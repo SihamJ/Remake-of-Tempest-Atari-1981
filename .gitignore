@@ -486,6 +486,7 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,c++,visualstudio,visualstudiocode
 
+.vscode*
 main
 main_ancien.cpp
 tp_sdl.cpp

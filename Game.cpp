@@ -117,16 +117,24 @@ void Game::handleEvents() {
  * 
  */
 void Game::update() {
-
+    // Ajout de points au centre jusqu'aux extrémités de l'octogone
+    // à des temps aléatoires < à 40000 millisecondes entre chacun
+    // sur des couloirs aléatoires
     if (SDL_GetTicks() - clock_new_p > (rand()%40000)) {
+        // maj horloge
         clock_new_p = SDL_GetTicks();
+        // le point ajouté au centre de l'octogone
         Point p;
         p.set_point(center.get_point()[0], center.get_point()[1]);
-        Hall hDest;
-        hDest = vh[rand()%8];
+        // un couloir aléatoire entre les 8 de l'octogone
+        Hall hDest = vh[rand()%8];
+        // big line du couloir choisi
         std::array<int,4> big_line = hDest.get_big_line();
+        // le centre de la bigLine
         p.set_dest({(big_line[0]+big_line[2])/2,(big_line[1]+big_line[3])/2});
+        // draw
         p.draw(renderer);
+        // ajoute le point au vecteur qui répertorie tous les points
         vp.push_back(p);
     }
     // Si on a dépassé les TICK millisecondes, on update

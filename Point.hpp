@@ -86,7 +86,7 @@ public:
 
 private:
     // + la vitesse est haute + on se rapproche du centre avec get_closer
-    static int const speed = 10;
+    static int const speed = 3;
     // les coordonnées du point
     std::array<int, 2> p;
     // destination du point

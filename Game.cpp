@@ -174,13 +174,34 @@ void Game::update() {
         // Rapproche tous les points existants de leur destination
         // détruit le point si il a atteint sa cible
         for (int i = 0; i<vm.size(); i++) {
+            int last_x, last_y;
+            last_x = vm[i].get_point()[0];
+            last_y = vm[i].get_point()[1];
+            SDL_Rect r;
+            r.w = 1;
+            r.h = 1;
             if (vm[i].get_closer()) {
                 vm.erase(vm.begin()+i);
+            }
+            else {
+                for (int j = 0; j<vp.size(); j++) {
+                    r.x = vp[j].get_point()[0];
+                    r.y = vp[j].get_point()[1];
+                    if (SDL_IntersectRectAndLine(&r, &last_x, &last_y, &vm[i].get_point()[0], &vm[i].get_point()[1]) == SDL_TRUE) {
+                        vm.erase(vm.begin()+i);
+                        vp.erase(vp.begin()+j);
+                        break;
+                    }
+                }
             }
         }
         for (int i = 0; i<vp.size(); i++) {
             if (vp[i].get_closer()) {
                 vp.erase(vp.begin()+i);
+                if (player.decr_life_point()) {
+                    std::cout << "Game over !" << std::endl;
+                    isRunning = false;
+                }
             }
         }
     }

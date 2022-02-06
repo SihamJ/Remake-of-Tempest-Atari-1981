@@ -34,10 +34,35 @@ public:
         n_hall = (n_hall + 7) % 8;
     }
 
+    /**
+     * @brief decremente les pdv et renvoie vrai si le player est mort
+     * renvoie faux quand il reste des pdv
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool decr_life_point() {
+        if ((--life_point) <= 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @brief Get the life point object
+     * 
+     * @return int 
+     */
+    int get_life_point() {
+        return life_point;
+    }
+
 
 private:
     // le numéro du hall dans lequel le joueur se trouve
     int n_hall = 0;
+    // point de vie
+    int life_point = 10;
 };
 
 #endif

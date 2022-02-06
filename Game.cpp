@@ -104,10 +104,11 @@ void Game::handleEvents() {
     SDL_Event event;
     SDL_PollEvent(&event);
     switch(event.type) {
-        case SDL_QUIT:
+        case SDL_QUIT: {
             isRunning = false;
             break;
-        case SDL_KEYDOWN:
+        }
+        case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_LEFT) {
                 player.decr_n_hall();
             }
@@ -115,6 +116,23 @@ void Game::handleEvents() {
                 player.incr_n_hall();
             }
             break;
+        }
+        case SDL_MOUSEBUTTONDOWN: {
+            // le couloir où le player se trouve
+            Hall h = vh[player.get_n_hall()];
+            // big line du couloir
+            std::array<int,4> big_line = h.get_big_line();
+            // Le missile
+            Point missile;
+            missile.set_point((big_line[0]+big_line[2])/2,(big_line[1]+big_line[3])/2);
+            // le centre de la bigLine
+            missile.set_dest(center.get_point());
+            // draw
+            missile.draw(renderer);
+            // ajoute le point au vecteur qui répertorie tous les missiles
+            vm.push_back(missile);
+            break;
+        }
         default:
             break;
     }
@@ -155,6 +173,11 @@ void Game::update() {
         clock = SDL_GetTicks();
         // Rapproche tous les points existants de leur destination
         // détruit le point si il a atteint sa cible
+        for (int i = 0; i<vm.size(); i++) {
+            if (vm[i].get_closer()) {
+                vm.erase(vm.begin()+i);
+            }
+        }
         for (int i = 0; i<vp.size(); i++) {
             if (vp[i].get_closer()) {
                 vp.erase(vp.begin()+i);
@@ -185,6 +208,9 @@ void Game::render() {
     center.draw(renderer);
     
     for (auto i : vh)
+        i.draw(renderer);
+
+    for (auto i : vm)
         i.draw(renderer);
 
     renderColorLightBlue();

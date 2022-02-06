@@ -50,8 +50,8 @@ private:
     SDL_Window *window;
     // rendu
     SDL_Renderer *renderer;
-    // L'ensemble des points
-    std::vector<Point> vp;
+    // L'ensemble des points (missile ennemi) et des missiles (missile alliés)
+    std::vector<Point> vp, vm;
     // Le centre de l'octogone
     Point center;
     // L'ensemble des traits pr former l'octogone

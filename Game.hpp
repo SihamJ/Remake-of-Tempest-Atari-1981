@@ -10,6 +10,7 @@
 #include <vector>
 #include "Hall.hpp"
 #include "Map_Hall.hpp"
+#include "Player.hpp"
 
 #define TICK 100
 
@@ -28,6 +29,7 @@ public:
     void clean();
     void renderColorBlack();
     void renderColorYellow();
+    void renderColorLightBlue();
 
     /**
      * @brief getter : the game is running ?
@@ -50,10 +52,12 @@ private:
     SDL_Renderer *renderer;
     // L'ensemble des points
     std::vector<Point> vp;
-    // Le centre où les points se rassemblent
+    // Le centre de l'octogone
     Point center;
     // L'ensemble des traits pr former l'octogone
     std::array<Hall, 16> vh;
+    // Le player
+    Player player;
 
 };
 

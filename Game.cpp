@@ -107,6 +107,14 @@ void Game::handleEvents() {
         case SDL_QUIT:
             isRunning = false;
             break;
+        case SDL_KEYDOWN:
+            if (event.key.keysym.sym == SDLK_LEFT) {
+                player.decr_n_hall();
+            }
+            if (event.key.keysym.sym == SDLK_RIGHT) {
+                player.incr_n_hall();
+            }
+            break;
         default:
             break;
     }
@@ -178,6 +186,12 @@ void Game::render() {
     
     for (auto i : vh)
         i.draw(renderer);
+
+    renderColorLightBlue();
+    vh[player.get_n_hall()].draw(renderer);
+    vh[player.get_n_hall()+8].draw(renderer);
+    vh[((player.get_n_hall()+9) % 8) + 8].draw(renderer);
+    renderColorYellow();
     
     
     // màj du rendu
@@ -211,3 +225,10 @@ void Game::renderColorYellow () {
     SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
 }
 
+/**
+ * @brief Change la couleur pr dessiner en blue clair
+ * 
+ */
+void Game::renderColorLightBlue() {
+    SDL_SetRenderDrawColor(renderer, 0, 255, 255, 1);
+}

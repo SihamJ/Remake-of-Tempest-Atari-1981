@@ -11,7 +11,7 @@
 #include "Hall.hpp"
 #include "Map_Hall.hpp"
 
-#define TICK 500
+#define TICK 100
 
 
 class Game {
@@ -40,6 +40,8 @@ public:
 private:
     // temps enregistré pr faire des updates toutes les x secondes
     Uint32 clock = 0;
+    // temps enregistré pr mettre un nouveau missile à des temps aléatoires
+    Uint32 clock_new_p = 0;
     // savoir si le jeu doit continuer de fonctionner
     bool isRunning;
     // fenêtre

@@ -46,20 +46,21 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height, in
         // pr utiliser rand avec des valeurs randoms
         srand (time(NULL));
 
-        // créé 100 points aléatoire sur la fenêtre
-        for (int i = 0; i<100; i++) {
-            Point p;
-            p.set_point(rand()%width, rand()%height);
-            p.draw(renderer);
-            vp.push_back(p);
-        }
-
         // créé le point central
         center.set_point(rand()%width, rand()%height);
         center.draw(renderer);
 
         // get les coordonnées du point central
         std::array<int, 2> pc = center.get_point();
+
+        // créé 100 points aléatoire sur la fenêtre
+        // for (int i = 0; i<100; i++) {
+        //     Point p;
+        //     p.set_point(rand()%width, rand()%height);
+        //     p.set_dest(pc);
+        //     p.draw(renderer);
+        //     vp.push_back(p);
+        // }
 
         // Calcul 8 lignes pr former un octogone
         // largeur des cotés de l'octogone
@@ -116,6 +117,18 @@ void Game::handleEvents() {
  * 
  */
 void Game::update() {
+
+    if (SDL_GetTicks() - clock_new_p > (rand()%40000)) {
+        clock_new_p = SDL_GetTicks();
+        Point p;
+        p.set_point(center.get_point()[0], center.get_point()[1]);
+        Hall hDest;
+        hDest = vh[rand()%8];
+        std::array<int,4> big_line = hDest.get_big_line();
+        p.set_dest({(big_line[0]+big_line[2])/2,(big_line[1]+big_line[3])/2});
+        p.draw(renderer);
+        vp.push_back(p);
+    }
     // Si on a dépassé les TICK millisecondes, on update
     if (SDL_GetTicks() - clock > TICK) {
         // affiche l'horloge
@@ -124,7 +137,7 @@ void Game::update() {
         clock = SDL_GetTicks();
         // Rapproche tous les points existants du point central
         for (int i = 0; i<vp.size(); i++) {
-            vp[i].get_closer(center);
+            vp[i].get_closer();
         }
     }
 }
@@ -145,14 +158,14 @@ void Game::render() {
 
     // dessine tous ce qui doit être affiché
 
-    for (int i = 0; i<vp.size(); i++) {
-        vp[i].draw(renderer);
-    }
+    for (auto i : vp)
+        i.draw(renderer);
+    
     center.draw(renderer);
     
-    for (auto i : vh) {
+    for (auto i : vh)
         i.draw(renderer);
-    }
+    
     
     // màj du rendu
     SDL_RenderPresent(renderer);

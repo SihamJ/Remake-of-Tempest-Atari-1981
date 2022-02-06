@@ -63,8 +63,9 @@ public:
      * @brief Rapproche le point de la destination 
      * (+ ou - en fct de la variable "vitesse")
      *  
+     * @return vrai si on a atteint l'objectif (= doit être détruit)
      */
-    void get_closer() {
+    bool get_closer() {
         int diff_x = dest[0] - p[0];
         int diff_y = dest[1] - p[1];
         int coeff_x = (diff_x > 0) ? 1 : -1;
@@ -77,10 +78,10 @@ public:
         int nv_coeff_y = ((dest[1] - p[1]) > 0) ? 1 : -1;
 
         // Si ça dépasse le centre, les points sont "détruits"
-        if ((nv_coeff_x != coeff_x) || (nv_coeff_y != coeff_y)) {
-            p[0] = dest[0];
-            p[1] = dest[1];
+        if ((nv_coeff_x != coeff_x) || (nv_coeff_y != coeff_y) || (p == dest)) {
+            return true;
         }
+        return false;
     }
 
 private:

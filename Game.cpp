@@ -120,7 +120,7 @@ void Game::update() {
     // Ajout de points au centre jusqu'aux extrémités de l'octogone
     // à des temps aléatoires < à 40000 millisecondes entre chacun
     // sur des couloirs aléatoires
-    if (SDL_GetTicks() - clock_new_p > (rand()%40000)) {
+    if (SDL_GetTicks() - clock_new_p > (rand()%20000)) {
         // maj horloge
         clock_new_p = SDL_GetTicks();
         // le point ajouté au centre de l'octogone
@@ -140,12 +140,17 @@ void Game::update() {
     // Si on a dépassé les TICK millisecondes, on update
     if (SDL_GetTicks() - clock > TICK) {
         // affiche l'horloge
-        std::cout << clock << std::endl;
+        // std::cout << clock << std::endl;
+        // vérifier qu'on delete les points
+        std::cout << vp.size() << std::endl;
         // màj de clock
         clock = SDL_GetTicks();
-        // Rapproche tous les points existants du point central
+        // Rapproche tous les points existants de leur destination
+        // détruit le point si il a atteint sa cible
         for (int i = 0; i<vp.size(); i++) {
-            vp[i].get_closer();
+            if (vp[i].get_closer()) {
+                vp.erase(vp.begin()+i);
+            }
         }
     }
 }

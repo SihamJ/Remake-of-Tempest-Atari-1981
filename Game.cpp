@@ -171,19 +171,19 @@ void Game::update() {
         std::cout << vp.size() << std::endl;
         // màj de clock
         clock = SDL_GetTicks();
-        // Rapproche tous les points existants de leur destination
-        // détruit le point si il a atteint sa cible
+        // Rapproche tous les missiles de leur destination
+        // détruit le missile si il a atteint sa cible
         for (int i = 0; i<vm.size(); i++) {
-            int last_x, last_y;
-            last_x = vm[i].get_point()[0];
-            last_y = vm[i].get_point()[1];
-            SDL_Rect r;
-            r.w = 1;
-            r.h = 1;
             if (vm[i].get_closer()) {
                 vm.erase(vm.begin()+i);
             }
             else {
+                // test si y a collision entre missiles alliés et ennemies
+                int last_x = vm[i].get_point()[0];
+                int last_y = vm[i].get_point()[1];
+                SDL_Rect r;
+                r.w = 1;
+                r.h = 1;
                 for (int j = 0; j<vp.size(); j++) {
                     r.x = vp[j].get_point()[0];
                     r.y = vp[j].get_point()[1];
@@ -195,6 +195,7 @@ void Game::update() {
                 }
             }
         }
+        // rapprochent missile ennemies
         for (int i = 0; i<vp.size(); i++) {
             if (vp[i].get_closer()) {
                 vp.erase(vp.begin()+i);

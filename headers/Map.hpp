@@ -1,17 +1,17 @@
-#ifndef __MAP_HALL_HPP__
-#define __MAP_HALL_HPP__
+#ifndef __MAP_HPP__
+#define __MAP_HPP__
 
 #include <vector>
 #include <SDL.h>
 #include "Hall.hpp"
 
-class Map_Hall {
+class Map {
 
 public:
     // constructeur
-    Map_Hall(){}
+    Map(){}
     // destructeur
-    ~Map_Hall(){}
+    ~Map(){}
 
     /**
      * @brief Ajout d'un couloir à la map

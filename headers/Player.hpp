@@ -1,7 +1,9 @@
 #ifndef __PLAYER_HPP__
 #define __PLAYER_HPP__
 
-class Player {
+#include "Character.hpp"
+
+class Player : protected Character {
 
 public:
     // Constructeur

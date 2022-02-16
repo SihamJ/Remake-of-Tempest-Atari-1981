@@ -1,4 +1,4 @@
-#include "Game.hpp"
+#include "../headers/Game.hpp"
 
 // #define SDL_WINDOWPOS_CENTERED SDL_WINDOWPOS_CENTERED_DISPLAY(0)
 

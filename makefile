@@ -1,7 +1,14 @@
 all: main
 
-SOURCES = main.cpp Game.cpp
-HEADERS = Game.hpp Point.hpp Map.hpp Hall.hpp Map_Hall.hpp
+SOURCES = src/*.cpp
+HEADERS = headers/*.hpp
+EXE = tempest-atari
 
 main: $(SOURCES) $(HEADERS)
-	g++ -o main $(SOURCES) $(LDLIBS) $$(sdl2-config --cflags --libs)
+	g++ -o $(EXE) $(SOURCES) $(LDLIBS) $$(sdl2-config --cflags --libs)
+
+archive:
+	tar -cvzf $(EXE).tar.gz headers src SDL makefile README.md
+
+clean: 
+	@$(RM) $(EXE) $(EXE).tar.gz

@@ -9,7 +9,7 @@
 #include "Point.hpp"
 #include <vector>
 #include "Hall.hpp"
-#include "Map_Hall.hpp"
+#include "Map.hpp"
 #include "Player.hpp"
 
 #define TICK 100

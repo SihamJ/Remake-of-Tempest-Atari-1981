@@ -3,9 +3,9 @@
 
 #include <SDL.h>
 #include <array>
+#include "Formes.hpp"
 
-
-class Point {
+class Point : protected Formes {
 
 public:
     // Constructeur

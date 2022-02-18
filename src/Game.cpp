@@ -47,7 +47,7 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height, in
         srand (time(NULL));
 
         // créé le point central
-        center.set_point(rand()%width, rand()%height);
+        center.set_point(width/2.0, height/2.0);
         center.draw(renderer);
 
         // get les coordonnées du point central

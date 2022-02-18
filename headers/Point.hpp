@@ -5,11 +5,20 @@
 #include <array>
 #include "Formes.hpp"
 
-class Point : protected Formes {
+class Point {
 
 public:
     // Constructeur
     Point(){}
+
+    Point(int x, int y){
+        p[0] = x;
+        p[1] = y;
+    }
+
+    Point(std::array<int, 2> point){
+        p = point;
+    }
     // Destructeur
     ~Point(){}
 
@@ -30,6 +39,14 @@ public:
      */
     std::array<int, 2> get_point () {
         return p;
+    }
+
+    int get_x(){
+        return p[0];
+    }
+
+    int get_y(){
+        return p[1];
     }
 
     /**

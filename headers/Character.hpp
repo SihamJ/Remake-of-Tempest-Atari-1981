@@ -7,6 +7,8 @@ public:
     Character(){}
     ~Character(){}
 
+private:
+
 };
 
 #endif

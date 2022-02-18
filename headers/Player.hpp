@@ -60,7 +60,7 @@ public:
     }
 
 
-private:
+protected:
     // le numéro du hall dans lequel le joueur se trouve
     int n_hall = 0;
     // point de vie

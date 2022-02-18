@@ -2,7 +2,7 @@ all: main
 
 SOURCES = src/*.cpp
 HEADERS = headers/*.hpp
-EXE = tempest-atari
+EXE = main
 
 main: $(SOURCES) $(HEADERS)
 	g++ -o $(EXE) $(SOURCES) $(LDLIBS) $$(sdl2-config --cflags --libs)

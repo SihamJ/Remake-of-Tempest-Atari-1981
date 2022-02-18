@@ -2,7 +2,7 @@
 #define __GAME_HPP__
 
 #include <string>
-#include "SDL.h"
+#include <SDL.h>
 #include <iostream>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
@@ -58,6 +58,9 @@ private:
     std::array<Hall, 16> vh;
     // Le player
     Player player;
+
+    // Map
+    Map *map;
 
 };
 

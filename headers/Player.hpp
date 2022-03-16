@@ -24,16 +24,16 @@ public:
      * @brief incrémente le numéro du hall
      * 
      */
-    void incr_n_hall() {
-        n_hall = (n_hall + 1) % 8;
+    void incr_n_hall(int nbHall) {
+        n_hall = (n_hall + 1) % nbHall;
     }
 
     /**
      * @brief décremente le numéro du hall
      * 
      */
-    void decr_n_hall() {
-        n_hall = (n_hall + 7) % 8;
+    void decr_n_hall(int nbHall) {
+        n_hall = (n_hall -1) % nbHall;
     }
 
     /**

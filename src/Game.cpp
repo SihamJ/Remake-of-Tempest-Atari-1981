@@ -27,8 +27,6 @@ Game::~Game() {
  * @param height la hauteur de la fenêtre
  */
 void Game::init(const char *title, int xpos, int ypos, int width, int height, int flagsWindow, int flagsRenderer) {
-    // if (SDL_INIT(SDL_INIT_EVERYTHING) == 0) {
-    // }
 
     if (SDL_Init(SDL_INIT_VIDEO) == 0) {
 		std::cout << "SDL Init" << std::endl;
@@ -47,9 +45,9 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height, in
         srand (time(NULL));
 
         // créé le point central
-        center.set_point(width/2.0, height/2.0);
+        center.set_point(width/2, height/2);
         center.draw(renderer);
-
+        
         // get les coordonnées du point central
         std::array<int, 2> pc = center.get_point();
 
@@ -67,33 +65,41 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height, in
         int a = 100;
         // rayon calculé par rapport à a
         int r = (a/2)*(1+sqrt(2));
+        
         // calcul des 8 cotés par rapport au point central
-        vh[0].set_big_line(-1*a/2+pc[0],-1*r+pc[1],a/2+pc[0],-1*r+pc[1]);
-        vh[1].set_big_line(a/2+pc[0],-1*r+pc[1],r+pc[0],-1*a/2+pc[1]);
-        vh[2].set_big_line(r+pc[0],-1*a/2+pc[1],r+pc[0],a/2+pc[1]);
-        vh[3].set_big_line(r+pc[0],a/2+pc[1],a/2+pc[0],r+pc[1]);
-        vh[4].set_big_line(a/2+pc[0],r+pc[1],-1*a/2+pc[0],r+pc[1]);
-        vh[5].set_big_line(-1*a/2+pc[0],r+pc[1],-1*r+pc[0],a/2+pc[1]);
-        vh[6].set_big_line(-1*r+pc[0],a/2+pc[1],-1*r+pc[0],-1*a/2+pc[1]);
-        vh[7].set_big_line(-1*r+pc[0],-1*a/2+pc[1],-1*a/2+pc[0],-1*r+pc[1]);
+        // vh[0].set_big_line(-1*a/2+pc[0],-1*r+pc[1],a/2+pc[0],-1*r+pc[1]);
+        // vh[1].set_big_line(a/2+pc[0],-1*r+pc[1],r+pc[0],-1*a/2+pc[1]);
+        // vh[2].set_big_line(r+pc[0],-1*a/2+pc[1],r+pc[0],a/2+pc[1]);
+        // vh[3].set_big_line(r+pc[0],a/2+pc[1],a/2+pc[0],r+pc[1]);
+        // vh[4].set_big_line(a/2+pc[0],r+pc[1],-1*a/2+pc[0],r+pc[1]);
+        // vh[5].set_big_line(-1*a/2+pc[0],r+pc[1],-1*r+pc[0],a/2+pc[1]);
+        // vh[6].set_big_line(-1*r+pc[0],a/2+pc[1],-1*r+pc[0],-1*a/2+pc[1]);
+        // vh[7].set_big_line(-1*r+pc[0],-1*a/2+pc[1],-1*a/2+pc[0],-1*r+pc[1]);
 
-        // créé les lignes intérieur et dessine ttes les lignes pr l'octogone
-        // les small lines servent à rien
-        for (int i = 0; i<8; i++) {
-            std::array<int, 4> bigL = vh[i].get_big_line();
-            vh[i+8].set_big_line(bigL[0], bigL[1], pc[0], pc[1]);
-            vh[i].set_small_line(0,0,0,0);
-            vh[i+8].set_small_line(0,0,0,0);
-            vh[i].draw(renderer);
-            vh[i+8].draw(renderer);
-        }
+        // // créé les lignes intérieur et dessine ttes les lignes pr l'octogone
+        // // les small lines servent à rien
+        // for (int i = 0; i<8; i++) {
+        //     std::array<int, 4> bigL = vh[i].get_big_line();
+        //     vh[i+8].set_big_line(bigL[0], bigL[1], pc[0], pc[1]);
+        //     vh[i].set_small_line(0,0,0,0);
+        //     vh[i+8].set_small_line(0,0,0,0);
+        //     vh[i].draw(renderer);
+        //     vh[i+8].draw(renderer);
+        // }
 
+        map = new TriangleMap(3, width, height);
+        map->buildMap();
+        map->draw(renderer);
+        vh = map->getHallList();
+        
+        
         isRunning = true;
     }
     else {
         // si problème, le jeu doit s'arrêter
         isRunning = false;
     }
+    
 }
 
 /**
@@ -110,10 +116,10 @@ void Game::handleEvents() {
         }
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_LEFT) {
-                player.decr_n_hall();
+                player.decr_n_hall(map->getNbHall());
             }
             if (event.key.keysym.sym == SDLK_RIGHT) {
-                player.incr_n_hall();
+                player.incr_n_hall(map->getNbHall());
             }
             break;
         }
@@ -153,11 +159,11 @@ void Game::update() {
         Point p;
         p.set_point(center.get_point()[0], center.get_point()[1]);
         // un couloir aléatoire entre les 8 de l'octogone
-        Hall hDest = vh[rand()%8];
+        Hall hDest = vh[rand() % vh.size()];
         // big line du couloir choisi
         std::array<int,4> big_line = hDest.get_big_line();
         // le centre de la bigLine
-        p.set_dest({(big_line[0]+big_line[2])/2,(big_line[1]+big_line[3])/2});
+        p.set_dest({(big_line[0]+big_line[2])/2, (big_line[1]+big_line[3])/2});
         // draw
         p.draw(renderer);
         // ajoute le point au vecteur qui répertorie tous les points
@@ -168,7 +174,7 @@ void Game::update() {
         // affiche l'horloge
         // std::cout << clock << std::endl;
         // vérifier qu'on delete les points
-        std::cout << vp.size() << std::endl;
+        // std::cout << vp.size() << std::endl;
         // màj de clock
         clock = SDL_GetTicks();
         // Rapproche tous les missiles de leur destination
@@ -213,6 +219,8 @@ void Game::update() {
  * 
  */
 void Game::render() {
+     Line* l = new Line(100, 100, 200 , 200);
+        l->draw(renderer);
     // clear la fenêtre en noir
     renderColorBlack();
     if (SDL_RenderClear(renderer) < 0) {
@@ -236,9 +244,11 @@ void Game::render() {
         i.draw(renderer);
 
     renderColorLightBlue();
-    vh[player.get_n_hall()].draw(renderer);
-    vh[player.get_n_hall()+8].draw(renderer);
-    vh[((player.get_n_hall()+9) % 8) + 8].draw(renderer);
+    Point p = Point(200, 100);
+    p.draw(renderer);
+    //vh[player.get_n_hall()].draw(renderer);
+    // vh[player.get_n_hall()+8].draw(renderer);
+    // vh[((player.get_n_hall()+9) % 8) + 8].draw(renderer);
     renderColorYellow();
     
     

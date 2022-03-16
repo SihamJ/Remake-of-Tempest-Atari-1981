@@ -11,19 +11,27 @@ public:
     // constructeur
     Map(){}
 
-    Map(std::vector<Hall*> hallList){
+    Map(std::vector<Hall> hallList){
         this->hallList = hallList;
         this->nbHall = hallList.size();
     }
     // destructeur
     ~Map(){}
 
+    std::vector<Hall> getHallList(){
+        return hallList;
+    }
+
+    int getNbHall(){
+        return this->nbHall;
+    }
+
     /**
      * @brief Ajout d'un couloir à la map
      * 
      * @param h le couloir à ajouter
      */
-    void add_Hall (Hall* h) {
+    void add_Hall (Hall h) {
         hallList.push_back(h);
     }
 
@@ -40,13 +48,14 @@ public:
      */
     void draw(SDL_Renderer* renderer) {
         for (auto i : hallList) {
-            i->draw(renderer);
+            i.draw(renderer);
         }
+        std::cout << "map drawn" << std::endl;
     }
 
 protected:
     // Liste des couloirs qui forment la map
-    std::vector<Hall*> hallList;
+    std::vector<Hall> hallList;
     int nbHall;
     
 };

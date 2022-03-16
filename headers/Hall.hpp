@@ -26,6 +26,11 @@ public:
         this->lines = lines;
     }
 
+    Hall(Point* p1, Point* p2, Point* p3, Point* p4){
+        lines[0] = new Line(p1, p2);
+        lines[1] = new Line(p3, p4);
+    }
+
     Hall(std::array<Point*, 4> points){
         lines[0] = new Line(points[0], points[1]);
         lines[1] = new Line(points[2], points[3]);
@@ -70,8 +75,8 @@ public:
      * @return std::array<int, 4> 
      */
     std::array<int, 4> get_big_line () {
-        return bigLine;
-        // return lines[1];
+        // return bigLine;
+        return lines[1]->get_line();
     }
 
     /**
@@ -80,8 +85,8 @@ public:
      * @return std::array<int, 4> 
      */
     std::array<int, 4> get_small_line () {
-        return smallLine;
-        // return lines[0];
+        //return smallLine;
+        return lines[0]->get_line();
     }
 
     std::array<Line*, 2> get_lines(){

@@ -14,12 +14,14 @@ int main(int argc, char** argv) {
                 1200, 800, SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI, 
                 SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
 
-    
+    int i = 0;
     // boucle principal
     while (game->running()) {
         game->handleEvents();
-        game->update();
+        // game->update();
         game->render();
+        i++;
+        
     }
 
     game->clean();

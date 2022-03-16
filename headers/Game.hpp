@@ -11,6 +11,7 @@
 #include "Hall.hpp"
 #include "Map.hpp"
 #include "Player.hpp"
+#include "TriangleMap.hpp"
 
 #define TICK 100
 
@@ -55,7 +56,7 @@ private:
     // Le centre de l'octogone
     Point center;
     // L'ensemble des traits pr former l'octogone
-    std::array<Hall, 16> vh;
+    std::vector<Hall> vh;
     // Le player
     Player player;
 

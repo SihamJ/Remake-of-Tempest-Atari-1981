@@ -45,11 +45,11 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height, in
         srand (time(NULL));
 
         // construction de la map
-        map = new TriangleMap(5, width, height);
+        map = new TriangleMap(15, width, height);
         map->buildMap();
         map->draw(renderer);
 
-         // créé le point central
+         // récupère le point central de la Map
         center = *(map->get_center());
 
         vh = map->getHallList();
@@ -180,8 +180,6 @@ void Game::update() {
  * 
  */
 void Game::render() {
-     Line* l = new Line(100, 100, 200 , 200);
-        l->draw(renderer);
     // clear la fenêtre en noir
     renderColorBlack();
     if (SDL_RenderClear(renderer) < 0) {
@@ -204,12 +202,9 @@ void Game::render() {
     map->draw(renderer);
 
     renderColorLightBlue();
-    Point p = Point(200, 100);
-    p.draw(renderer);
-    //vh[player.get_n_hall()%map->getNbHall()].draw(renderer);
+
     map->getHallList().at(player.get_n_hall()).draw(renderer);
-    // vh[player.get_n_hall()+map->getNbHall()-1].draw(renderer);
-    // vh[((player.get_n_hall()+map->getNbHall()+1) % map->getNbHall()) + map->getNbHall()].draw(renderer);
+
     renderColorYellow();
     
     

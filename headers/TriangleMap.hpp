@@ -14,18 +14,19 @@ public:
 
         this->nbHall = nbHall;
         this->width = width/3;
-        this->height = 6*height/8;
+        this->height = 3*height/5;
 
         setBigTriangle(width, height);
 
-        // On calcule les 3 -lignes- médianes du triangles
+        // On calcule de 2 -lignes- médianes du triangles
         setMedians(width);
 
         // On determine le barycentre (intersection de deux médianes)
+        // il servira par la suite comme point central pour les missiles ennemis
         this->center = medians[0]->intersect(medians[1]);
 
         // On peut maintenant définir le triangle intérieur
-        setSmallTriangle(0.4);
+        setSmallTriangle(0.6);
     }
 
     //destructeur
@@ -49,9 +50,6 @@ public:
 
         medians[0] = new Line(bigTriangle[0], mid_2);
         medians[1] = new Line(bigTriangle[1], mid_1);
-    
-    //  la 3eme médiane est une ligne vertical --> bug y=infini -- pas besoin 
-    //  medians[2] = new Line(bigTriangle[2], mid_3);
     }
 
     // calcul des coordonnées du triangle intérieur
@@ -61,7 +59,7 @@ public:
         smallTriangle[2] = new Point(bigTriangle[2]->get_x(), bigTriangle[2]->get_y() + abs(bigTriangle[0]->get_y() - bigTriangle[2]->get_y())*ratio);
     }
 
-    // Déssine la TriangleMap
+    // Constructions des couloirs
     void buildMap(){
         int hallPerSide = nbHall / 3;
         int nbLastSide = hallPerSide + nbHall % 3;
@@ -80,8 +78,6 @@ public:
         smallLines.push_back(new Point(smallTriangle[0]->get_x(), smallTriangle[0]->get_y()));
 
         for(int i = 1; i < hallPerSide; i++){
-            // Point* p1 = new Point(bigTriangle[0]->get_x() + ((bigTriangle[1]->get_x() - bigTriangle[0]->get_x())*i) / hallPerSide, bigTriangle[0]->get_y());
-            // Point* p2 = new Point(smallTriangle[0]->get_x() + ((smallTriangle[1]->get_x() - smallTriangle[0]->get_x())*i) / hallPerSide, smallTriangle[0]->get_y());
             Point* p1 = linesB[0].inLine((double)i/(double)hallPerSide);
             Point* p2 = linesS[0].inLine((double)i/(double)hallPerSide);
             bigLines.push_back(p1);
@@ -92,8 +88,6 @@ public:
         smallLines.push_back(new Point(smallTriangle[1]->get_x(), smallTriangle[1]->get_y()));
 
         for(int i = 1; i < hallPerSide; i++){
-            // Point* p1 = new Point(bigTriangle[2]->get_x() + ((bigTriangle[2]->get_x() - bigTriangle[1]->get_x()) * i) / hallPerSide, bigTriangle[1]->get_y() + ((bigTriangle[2]->get_y() - bigTriangle[1]->get_y()) * i) / hallPerSide);
-            // Point* p2 = new Point(smallTriangle[2]->get_x() + ((smallTriangle[2]->get_x() - smallTriangle[1]->get_x()) * i) / hallPerSide, smallTriangle[1]->get_y() + ((smallTriangle[2]->get_y() - smallTriangle[1]->get_y()) * i) / hallPerSide);
             Point* p1 = linesB[1].inLine( (double)i/(double)hallPerSide);
             Point* p2 = linesS[1].inLine((double)i/(double)hallPerSide);
             bigLines.push_back(p1);
@@ -104,8 +98,6 @@ public:
         smallLines.push_back(new Point(smallTriangle[2]->get_x(), smallTriangle[2]->get_y()));
 
         for(int i = 1; i < nbLastSide; i++){
-            // Point* p1 = new Point(bigTriangle[0]->get_x() + ((bigTriangle[2]->get_x() - bigTriangle[0]->get_x()) * i) / hallPerSide, bigTriangle[0]->get_y() + ((bigTriangle[2]->get_y() - bigTriangle[0]->get_y()) * i) / hallPerSide);
-            // Point* p2 = new Point(smallTriangle[0]->get_x() + ((smallTriangle[2]->get_x() - smallTriangle[0]->get_x()) * i) / hallPerSide, smallTriangle[0]->get_y() + ((smallTriangle[2]->get_y() - smallTriangle[0]->get_y()) * i) / hallPerSide);
             Point* p1 = linesB[2].inLine((double)i/(double)nbLastSide);
             Point* p2 = linesS[2].inLine((double)i/(double)nbLastSide);
             bigLines.push_back(p1);
@@ -115,7 +107,7 @@ public:
         bigLines.push_back(new Point(bigTriangle[0]->get_x(), bigTriangle[0]->get_y()));
         smallLines.push_back(new Point(smallTriangle[0]->get_x(), smallTriangle[0]->get_y()));
 
-        // ajout des couloirs
+        // linking
         for(int i = 0; i < nbHall; i++){
             this->add_Hall( Hall(bigLines.at(i), bigLines.at((i+1) % bigLines.size()), smallLines.at(i), smallLines.at((i+1) % smallLines.size())) );
         }
@@ -129,7 +121,7 @@ private:
     int height;
     std::array<Point*, 3> bigTriangle;
     std::array<Point*, 3> smallTriangle;
-    std::array<Line*, 3> medians;
+    std::array<Line*, 2> medians;
 };
 
 

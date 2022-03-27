@@ -48,7 +48,6 @@ public:
      * @param y2 
      */
     void set_big_line (int x1, int y1, int x2, int y2) {
-        bigLine = {x1, y1, x2, y2};
         lines[1] = new Line(x1, y1, x2, y2);
     }
 
@@ -61,7 +60,6 @@ public:
      * @param y2 
      */
     void set_small_line (int x1, int y1, int x2, int y2) {
-        smallLine = {x1, y1, x2, y2};
         lines[0] = new Line(x1, y1, x2, y2);
     }
 
@@ -75,7 +73,6 @@ public:
      * @return std::array<int, 4> 
      */
     std::array<int, 4> get_big_line () {
-        // return bigLine;
         return lines[1]->get_line();
     }
 
@@ -85,7 +82,6 @@ public:
      * @return std::array<int, 4> 
      */
     std::array<int, 4> get_small_line () {
-        //return smallLine;
         return lines[0]->get_line();
     }
 
@@ -101,13 +97,13 @@ public:
     void draw(SDL_Renderer* renderer) {
         lines[0]->draw(renderer);
         lines[1]->draw(renderer);
+        Line l1 = Line(lines[0]->get_p1(), lines[1]->get_p1());
+        Line l2 = Line(lines[0]->get_p0(), lines[1]->get_p0());
+        l1.draw(renderer);
+        l2.draw(renderer);
     }
 
 private:
-    // la petite ligne intérieur qui forme un couloir
-    std::array<int, 4> bigLine;
-    // la gross ligne extérieur qui forme un couloir
-    std::array<int, 4> smallLine;
     // les deux lignes
     std::array<Line*, 2> lines;
 };

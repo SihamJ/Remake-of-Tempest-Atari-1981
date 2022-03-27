@@ -26,6 +26,10 @@ public:
         return this->nbHall;
     }
 
+    Point* get_center(){
+        return center;
+    }
+
     /**
      * @brief Ajout d'un couloir à la map
      * 
@@ -50,13 +54,13 @@ public:
         for (auto i : hallList) {
             i.draw(renderer);
         }
-        std::cout << "map drawn" << std::endl;
     }
 
 protected:
     // Liste des couloirs qui forment la map
     std::vector<Hall> hallList;
     int nbHall;
+    Point* center;
     
 };
 

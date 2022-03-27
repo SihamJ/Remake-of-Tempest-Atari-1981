@@ -44,56 +44,17 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height, in
         // pr utiliser rand avec des valeurs randoms
         srand (time(NULL));
 
-        // créé le point central
-        center.set_point(width/2, height/2);
-        center.draw(renderer);
-        
-        // get les coordonnées du point central
-        std::array<int, 2> pc = center.get_point();
-
-        // créé 100 points aléatoire sur la fenêtre
-        // for (int i = 0; i<100; i++) {
-        //     Point p;
-        //     p.set_point(rand()%width, rand()%height);
-        //     p.set_dest(pc);
-        //     p.draw(renderer);
-        //     vp.push_back(p);
-        // }
-
-        // Calcul 8 lignes pr former un octogone
-        // largeur des cotés de l'octogone
-        int a = 100;
-        // rayon calculé par rapport à a
-        int r = (a/2)*(1+sqrt(2));
-        
-        // calcul des 8 cotés par rapport au point central
-        // vh[0].set_big_line(-1*a/2+pc[0],-1*r+pc[1],a/2+pc[0],-1*r+pc[1]);
-        // vh[1].set_big_line(a/2+pc[0],-1*r+pc[1],r+pc[0],-1*a/2+pc[1]);
-        // vh[2].set_big_line(r+pc[0],-1*a/2+pc[1],r+pc[0],a/2+pc[1]);
-        // vh[3].set_big_line(r+pc[0],a/2+pc[1],a/2+pc[0],r+pc[1]);
-        // vh[4].set_big_line(a/2+pc[0],r+pc[1],-1*a/2+pc[0],r+pc[1]);
-        // vh[5].set_big_line(-1*a/2+pc[0],r+pc[1],-1*r+pc[0],a/2+pc[1]);
-        // vh[6].set_big_line(-1*r+pc[0],a/2+pc[1],-1*r+pc[0],-1*a/2+pc[1]);
-        // vh[7].set_big_line(-1*r+pc[0],-1*a/2+pc[1],-1*a/2+pc[0],-1*r+pc[1]);
-
-        // // créé les lignes intérieur et dessine ttes les lignes pr l'octogone
-        // // les small lines servent à rien
-        // for (int i = 0; i<8; i++) {
-        //     std::array<int, 4> bigL = vh[i].get_big_line();
-        //     vh[i+8].set_big_line(bigL[0], bigL[1], pc[0], pc[1]);
-        //     vh[i].set_small_line(0,0,0,0);
-        //     vh[i+8].set_small_line(0,0,0,0);
-        //     vh[i].draw(renderer);
-        //     vh[i+8].draw(renderer);
-        // }
-
-        map = new TriangleMap(3, width, height);
+        // construction de la map
+        map = new TriangleMap(5, width, height);
         map->buildMap();
         map->draw(renderer);
+
+         // créé le point central
+        center = *(map->get_center());
+
         vh = map->getHallList();
-        
-        
         isRunning = true;
+
     }
     else {
         // si problème, le jeu doit s'arrêter
@@ -237,18 +198,18 @@ void Game::render() {
     
     center.draw(renderer);
     
-    for (auto i : vh)
-        i.draw(renderer);
-
     for (auto i : vm)
         i.draw(renderer);
+
+    map->draw(renderer);
 
     renderColorLightBlue();
     Point p = Point(200, 100);
     p.draw(renderer);
-    //vh[player.get_n_hall()].draw(renderer);
-    // vh[player.get_n_hall()+8].draw(renderer);
-    // vh[((player.get_n_hall()+9) % 8) + 8].draw(renderer);
+    //vh[player.get_n_hall()%map->getNbHall()].draw(renderer);
+    map->getHallList().at(player.get_n_hall()).draw(renderer);
+    // vh[player.get_n_hall()+map->getNbHall()-1].draw(renderer);
+    // vh[((player.get_n_hall()+map->getNbHall()+1) % map->getNbHall()) + map->getNbHall()].draw(renderer);
     renderColorYellow();
     
     

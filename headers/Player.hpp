@@ -33,7 +33,7 @@ public:
      * 
      */
     void decr_n_hall(int nbHall) {
-        n_hall = (n_hall -1) % nbHall;
+        n_hall = (n_hall - 1 + nbHall) % nbHall;
     }
 
     /**
@@ -64,7 +64,7 @@ protected:
     // le numéro du hall dans lequel le joueur se trouve
     int n_hall = 0;
     // point de vie
-    int life_point = 10;
+    int life_point = 100;
 };
 
 #endif

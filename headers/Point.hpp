@@ -4,7 +4,8 @@
 #include <SDL.h>
 #include <array>
 #include <tgmath.h>
-#include "Formes.hpp"
+#include <vector>
+#include <string>
 
 class Point {
 

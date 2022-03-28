@@ -6,12 +6,15 @@
 #include <iostream>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
+#include <memory>
 #include "Point.hpp"
 #include <vector>
 #include "Hall.hpp"
 #include "Map.hpp"
 #include "Player.hpp"
 #include "TriangleMap.hpp"
+#include "Enemy.hpp"
+#include "Flippers.hpp"
 
 #define TICK 100
 
@@ -31,7 +34,7 @@ public:
     void renderColorBlack();
     void renderColorYellow();
     void renderColorLightBlue();
-
+    void renderColorRed ();
     /**
      * @brief getter : the game is running ?
      * 
@@ -41,28 +44,40 @@ public:
     bool running() { return isRunning; }
 
 private:
+
     // temps enregistré pr faire des updates toutes les x secondes
     Uint32 clock = 0;
+
     // temps enregistré pr mettre un nouveau missile à des temps aléatoires
     Uint32 clock_new_p = 0;
+
     // savoir si le jeu doit continuer de fonctionner
     bool isRunning;
+
     // fenêtre
     SDL_Window *window;
+
     // rendu
     SDL_Renderer *renderer;
+
     // L'ensemble des points (missile ennemi) et des missiles (missile alliés)
     std::vector<Point> vp, vm;
+
+    // Vecteur des ennemies
+    std::vector<Flippers> enemies;
+
     // Le centre de l'octogone
     Point center;
+
     // L'ensemble des traits pr former l'octogone
     std::vector<Hall> vh;
+
     // Le player
     Player player;
 
     // Map
-    Map *map;
-
+    // Unique ptr car n'est pas copié.
+    std::unique_ptr<Map> map;
 };
 
 #endif

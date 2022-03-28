@@ -26,8 +26,12 @@ public:
         return this->nbHall;
     }
 
-    Point* get_center(){
+    Point get_center(){
         return center;
+    }
+
+    void set_center(Point c){
+        this->center = c;
     }
 
     /**
@@ -60,7 +64,7 @@ protected:
     // Liste des couloirs qui forment la map
     std::vector<Hall> hallList;
     int nbHall;
-    Point* center;
+    Point center;
     
 };
 

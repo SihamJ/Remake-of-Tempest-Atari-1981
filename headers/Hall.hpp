@@ -6,34 +6,34 @@
 #include <array>
 #include "Line.hpp"
 
-class Hall : private Formes {
+class Hall {
     
 public:
     // constructeur
     Hall(){}
 
     Hall(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4){
-        lines[0] = new Line(x1, y1, x2, y2);
-        lines[1] = new Line(x3, y3, x4, y4);
+        lines[0] = Line(x1, y1, x2, y2);
+        lines[1] = Line(x3, y3, x4, y4);
     }
 
-    Hall(Line* smallLine, Line* bigLine){
+    Hall(Line smallLine, Line bigLine){
         lines[0] = smallLine;
         lines[1] = bigLine;
     }
 
-    Hall(std::array<Line*, 2> lines){
+    Hall(std::array<Line, 2> lines){
         this->lines = lines;
     }
 
-    Hall(Point* p1, Point* p2, Point* p3, Point* p4){
-        lines[0] = new Line(p1, p2);
-        lines[1] = new Line(p3, p4);
+    Hall(Point p1, Point p2, Point p3, Point p4){
+        lines[0] = Line(p1, p2);
+        lines[1] = Line(p3, p4);
     }
 
-    Hall(std::array<Point*, 4> points){
-        lines[0] = new Line(points[0], points[1]);
-        lines[1] = new Line(points[2], points[3]);
+    Hall(std::array<Point, 4> points){
+        lines[0] = Line(points[0], points[1]);
+        lines[1] = Line(points[2], points[3]);
     }
 
     // destructeur
@@ -48,7 +48,7 @@ public:
      * @param y2 
      */
     void set_big_line (int x1, int y1, int x2, int y2) {
-        lines[1] = new Line(x1, y1, x2, y2);
+        lines[1] = Line(x1, y1, x2, y2);
     }
 
     /**
@@ -60,10 +60,10 @@ public:
      * @param y2 
      */
     void set_small_line (int x1, int y1, int x2, int y2) {
-        lines[0] = new Line(x1, y1, x2, y2);
+        lines[0] = Line(x1, y1, x2, y2);
     }
 
-    void set_lines (std::array<Line*, 2> lines){
+    void set_lines (std::array<Line, 2> lines){
         this->lines = lines;
     }
 
@@ -72,8 +72,8 @@ public:
      * 
      * @return std::array<int, 4> 
      */
-    std::array<int, 4> get_big_line () {
-        return lines[1]->get_line();
+    Line get_big_line () {
+        return lines[0];
     }
 
     /**
@@ -81,11 +81,11 @@ public:
      * 
      * @return std::array<int, 4> 
      */
-    std::array<int, 4> get_small_line () {
-        return lines[0]->get_line();
+    Line get_small_line () {
+        return lines[1];
     }
 
-    std::array<Line*, 2> get_lines(){
+    std::array<Line, 2> get_lines(){
         return lines;
     }
 
@@ -95,17 +95,17 @@ public:
      * @param renderer 
      */
     void draw(SDL_Renderer* renderer) {
-        lines[0]->draw(renderer);
-        lines[1]->draw(renderer);
-        Line l1 = Line(lines[0]->get_p1(), lines[1]->get_p1());
-        Line l2 = Line(lines[0]->get_p0(), lines[1]->get_p0());
+        lines[0].draw(renderer);
+        lines[1].draw(renderer);
+        Line l1(lines[0].get_p1(), lines[1].get_p1());
+        Line l2(lines[0].get_p0(), lines[1].get_p0());
         l1.draw(renderer);
         l2.draw(renderer);
     }
 
 private:
     // les deux lignes
-    std::array<Line*, 2> lines;
+    std::array<Line, 2> lines;
 };
 
 #endif

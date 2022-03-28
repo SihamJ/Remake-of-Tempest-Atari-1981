@@ -45,12 +45,12 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height, in
         srand (time(NULL));
 
         // construction de la map
-        map = new TriangleMap(15, width, height);
+        map = std::make_unique<TriangleMap>(15, width, height);
         map->buildMap();
         map->draw(renderer);
 
          // récupère le point central de la Map
-        center = *(map->get_center());
+        center.set_point(map->get_center().get_x(), map->get_center().get_y());
 
         vh = map->getHallList();
         isRunning = true;
@@ -76,29 +76,45 @@ void Game::handleEvents() {
             break;
         }
         case SDL_KEYDOWN: {
-            if (event.key.keysym.sym == SDLK_LEFT) {
+            if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_f) {
                 player.decr_n_hall(map->getNbHall());
             }
-            if (event.key.keysym.sym == SDLK_RIGHT) {
+            if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_j) {
                 player.incr_n_hall(map->getNbHall());
             }
+            // if (event.key.keysym.sym == SDLK_SPACE){
+            //     // le couloir où le player se trouve
+            //     Hall h = vh[player.get_n_hall()];
+            //     // big line du couloir
+            //     std::array<int,4> big_line = h.get_big_line().;
+            //     // Le missile
+            //     Point missile;
+            //     missile.set_point((big_line[0]+big_line[2])/2,(big_line[1]+big_line[3])/2);
+            //     // le centre de la bigLine
+            //     missile.set_dest(center.get_point());
+            //     // draw
+            //     missile.draw(renderer);
+            //     // ajoute le point au vecteur qui répertorie tous les missiles
+            //     vm.push_back(missile);
+            //     break;
+            // }
             break;
         }
         case SDL_MOUSEBUTTONDOWN: {
-            // le couloir où le player se trouve
-            Hall h = vh[player.get_n_hall()];
-            // big line du couloir
-            std::array<int,4> big_line = h.get_big_line();
-            // Le missile
-            Point missile;
-            missile.set_point((big_line[0]+big_line[2])/2,(big_line[1]+big_line[3])/2);
-            // le centre de la bigLine
-            missile.set_dest(center.get_point());
-            // draw
-            missile.draw(renderer);
-            // ajoute le point au vecteur qui répertorie tous les missiles
-            vm.push_back(missile);
-            break;
+            // // le couloir où le player se trouve
+            // Hall h = vh[player.get_n_hall()];
+            // // big line du couloir
+            // std::array<int,4> big_line = h.get_big_line();
+            // // Le missile
+            // Point missile;
+            // missile.set_point((big_line[0]+big_line[2])/2,(big_line[1]+big_line[3])/2);
+            // // le centre de la bigLine
+            // missile.set_dest(center.get_point());
+            // // draw
+            // missile.draw(renderer);
+            // // ajoute le point au vecteur qui répertorie tous les missiles
+            // vm.push_back(missile);
+            // break;
         }
         default:
             break;
@@ -113,22 +129,23 @@ void Game::update() {
     // Ajout de points au centre jusqu'aux extrémités de l'octogone
     // à des temps aléatoires < à 40000 millisecondes entre chacun
     // sur des couloirs aléatoires
-    if (SDL_GetTicks() - clock_new_p > (rand()%20000)) {
+    if (SDL_GetTicks() - clock_new_p > (rand()%2000000)) {
         // maj horloge
         clock_new_p = SDL_GetTicks();
-        // le point ajouté au centre de l'octogone
-        Point p;
-        p.set_point(center.get_point()[0], center.get_point()[1]);
+
         // un couloir aléatoire entre les 8 de l'octogone
         Hall hDest = vh[rand() % vh.size()];
-        // big line du couloir choisi
-        std::array<int,4> big_line = hDest.get_big_line();
-        // le centre de la bigLine
-        p.set_dest({(big_line[0]+big_line[2])/2, (big_line[1]+big_line[3])/2});
-        // draw
-        p.draw(renderer);
-        // ajoute le point au vecteur qui répertorie tous les points
-        vp.push_back(p);
+        Line small_line = hDest.get_small_line();
+        Line big_line = hDest.get_big_line();
+        Point c1 = small_line.inLine(0.5);
+        Point c2 = big_line.inLine(0.5);
+        Line l(c1, c2);
+        Point c = l.inLine(0.2);
+        Flippers f = Flippers("flippers", c, 10);
+        
+        f.set_dest(c2);
+        f.set_bigLine(big_line);
+        enemies.push_back(f);
     }
     // Si on a dépassé les TICK millisecondes, on update
     if (SDL_GetTicks() - clock > TICK) {
@@ -151,21 +168,21 @@ void Game::update() {
                 SDL_Rect r;
                 r.w = 1;
                 r.h = 1;
-                for (int j = 0; j<vp.size(); j++) {
-                    r.x = vp[j].get_point()[0];
-                    r.y = vp[j].get_point()[1];
-                    if (SDL_IntersectRectAndLine(&r, &last_x, &last_y, &vm[i].get_point()[0], &vm[i].get_point()[1]) == SDL_TRUE) {
+                for (int j = 0; j<enemies.size(); j++) {
+                    r.x = enemies[j].get_center().get_x();
+                    r.y = enemies[j].get_center().get_y();
+                    if (SDL_IntersectRectAndLine(&r, &last_x, &last_y, &r.x, &r.y) == SDL_TRUE) {
                         vm.erase(vm.begin()+i);
-                        vp.erase(vp.begin()+j);
+                        enemies.erase(enemies.begin()+j);
                         break;
                     }
                 }
             }
         }
-        // rapprochent missile ennemies
-        for (int i = 0; i<vp.size(); i++) {
-            if (vp[i].get_closer()) {
-                vp.erase(vp.begin()+i);
+
+         for (int i = 0; i<enemies.size(); i++) {
+            if (enemies[i].get_closer()) {
+                enemies.erase(enemies.begin()+i);
                 if (player.decr_life_point()) {
                     std::cout << "Game over !" << std::endl;
                     isRunning = false;
@@ -190,19 +207,25 @@ void Game::render() {
     renderColorYellow();
 
     // dessine tous ce qui doit être affiché
-
-    for (auto i : vp)
-        i.draw(renderer);
     
     center.draw(renderer);
     
     for (auto i : vm)
         i.draw(renderer);
 
+    renderColorRed();
+
+    for (auto i : enemies)
+        i.draw(renderer);
+
+    renderColorYellow();
+
     map->draw(renderer);
 
+   
     renderColorLightBlue();
-
+    
+    
     map->getHallList().at(player.get_n_hall()).draw(renderer);
 
     renderColorYellow();
@@ -245,4 +268,12 @@ void Game::renderColorYellow () {
  */
 void Game::renderColorLightBlue() {
     SDL_SetRenderDrawColor(renderer, 0, 255, 255, 1);
+}
+
+/**
+ * @brief Change la couleur pr dessiner en rouge
+ * 
+ */
+void Game::renderColorRed () {
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 }

@@ -64,7 +64,7 @@ protected:
     // le numéro du hall dans lequel le joueur se trouve
     int n_hall = 0;
     // point de vie
-    int life_point = 100;
+    int life_point = 20;
 };
 
 #endif

@@ -10,11 +10,11 @@ public:
 
     Enemy(){}
 
-    Enemy(std::string name, Point center, int w, int h){
+    Enemy(std::string name, Point center, Point ch, Hall h){
         this->name = name;
         this->center = center;
-        this->height = h;
-        this->width = w;
+        this->ch = ch;
+        this->hall = h;
     }
 
     // ~Enemy(){}
@@ -46,18 +46,21 @@ protected:
 
     std::vector<Line> lines;
     std::vector<Line> shadows;
+    // un rectangle contenant la forme
     std::string name;
     // destination de l'ennemi
     Point dest;
     // + la vitesse est haute + on se rapproche du centre avec get_closer
-    static int const speed = 20;
+    int speed = 10;
 
+    // couloir auquel appartient l'ennemi
+    Hall hall;
     // centre de gravité. Servira comme position de départ (initialisé au centre de la map)
     Point center;
+
+    Point ch;
     Line bigLine;
     // la taille du rectangle qui encadre l'ennemi
-    int width;
-    int height;
 };
 
 

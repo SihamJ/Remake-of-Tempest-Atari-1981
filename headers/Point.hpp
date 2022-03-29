@@ -104,13 +104,15 @@ public:
     }
 
     // retourne la distance euclidienne à un autre point
-    int euclideanDistance(Point p){
-        return sqrt(abs(this->get_x()-p.get_x()) * abs(this->get_y()-p.get_y()));
+    double euclideanDistance(Point p){
+        double dx = (double) abs(this->get_x() - p.get_x());
+        double dy = (double) abs(this->get_y() - p.get_y());
+        return sqrt( dx*dx + dy*dy );
     }
 
 private:
     // + la vitesse est haute + on se rapproche du centre avec get_closer
-    static int const speed = 3;
+    static int const speed = 10;
     // les coordonnées du point
     std::array<int, 2> p;
     // destination du point

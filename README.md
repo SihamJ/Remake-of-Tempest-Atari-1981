@@ -19,4 +19,4 @@ Pout télécharger le code et le compiler sur tous les systèmes vous pouvez uti
 # Utilisation
 
 	Flêches clavier pour changer de couloir
-	Clic gauche souris pour tirer des missiles
+	Espace pour tirer des missiles

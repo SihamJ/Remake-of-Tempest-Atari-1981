@@ -165,6 +165,7 @@ void Level::set_player_color(){
 // at this stage, we only have triangle map, so we will play at level 6 only
 void Level::next_level(){
     //this->current_level++;    
+    this->set_current_level(6);
     this->set_map();
     this->set_enemies();
     this->set_player_color();
@@ -174,7 +175,8 @@ void Level::next_level(){
 // TO DO: create the other enemies classes and uncomment the code
 
 std::shared_ptr<Enemy> Level::new_enemy(){
-    int i = rand() % this->current_enemies.size();
+    int i = 0;//rand() % this->current_enemies.size();
+    std::cout << current_enemies.size() << std::endl;
     Color color = this->current_enemies.at(i);
     std::shared_ptr<Enemy> e;
     

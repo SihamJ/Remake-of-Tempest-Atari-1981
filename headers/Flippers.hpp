@@ -42,6 +42,7 @@ public:
     bool intersect(Line l);    
 
 private:
+    const int scoring=150;
     
 };
 

@@ -46,24 +46,14 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
 
         this->level = std::make_shared<Level>();
 
-        std::cout << "level created" <<std::endl;
-
         this->level->next_level();
-
-        std::cout << "level built" <<std::endl;
 
         this->map = level->get_map();
 
-        std::cout << "get map " << this->map->get_name() << std::endl;
         // construction de la map
-        // map = std::make_unique<TriangleMap>(15, WIDTH, HEIGHT);
         map->build_map();
 
-        std::cout << "map built" <<std::endl;
-
         map->draw(renderer);
-
-        
 
          // récupère le point central de la Map
         center.set_point(map->get_center().get_x(), map->get_center().get_y());
@@ -149,7 +139,7 @@ void Game::update() {
         // maj horloge
         clock_new_p = SDL_GetTicks();
 
-        std::shared_ptr<Enemy> e = this->level->new_enemy();
+        std::shared_ptr<Enemy> enemy = this->level->new_enemy();
 
         // un couloir aléatoire entre les 8 de l'octogone
         Tunel hDest = vh[rand() % vh.size()];
@@ -165,15 +155,12 @@ void Game::update() {
 
         std::array<Point, 4> rect{small_line.get_p0(), small_line.get_p1(), p2, p3};
 
-        Point c = Point(Line(rect.at(0), rect.at(2)).intersect(Line(rect.at(1), rect.at(3))));
+        Point center = Point(Line(rect.at(0), rect.at(2)).intersect(Line(rect.at(1), rect.at(3))));
         
-        e->set(c, hDest, rect);
-        e->build();
-
-        // Flippers f {"flippers", c, hDest, rect};
+        enemy->set(center, hDest, rect);
+        enemy->build();
         
-        enemies.push_back(e);
-        std::cout << enemies.at(enemies.size()-1)->get_name() << std::endl;
+        enemies.push_back(enemy);
     }
     // Si on a dépassé les TICK millisecondes, on update
     if (SDL_GetTicks() - clock > TICK) {
@@ -244,7 +231,6 @@ void Game::render() {
 
     for (auto i : enemies){
         // on récupère la couleur de l'ennemi
-        std::cout << "drawing enemy " << i->get_name() << std::endl;
         render_color(i->get_color());
         i->draw(renderer);
     }

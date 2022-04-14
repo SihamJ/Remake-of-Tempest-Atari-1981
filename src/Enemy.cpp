@@ -12,14 +12,14 @@
         this->name = static_cast<std::string>("Enemy");
     }
 
-    Enemy::Enemy(const Point center, const Tunel h, const int scoring, const std::array<Point, 4> rect)
-        :  center(center), hall(h), scoring(scoring), rect(rect)
+    Enemy::Enemy(const Point center, const Tunel h, const std::array<Point, 4> rect)
+        :  center(center), hall(h), rect(rect)
     {
         name = static_cast<std::string>("Enemy");
     }
 
     Enemy::Enemy(const Enemy& other)
-        : name(other.name), center(other.center), hall(other.hall), scoring(other.scoring), rect(other.rect)
+        : name(other.name), center(other.center), hall(other.hall), rect(other.rect)
     {
 
     }
@@ -35,7 +35,7 @@
         this->bigLine = l;
     }
 
-    void Enemy::set(const Point center, const Tunel h, const std::array<Point, 4> rect){
+    void Enemy::set(Point center, const Tunel h, const std::array<Point, 4> rect){
         this->center = center;
         this->hall = h;
         this->rect = rect;

@@ -44,6 +44,8 @@ class Level {
         const std::map<int, Color> level1_16_characters  =  { { enemies_list::superzapper, Color(YELLOW) }, 
                                                                     { enemies_list::flippers, Color(RED) }, { enemies_list::tankers, Color(BLUE) }, 
                                                                     { enemies_list::spikers, Color(LIGHT_BLUE) } };
+        
+        // const std::map<int, Color> level1_16_characters  =  { { enemies_list::flippers, Color(RED) }, { enemies_list::flippers, Color(RED) }};
 
         const std::map<int, Color> level17_32_characters  = { { enemies_list::superzapper, Color(LIGHT_BLUE) }, 
                                                                     { enemies_list::flippers, Color(PURPLE) }, { enemies_list::tankers, Color(BLUE) }, 

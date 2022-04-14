@@ -13,7 +13,7 @@ public:
 
     Enemy(Color c);
 
-    Enemy(Point center, const Tunel h, const int scoring, std::array<Point, 4> rect);
+    Enemy(Point center, const Tunel h, std::array<Point, 4> rect);
 
     Enemy(const Enemy& other);
 
@@ -23,7 +23,7 @@ public:
     Point get_center();
     void set_bigLine(const Line l);
 
-    void set(const Point center, const Tunel h, const std::array<Point, 4> rect);
+    void set(Point center, const Tunel h, const std::array<Point, 4> rect);
 
     void draw(SDL_Renderer* renderer);
 
@@ -57,7 +57,7 @@ protected:
     Point dest;
     // + la vitesse est haute + on se rapproche du centre avec get_closer
     int speed = 10;
-    int scoring;
+    
     // couloir auquel appartient l'ennemi
     Tunel hall;
     // centre de gravité. Servira comme position de départ (initialisé au centre de la map)

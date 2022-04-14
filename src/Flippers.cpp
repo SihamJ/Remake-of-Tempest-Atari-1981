@@ -16,7 +16,7 @@ Flippers::Flippers(const char* name, Color c)
 
 //constructeur
 Flippers::Flippers(const char* name, const Point center, const Tunel h, const std::array<Point, 4> rect)
-    : Enemy(center, h, 150, rect)
+    : Enemy(center, h, rect)
 {
     this->name = static_cast<std::string>(name);
     build();

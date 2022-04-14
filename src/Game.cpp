@@ -26,12 +26,12 @@ Game::~Game() {
  * @param width la largeur de la fenêtre
  * @param height la hauteur de la fenêtre
  */
-void Game::init(const char *title, int xpos, int ypos, int width, int height, int flagsWindow, int flagsRenderer) {
+void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flagsRenderer) {
 
     if (SDL_Init(SDL_INIT_VIDEO) == 0) {
 		std::cout << "SDL Init" << std::endl;
 
-        window = SDL_CreateWindow(title, xpos, ypos, width, height, flagsWindow);
+        window = SDL_CreateWindow(title, xpos, ypos, WIDTH, HEIGHT, flagsWindow);
         if (window) {
             std::cout << "Window created" << std::endl;
         }
@@ -44,15 +44,31 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height, in
         // pr utiliser rand avec des valeurs randoms
         srand (time(NULL));
 
+        this->level = std::make_shared<Level>();
+
+        std::cout << "level created" <<std::endl;
+
+        this->level->next_level();
+
+        std::cout << "level built" <<std::endl;
+
+        this->map = level->get_map();
+
+        std::cout << "get map " << this->map->get_name() << std::endl;
         // construction de la map
-        map = std::make_unique<TriangleMap>(15, width, height);
-        map->buildMap();
+        // map = std::make_unique<TriangleMap>(15, WIDTH, HEIGHT);
+        map->build_map();
+
+        std::cout << "map built" <<std::endl;
+
         map->draw(renderer);
+
+        
 
          // récupère le point central de la Map
         center.set_point(map->get_center().get_x(), map->get_center().get_y());
 
-        vh = map->getHallList();
+        vh = map->get_hall_list();
         isRunning = true;
 
     }
@@ -67,7 +83,7 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height, in
  * @brief Gère les évènements de l'utilisateur (click souris/tape au clavier)
  * 
  */
-void Game::handleEvents() {
+void Game::handle_events() {
     SDL_Event event;
     SDL_PollEvent(&event);
     switch(event.type) {
@@ -77,14 +93,14 @@ void Game::handleEvents() {
         }
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_f) {
-                player.decr_n_hall(map->getNbHall());
+                player.decr_n_hall(map->get_nb_hall());
             }
             if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_j) {
-                player.incr_n_hall(map->getNbHall());
+                player.incr_n_hall(map->get_nb_hall());
             }
             if (event.key.keysym.sym == SDLK_SPACE){
                 // le couloir où le player se trouve
-                Hall h = vh[player.get_n_hall()];
+                Tunel h = vh[player.get_n_hall()];
                 // big line du couloir
                 std::array<int,4> big_line = h.get_big_line().get_coord();
                 // Le missile
@@ -133,8 +149,10 @@ void Game::update() {
         // maj horloge
         clock_new_p = SDL_GetTicks();
 
+        std::shared_ptr<Enemy> e = this->level->new_enemy();
+
         // un couloir aléatoire entre les 8 de l'octogone
-        Hall hDest = vh[rand() % vh.size()];
+        Tunel hDest = vh[rand() % vh.size()];
         Line small_line = hDest.get_small_line();
         Line big_line = hDest.get_big_line();
         double r1 = 0.2;
@@ -149,9 +167,13 @@ void Game::update() {
 
         Point c = Point(Line(rect.at(0), rect.at(2)).intersect(Line(rect.at(1), rect.at(3))));
         
-        Flippers f = Flippers("flippers", c, hDest, rect);
+        e->set(c, hDest, rect);
+        e->build();
+
+        // Flippers f {"flippers", c, hDest, rect};
         
-        enemies.push_back(f);
+        enemies.push_back(e);
+        std::cout << enemies.at(enemies.size()-1)->get_name() << std::endl;
     }
     // Si on a dépassé les TICK millisecondes, on update
     if (SDL_GetTicks() - clock > TICK) {
@@ -174,10 +196,10 @@ void Game::update() {
                
                 for (int j = 0; j<enemies.size(); j++) {
                     SDL_Rect r;
-                    r.w = ((Flippers) enemies[j]).get_rect().at(0).euclideanDistance(enemies[j].get_rect().at(1));
-                    r.h = ((Flippers) enemies[j]).get_rect().at(1).euclideanDistance(enemies[j].get_rect().at(2));
-                    r.x = enemies[j].get_center().get_x();
-                    r.y = enemies[j].get_center().get_y();
+                    r.w = enemies[j]->get_rect().at(0).euclideanDistance(enemies[j]->get_rect().at(1));
+                    r.h = enemies[j]->get_rect().at(1).euclideanDistance(enemies[j]->get_rect().at(2));
+                    r.x = enemies[j]->get_center().get_x();
+                    r.y = enemies[j]->get_center().get_y();
                     if (SDL_IntersectRectAndLine(&r, &last_x, &last_y, &last_x, &last_y) == SDL_TRUE) {
                         vm.erase(vm.begin()+i);
                         enemies.erase(enemies.begin()+j);
@@ -188,7 +210,7 @@ void Game::update() {
         }
 
          for (int i = 0; i<enemies.size(); i++) {
-            if (enemies[i].get_closer()) {
+            if (enemies[i]->get_closer()) {
                 enemies.erase(enemies.begin()+i);
                 if (player.decr_life_point()) {
                     std::cout << "Game over !" << std::endl;
@@ -206,37 +228,38 @@ void Game::update() {
  */
 void Game::render() {
     // clear la fenêtre en noir
-    renderColorBlack();
+    render_color(BLACK, 255);
     if (SDL_RenderClear(renderer) < 0) {
         std::cerr<<"Pb render clear SDL"<< std::endl;
         isRunning = false;
     }
     // tous les dessins seront en jaune
-    renderColorYellow();
+    render_color(YELLOW, 255);
 
     // dessine tous ce qui doit être affiché
-    
-    center.draw(renderer);
-    
+        
     for (auto i : vm)
         i.draw(renderer);
 
-    renderColorRed();
 
-    for (auto i : enemies)
-        i.draw(renderer);
+    for (auto i : enemies){
+        // on récupère la couleur de l'ennemi
+        std::cout << "drawing enemy " << i->get_name() << std::endl;
+        render_color(i->get_color());
+        i->draw(renderer);
+    }
 
-    renderColorYellow();
+    render_color(map->get_color());
 
     map->draw(renderer);
 
    
-    renderColorLightBlue();
+    render_color(LIGHT_BLUE, 255);
     
     
-    map->getHallList().at(player.get_n_hall()).draw(renderer);
+    map->get_hall_list().at(player.get_n_hall()).draw(renderer);
 
-    renderColorYellow();
+    render_color(YELLOW, 255);
     
     
     // màj du rendu
@@ -254,34 +277,20 @@ void Game::clean() {
     std::cout << "Game cleaned" << std::endl;
 }
 
-/**
- * @brief Change la couleur pr dessiner en noir
- * 
- */
-void Game::renderColorBlack () {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+void Game::render_color(Color c){
+    SDL_SetRenderDrawColor(renderer, c.get_r(), c.get_g(), c.get_b(), c.get_a());
 }
 
-/**
- * @brief Change la couleur pr dessiner en jaune
- * 
- */
-void Game::renderColorYellow () {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+
+void Game::render_color(const char* color){
+    Color c{color};
+    SDL_SetRenderDrawColor(renderer, c.get_r(), c.get_g(), c.get_b(), 255);
 }
 
-/**
- * @brief Change la couleur pr dessiner en blue clair
- * 
- */
-void Game::renderColorLightBlue() {
-    SDL_SetRenderDrawColor(renderer, 0, 255, 255, 1);
+void Game::render_color(const char* color, const int opacity){
+    Color c{color, opacity};
+    SDL_SetRenderDrawColor(renderer, c.get_r(), c.get_g(), c.get_b(), opacity);
 }
 
-/**
- * @brief Change la couleur pr dessiner en rouge
- * 
- */
-void Game::renderColorRed () {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-}
+bool Game::running() { return this->isRunning; }

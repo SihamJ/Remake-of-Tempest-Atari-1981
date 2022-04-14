@@ -11,18 +11,17 @@ class Point {
 
 public:
     // Constructeur
-    Point(){}
+    Point();
 
-    Point(int x, int y){
-        p[0] = x;
-        p[1] = y;
-    }
+    Point(int x, int y);
 
-    Point(std::array<int, 2> point){
-        p = point;
-    }
+    Point(float phi, float r);
+
+    Point(int x, int y, float phi, float r);
+
+    Point(std::array<int, 2> point);
     // Destructeur
-    ~Point(){}
+    ~Point();
 
     /**
      * @brief Set the point object
@@ -30,53 +29,46 @@ public:
      * @param x 
      * @param y 
      */
-    void set_point (int x, int y) {
-        p = {x, y};
-    }
+    void set_point (int x, int y);
 
     /**
      * @brief Get the point object
      * 
      * @return std::array<int, 2> 
      */
-    std::array<int, 2> get_point () {
-        return p;
-    }
+    std::array<int, 2> get_point ();
 
-    int get_x(){
-        return p[0];
-    }
+    int get_x();
 
-    int get_y(){
-        return p[1];
-    }
+    int get_y();
+
+    void set_polar(float phi, float r);
+
+    void set_cartesian(int x, int y);
+    
+    std::array<float, 2> cartesian_to_polar(int x, int y);
+
+    std::array<int, 2> polar_to_cartesian(float phi, float r);
 
     /**
      * @brief Dessine le point
      * 
      * @param renderer 
      */
-    void draw(SDL_Renderer* renderer) {
-        SDL_RenderDrawPoint(renderer, p[0], p[1]);
-    }
+    void draw(SDL_Renderer* renderer);
 
     /**
      * @brief Set the dest object
      * 
      * @param dest 
      */
-    void set_dest (std::array<int, 2> destination) {
-        dest = destination;
-    }
-
+    void set_dest (std::array<int, 2> destination);
     /**
      * @brief Get the dest object
      * 
      * @return std::array<int, 2> 
      */
-    std::array<int, 2> get_dest () {
-        return dest;
-    }
+    std::array<int, 2> get_dest () ;
 
     /**
      * @brief Rapproche le point de la destination 
@@ -84,31 +76,11 @@ public:
      *  
      * @return vrai si on a atteint l'objectif (= doit être détruit)
      */
-    bool get_closer() {
-        int diff_x = dest[0] - p[0];
-        int diff_y = dest[1] - p[1];
-        int coeff_x = (diff_x > 0) ? 1 : -1;
-        int coeff_y = (diff_y > 0) ? 1 : -1;
-        if (diff_x != 0 || diff_y != 0) {
-            p[0] += speed * diff_x / (coeff_x * diff_x + coeff_y * diff_y);
-            p[1] += speed * diff_y / (coeff_x * diff_x + coeff_y * diff_y);
-        }
-        int nv_coeff_x = ((dest[0] - p[0]) > 0) ? 1 : -1;
-        int nv_coeff_y = ((dest[1] - p[1]) > 0) ? 1 : -1;
-
-        // Si ça dépasse le centre, les points sont "détruits"
-        if ((nv_coeff_x != coeff_x) || (nv_coeff_y != coeff_y) || (p == dest)) {
-            return true;
-        }
-        return false;
-    }
+    bool get_closer();
 
     // retourne la distance euclidienne à un autre point
-    double euclideanDistance(Point p){
-        double dx = (double) abs(this->get_x() - p.get_x());
-        double dy = (double) abs(this->get_y() - p.get_y());
-        return sqrt( dx*dx + dy*dy );
-    }
+    double euclideanDistance(Point p);
+
 
 private:
     // + la vitesse est haute + on se rapproche du centre avec get_closer
@@ -117,6 +89,14 @@ private:
     std::array<int, 2> p;
     // destination du point
     std::array<int, 2> dest;
+
+    // coordonnées cartésiennes
+    int x;
+    int y;
+
+    //coordonnées polaires
+    float phi;
+    float r;
 
 };
 

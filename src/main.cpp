@@ -11,13 +11,13 @@ int main(int argc, char** argv) {
     // 480 et 420 à la place de windowpos_centered 
     // psq la fenêtre s'affiche entre mes deux écrans chez moi
     game->init("Tempest", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                1200, 800, SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI, 
+                SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI, 
                 SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
 
     int i = 0;
     // boucle principal
     while (game->running()) {
-        game->handleEvents();
+        game->handle_events();
         game->update();
         game->render();
         i++;

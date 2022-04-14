@@ -7,16 +7,17 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <memory>
-#include "Point.hpp"
 #include <vector>
+#include "Point.hpp"
 #include "Hall.hpp"
-#include "Map.hpp"
 #include "Player.hpp"
 #include "TriangleMap.hpp"
 #include "Enemy.hpp"
 #include "Flippers.hpp"
+#include "Color.hpp"
+#include "utils.hpp"
+#include "Level.hpp"
 
-#define TICK 100
 
 
 class Game {
@@ -25,23 +26,20 @@ public:
     Game();
     ~Game();
 
-    void init(const char *title, int xpos, int ypos, int width, int height, int flagsWindow, int flagsRenderer);
+    void init(const char *title, int xpos, int ypos, int flagsWindow, int flagsRenderer);
 
-    void handleEvents();
+    void handle_events();
     void update();
     void render();
     void clean();
-    void renderColorBlack();
-    void renderColorYellow();
-    void renderColorLightBlue();
-    void renderColorRed ();
-    /**
-     * @brief getter : the game is running ?
-     * 
-     * @return true 
-     * @return false 
-     */
-    bool running() { return isRunning; }
+
+    void render_color(Color c);
+    void render_color(const char* color);
+    void render_color(const char* color, int opacity);
+
+
+    // checks if the game is still running
+    bool running();
 
 private:
 
@@ -60,24 +58,29 @@ private:
     // rendu
     SDL_Renderer *renderer;
 
-    // L'ensemble des points (missile ennemi) et des missiles (missile alliés)
-    std::vector<Point> vp, vm;
+    // L'ensemble des points missiles alliés
+    std::vector<Point> vm;
 
-    // Vecteur des ennemies
-    std::vector<Flippers> enemies;
+    // Vecteur des ennemies courants
+    std::vector<std::shared_ptr<Enemy>> enemies;
 
-    // Le centre de l'octogone
+    // Le centre de la Map
     Point center;
 
-    // L'ensemble des traits pr former l'octogone
-    std::vector<Hall> vh;
+    // Ensemble des tunnels (Hall) de la Map courante
+    std::vector<Tunel> vh;
 
     // Le player
     Player player;
 
-    // Map
-    // Unique ptr car n'est pas copié.
-    std::unique_ptr<Map> map;
+    // Map courante
+    std::shared_ptr<Tube> map;
+
+    // Une partie est définie par plusieurs niveaux. Chaque niveau contient une Map et des ennemies qui le caractèrisent.
+    // Le jeu donc progresse d'un niveau à l'autre en mettant à jour l'attribut level
+    std::shared_ptr<Level> level;
+
+
 };
 
 #endif

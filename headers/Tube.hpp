@@ -24,7 +24,7 @@ public:
     void add_Hall (const Tunel h);
     void delete_hall();
     virtual void build_map();
-    void draw(SDL_Renderer* renderer);
+    void draw(std::shared_ptr<SDL_Renderer> renderer);
     void clear();
     std::string get_name();
 

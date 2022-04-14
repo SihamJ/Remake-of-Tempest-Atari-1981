@@ -1,5 +1,5 @@
 #include "../headers/Game.hpp"
-#include <cmath>
+
 
 /**
  * @brief Construct a new Game:: Game object
@@ -31,12 +31,12 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
     if (SDL_Init(SDL_INIT_VIDEO) == 0) {
 		std::cout << "SDL Init" << std::endl;
 
-        window = SDL_CreateWindow(title, xpos, ypos, WIDTH, HEIGHT, flagsWindow);
+        window = (sdl_shared<SDL_Window>(SDL_CreateWindow(title, xpos, ypos, WIDTH, HEIGHT, flagsWindow)));
         if (window) {
             std::cout << "Window created" << std::endl;
         }
 
-        renderer = SDL_CreateRenderer(window, -1, flagsRenderer);
+        renderer = (sdl_shared(SDL_CreateRenderer(window.get(), -1, flagsRenderer)));
         if (renderer) {
             std::cout << "Renderer created" << std::endl;
         }
@@ -106,22 +106,6 @@ void Game::handle_events() {
             }
             break;
         }
-        case SDL_MOUSEBUTTONDOWN: {
-            // // le couloir où le player se trouve
-            // Hall h = vh[player.get_n_hall()];
-            // // big line du couloir
-            // std::array<int,4> big_line = h.get_big_line();
-            // // Le missile
-            // Point missile;
-            // missile.set_point((big_line[0]+big_line[2])/2,(big_line[1]+big_line[3])/2);
-            // // le centre de la bigLine
-            // missile.set_dest(center.get_point());
-            // // draw
-            // missile.draw(renderer);
-            // // ajoute le point au vecteur qui répertorie tous les missiles
-            // vm.push_back(missile);
-            // break;
-        }
         default:
             break;
     }
@@ -135,16 +119,18 @@ void Game::update() {
     // Ajout de points au centre jusqu'aux extrémités de l'octogone
     // à des temps aléatoires < à 40000 millisecondes entre chacun
     // sur des couloirs aléatoires
-    if (SDL_GetTicks() - clock_new_p > (rand()%200000)) {
+    if (SDL_GetTicks() - clock_new_p > (rand()%1000000)) {
         // maj horloge
         clock_new_p = SDL_GetTicks();
 
         std::shared_ptr<Enemy> enemy = this->level->new_enemy();
 
-        // un couloir aléatoire entre les 8 de l'octogone
+        // un couloir aléatoire entre les couloirs de la map
         Tunel hDest = vh[rand() % vh.size()];
+
         Line small_line = hDest.get_small_line();
         Line big_line = hDest.get_big_line();
+
         double r1 = 0.2;
         
         Point p2 = Line(small_line.get_p1(), big_line.get_p1()).inLine(r1);
@@ -157,7 +143,8 @@ void Game::update() {
 
         Point center = Point(Line(rect.at(0), rect.at(2)).intersect(Line(rect.at(1), rect.at(3))));
         
-        enemy->set(center, hDest, rect);
+        // instead of copying values, we move them by rvalue reference. They won't be needed afterwards.
+        enemy->set(std::move(center), std::move(hDest), std::move(rect));
         enemy->build();
         
         enemies.push_back(enemy);
@@ -216,7 +203,7 @@ void Game::update() {
 void Game::render() {
     // clear la fenêtre en noir
     render_color(BLACK, 255);
-    if (SDL_RenderClear(renderer) < 0) {
+    if (SDL_RenderClear(renderer.get()) < 0) {
         std::cerr<<"Pb render clear SDL"<< std::endl;
         isRunning = false;
     }
@@ -231,16 +218,16 @@ void Game::render() {
 
     for (auto i : enemies){
         // on récupère la couleur de l'ennemi
-        render_color(i->get_color());
+        render_color(std::move(i->get_color()));
         i->draw(renderer);
     }
 
-    render_color(map->get_color());
+    render_color(std::move(map->get_color()));
 
     map->draw(renderer);
 
    
-    render_color(LIGHT_BLUE, 255);
+    render_color(YELLOW, 255);
     
     
     map->get_hall_list().at(player.get_n_hall()).draw(renderer);
@@ -249,7 +236,7 @@ void Game::render() {
     
     
     // màj du rendu
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer.get());
 }
 
 /**
@@ -257,26 +244,27 @@ void Game::render() {
  * 
  */
 void Game::clean() {
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window.get());
+    SDL_DestroyRenderer(renderer.get());
     SDL_Quit();
     std::cout << "Game cleaned" << std::endl;
 }
 
 
-void Game::render_color(Color c){
-    SDL_SetRenderDrawColor(renderer, c.get_r(), c.get_g(), c.get_b(), c.get_a());
+void Game::render_color(Color&& c){
+    SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), c.get_a());
 }
 
 
-void Game::render_color(const char* color){
-    Color c{color};
-    SDL_SetRenderDrawColor(renderer, c.get_r(), c.get_g(), c.get_b(), 255);
+void Game::render_color(std::string color){
+    Color c { std::move(color) };
+    SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), 255);
 }
 
-void Game::render_color(const char* color, const int opacity){
-    Color c{color, opacity};
-    SDL_SetRenderDrawColor(renderer, c.get_r(), c.get_g(), c.get_b(), opacity);
+void Game::render_color(std::string color, const int opacity){
+    Color c { std::move(color), opacity };
+    SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), opacity);
 }
 
 bool Game::running() { return this->isRunning; }
+

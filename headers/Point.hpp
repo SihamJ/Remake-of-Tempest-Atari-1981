@@ -6,6 +6,8 @@
 #include <tgmath.h>
 #include <vector>
 #include <string>
+#include <memory>
+#include "SDLWrapper.hpp"
 
 class Point {
 
@@ -19,7 +21,10 @@ public:
 
     Point(int x, int y, float phi, float r);
 
+    Point(const Point &other);
+
     Point(std::array<int, 2> point);
+
     // Destructeur
     ~Point();
 
@@ -55,7 +60,7 @@ public:
      * 
      * @param renderer 
      */
-    void draw(SDL_Renderer* renderer);
+    void draw(std::shared_ptr<SDL_Renderer> renderer);
 
     /**
      * @brief Set the dest object

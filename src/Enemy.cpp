@@ -3,27 +3,21 @@
    
     Enemy::Enemy()
     {
-        this->name = static_cast<std::string>("Enemy");
+        this->name = std::move(static_cast<std::string>("Enemy"));
     }
 
-    Enemy::Enemy(Color c) 
+    Enemy::Enemy(Color& c) 
         : color(c)
     {
-        this->name = static_cast<std::string>("Enemy");
+        this->name = std::move(static_cast<std::string>("Enemy"));
     }
 
-    Enemy::Enemy(const Point center, const Tunel h, const std::array<Point, 4> rect)
+    Enemy::Enemy(const Point& center, const Tunel& h, const std::array<Point, 4> &rect)
         :  center(center), hall(h), rect(rect)
     {
-        name = static_cast<std::string>("Enemy");
+        name = std::move(static_cast<std::string>("Enemy"));
     }
-
-    Enemy::Enemy(const Enemy& other)
-        : name(other.name), center(other.center), hall(other.hall), rect(other.rect)
-    {
-
-    }
-
+    
     // ~Enemy(){}
     Enemy::~Enemy(){}
 
@@ -31,17 +25,25 @@
         return this->center;
     }
 
-    void Enemy::set_bigLine(const Line l){
+    void Enemy::set_bigLine(const Line& l){
         this->bigLine = l;
     }
 
-    void Enemy::set(Point center, const Tunel h, const std::array<Point, 4> rect){
+    void Enemy::set(const Point& center, const Tunel& h, const std::array<Point, 4> &rect){
         this->center = center;
         this->hall = h;
         this->rect = rect;
     }
 
-    void Enemy::draw(SDL_Renderer* renderer){
+    void Enemy::set(Point&& center, Tunel&& h, std::array<Point, 4> &&rect){
+        std::cout << "moved values for enemy" << std::endl;
+        this->center = center;
+        this->hall = h;
+        this->rect = rect;
+        
+    }
+
+    void Enemy::draw(std::shared_ptr<SDL_Renderer> renderer){
         for (auto i : lines) {
             i.draw(renderer);
         }
@@ -63,7 +65,7 @@
         std::cout<< "base build" <<std::endl;
     }
 
-    bool Enemy::get_closer(){ return false;};
+    bool Enemy::get_closer(){ return false; }
     
     // virtual void move();
     // virtual void rotate();

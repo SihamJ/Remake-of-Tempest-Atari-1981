@@ -12,7 +12,7 @@ public:
     Character(){}
     ~Character(){}
 
-    virtual void draw(SDL_Renderer* renderer){
+    virtual void draw(std::shared_ptr<SDL_Renderer> renderer){
         for (auto i : lines) {
             i.draw(renderer);
         }

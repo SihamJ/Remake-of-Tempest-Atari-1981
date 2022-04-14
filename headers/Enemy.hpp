@@ -11,21 +11,20 @@ public:
 
     Enemy();
 
-    Enemy(Color c);
+    Enemy(Color& c);
 
-    Enemy(Point center, const Tunel h, std::array<Point, 4> rect);
-
-    Enemy(const Enemy& other);
+    Enemy(const Point& center, const Tunel& h, const std::array<Point, 4> &rect);
 
     // ~Enemy(){}
     ~Enemy();
 
     Point get_center();
-    void set_bigLine(const Line l);
+    void set_bigLine(const Line& l);
 
-    void set(Point center, const Tunel h, const std::array<Point, 4> rect);
+    void set(const Point& center, const Tunel& h, const std::array<Point, 4> &rect);
+    void set(Point&& center, Tunel&& h, std::array<Point, 4> &&rect);
 
-    void draw(SDL_Renderer* renderer);
+    void draw(std::shared_ptr<SDL_Renderer> renderer);
 
     virtual std::string get_name();
 

@@ -10,15 +10,16 @@ public:
     Flippers();
 
     //constructeur
-    Flippers(const char* name);
+    Flippers(std::string  name);
 
-    Flippers(const char* name, Color c);
+    Flippers(std::string  name, Color& c);
 
     //constructeur
-    Flippers(const char* name, const Point center, const Tunel h, const std::array<Point, 4> rect);
+    Flippers(std::string name, const Point& center, const Tunel& h, const std::array<Point, 4> &rect);
 
     //constructeur par copie
     Flippers(const Flippers &other);
+
 
     //destructeur
     ~Flippers();
@@ -27,12 +28,12 @@ public:
 
     void clean();
 
-    std::vector<Line> get_lines(){return this->lines; }
+    std::vector<Line> get_lines(){ return this->lines; }
 
-    void set_dest (const Point destination);
-    void set_tunnel(const Tunel h);
+    void set_dest (const Point& destination);
+    void set_tunnel(const Tunel& h);
     void set_rect(const std::array<Point, 4> rect);
-    void set_center(const Point center);
+    void set_center(const Point& center);
     
 
     std::string get_name(){ return "Flippers";}

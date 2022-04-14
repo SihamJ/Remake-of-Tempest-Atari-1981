@@ -46,7 +46,7 @@ void Tube::delete_hall(){
 
 void Tube::build_map(){}
 
-void Tube::draw(SDL_Renderer* renderer) {
+void Tube::draw(std::shared_ptr<SDL_Renderer> renderer) {
     for (auto i : hallList) {
         i.draw(renderer);
     }

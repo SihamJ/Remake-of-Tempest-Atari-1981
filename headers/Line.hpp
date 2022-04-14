@@ -59,7 +59,7 @@ public:
      */
     Point inLine(double ratio );
 
-    void draw(SDL_Renderer* renderer);
+    void draw(std::shared_ptr<SDL_Renderer> renderer);
 
 private:
     std::array<Point, 2> points;

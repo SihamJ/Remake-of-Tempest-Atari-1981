@@ -8,8 +8,9 @@
 #include <time.h>       /* time */
 #include <memory>
 #include <vector>
+#include <cmath>
+
 #include "Point.hpp"
-#include "Hall.hpp"
 #include "Player.hpp"
 #include "TriangleMap.hpp"
 #include "Enemy.hpp"
@@ -17,7 +18,7 @@
 #include "Color.hpp"
 #include "utils.hpp"
 #include "Level.hpp"
-
+#include "SDLWrapper.hpp"
 
 
 class Game {
@@ -33,9 +34,9 @@ public:
     void render();
     void clean();
 
-    void render_color(Color c);
-    void render_color(const char* color);
-    void render_color(const char* color, int opacity);
+    void render_color(Color&& c);
+    void render_color(std::string color);
+    void render_color(std::string color, int opacity);
 
 
     // checks if the game is still running
@@ -53,10 +54,10 @@ private:
     bool isRunning;
 
     // fenêtre
-    SDL_Window *window;
+    std::shared_ptr<SDL_Window> window;
 
     // rendu
-    SDL_Renderer *renderer;
+    std::shared_ptr<SDL_Renderer> renderer;
 
     // L'ensemble des points missiles alliés
     std::vector<Point> vm;

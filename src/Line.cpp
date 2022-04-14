@@ -137,7 +137,7 @@ Point Line::inLine(double ratio ){
     return Point{x,y};
 }
 
-void Line::draw(SDL_Renderer* renderer){
-    SDL_RenderDrawLine(renderer, points[0].get_x(), points[0].get_y(), points[1].get_x(), points[1].get_y());
+void Line::draw(std::shared_ptr<SDL_Renderer> renderer){
+    SDL_RenderDrawLine(renderer.get(), points[0].get_x(), points[0].get_y(), points[1].get_x(), points[1].get_y());
 }
 

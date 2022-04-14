@@ -22,6 +22,14 @@
     Point::Point(std::array<int, 2> point){
         p = point;
     }
+
+    Point::Point(const Point &other)
+        : x(other.x), y(other.y), phi(other.phi), r(other.r), p(other.p), dest(other.dest)
+    {
+
+    }
+
+
     // Destructeur
     Point::~Point(){}
 
@@ -93,8 +101,8 @@
      * 
      * @param renderer 
      */
-    void Point::draw(SDL_Renderer* renderer) {
-        SDL_RenderDrawPoint(renderer, this->x, this->y);
+    void Point::draw( std::shared_ptr<SDL_Renderer> renderer) {
+        SDL_RenderDrawPoint(renderer.get(), this->x, this->y);
     }
 
     /**

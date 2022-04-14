@@ -10,13 +10,12 @@ class Color {
     public:
         Color();
 
-        Color(const int r, const int g, const int b);
-        Color(const char* stream);
+        Color(const int& r, const int& g, const int& b);
+        Color(std::string&& stream);
 
-        Color(const int r, const int g, const int b, const int a);
-        Color(const char* stream, const int opacity);
+        Color(const int& r, const int& g, const int& b, const int& a);
+        Color(std::string&& stream, const int& opacity);
 
-        Color(const Color& other);
 
 
         ~Color();

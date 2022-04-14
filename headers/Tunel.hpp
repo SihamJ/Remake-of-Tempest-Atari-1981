@@ -96,7 +96,7 @@ public:
      * 
      * @param renderer 
      */
-    void draw(SDL_Renderer* renderer) {
+    void draw(std::shared_ptr<SDL_Renderer> renderer) {
         lines[0].draw(renderer);
         lines[1].draw(renderer);
         Line l1(lines[0].get_p1(), lines[1].get_p1());

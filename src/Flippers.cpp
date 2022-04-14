@@ -3,22 +3,22 @@
 Flippers::Flippers(){}
 
 //constructeur
-Flippers::Flippers(const char* name)
+Flippers::Flippers(std::string name)
 {
-    this->name = static_cast<std::string>(name);
+    this->name = std::move(name);
 }
 
-Flippers::Flippers(const char* name, Color c)
+Flippers::Flippers(std::string  name, Color& c)
     : Flippers(name) 
 {
     this->color = c;
 }
 
 //constructeur
-Flippers::Flippers(const char* name, const Point center, const Tunel h, const std::array<Point, 4> rect)
+Flippers::Flippers(std::string name, const Point& center, const Tunel& h, const std::array<Point, 4> &rect)
     : Enemy(center, h, rect)
 {
-    this->name = static_cast<std::string>(name);
+    this->name = std::move(name);
     build();
 }
 
@@ -35,11 +35,11 @@ Flippers::~Flippers(){}
 
 
 
-void Flippers::set_dest (const Point destination){
+void Flippers::set_dest (const Point& destination){
     this->dest = destination;
 }
 
-void Flippers::set_tunnel(const Tunel h){
+void Flippers::set_tunnel(const Tunel& h){
     this->hall = h;
 }
 
@@ -47,12 +47,12 @@ void Flippers::set_rect(const std::array<Point, 4> rect){
     this->rect = rect;
 }
 
-void Flippers::set_center(const Point center){
+void Flippers::set_center(const Point& center){
     this->center = center;
 }
 
 void Flippers::build() {
-    std::cout << "Flippers build" << std::endl;
+    // std::cout << "Flippers build" << std::endl;
     //line 1
     Point p0, p1, p2, p3, p4, p5;
     std::array<Line, 6> l;

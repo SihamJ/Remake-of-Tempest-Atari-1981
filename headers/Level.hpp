@@ -9,6 +9,7 @@
 #include "Enemy.hpp"
 #include "TriangleMap.hpp"
 #include "Flippers.hpp"
+#include "Spikers.hpp"
 #include "utils.hpp"
 #include "Color.hpp"
 

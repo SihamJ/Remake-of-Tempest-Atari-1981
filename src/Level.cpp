@@ -175,7 +175,7 @@ void Level::next_level(){
 // TO DO: create the other enemies classes and uncomment the code
 
 std::shared_ptr<Enemy> Level::new_enemy(){
-    int i = 0;//rand() % this->current_enemies.size();
+    int i = rand() % 3;
     std::cout << current_enemies.size() << std::endl;
     Color color = this->current_enemies.at(i);
     std::shared_ptr<Enemy> e;
@@ -184,6 +184,9 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     {
     case enemies_list::flippers:
         e = std::make_shared<Flippers>("flippers", color);
+        break;
+    case enemies_list::spikers:
+        e = std::make_shared<Spikers>("spikers", color);
         break;
     // case enemies_list::tankers:
     //     e = std::make_shared<Tankers>("tankers", color);

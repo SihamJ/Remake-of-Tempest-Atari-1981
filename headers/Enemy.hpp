@@ -24,7 +24,7 @@ public:
     void set(const Point& center, const Tunel& h, const std::array<Point, 4> &rect);
     void set(Point&& center, Tunel&& h, std::array<Point, 4> &&rect);
 
-    void draw(std::shared_ptr<SDL_Renderer> renderer);
+    virtual void draw(std::shared_ptr<SDL_Renderer> renderer);
 
     virtual std::string get_name();
 

@@ -66,6 +66,21 @@ protected:
     // la taille du rectangle qui encadre l'ennemi
 
     std::array<Point, 4> rect;
+
+    // coordonnee de l'image (top left corner du carré)
+    double x, y;
+
+    // taille initial de l'image
+    const int init_width = 57;
+    const int init_height = 64;
+
+    // taille à changer pr agrandir ou rétrécir l'image de l'ennemi
+    int width = 57;
+    int height = 64;
+
+    // angle de rotation de l'image
+    double angle;
+
 };
 
 

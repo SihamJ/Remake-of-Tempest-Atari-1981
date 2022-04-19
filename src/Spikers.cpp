@@ -1,4 +1,5 @@
 #include "../headers/Spikers.hpp"
+#include <cmath>
 
 Spikers::Spikers(){}
 
@@ -26,7 +27,7 @@ Spikers::Spikers(std::string name, const Point& center, const Tunel& h, const st
 Spikers::Spikers(const Spikers &other) 
     : Enemy(other)
 { 
-     this->name = static_cast<std::string>("Spikers");
+    this->name = static_cast<std::string>("Spikers");
     build();
 }
 
@@ -109,48 +110,69 @@ void Spikers::clean(){
  * @return vrai si on a atteint l'objectif (= doit être détruit)
  */
 bool Spikers::get_closer() {
+    // avance de 3% // todo avec speed, ptetre un 0.003 * speed 
+    double ratio = 0.03;
 
-    Line l1, l2, l3, l4;
-    l1 = Line(rect.at(0), hall.get_big_line().get_p0());
-    l2 = Line(rect.at(1), hall.get_big_line().get_p1());
-    l3 = Line(rect.at(2), hall.get_big_line().get_p1());
-    l4 = Line(rect.at(3), hall.get_big_line().get_p0());
+    double init_dist = hall.get_small_line().get_p0().euclideanDistance(hall.get_small_line().get_p1());
 
-    double r0, r1, r2, r3;
-    r0 = 1.0 / (double) speed; r1 = r0; 
-    r2 = 2*r0; r3 = 2*r0;   
+    double init_w = init_dist/3.0;
+    double init_h = init_dist/3.0;
 
-    // if(l3.length() > 0 && l1.length() > 0)
-    //     r2 = r0 * l1.length() / l3.length();
-    // if(l4.length() > 0 && l1.length() > 0)
-    //     r3 = r0 * l1.length() / l4.length(); 
+    // Point centre_small_line = hall.get_small_line().inLine(0.5);
 
-    this->rect.at(0) = l1.inLine(r0);
-    this->rect.at(1) = l2.inLine(r1);
-    this->rect.at(2) = l3.inLine(r2);
-    this->rect.at(3) = l4.inLine(r3);
+    // double init_x = centre_small_line.get_x() - (init_w/2);
+    // double init_y = centre_small_line.get_y() - (init_h/2);
 
-    this->center = Line(rect.at(0), rect.at(2)).intersect(Line(rect.at(1), rect.at(3)));
+    // Line center_line_test = Line{Point{static_cast<int>(init_x+(init_w/2.0)), static_cast<int>(init_y+(init_h/2.0))}, hall.get_big_line().inLine(0.5)};
 
-    this->clean();
-    this->build();
 
-    // TO DO: rendre speed proportionnelle à la position dans le couloir
-    speed--;
+
+    Line center_line = Line{hall.get_small_line().inLine(0.5), hall.get_big_line().inLine(0.5)};
+
+    double x1 = center_line.get_p0().get_x();
+    double y1 = center_line.get_p0().get_y();
+ 
+    Point coord_vector = center_line.inLine(ratio);
+
+    double x2 = coord_vector.get_x();
+    double y2 = coord_vector.get_y();
+
+    double diff_x = x2 - x1;
+    double diff_y = y2 - y1;
+
+    this->x += diff_x;
+    this->y += diff_y;
+
+    double l1 = hall.get_big_line().get_p0().euclideanDistance(hall.get_big_line().get_p1());
+    double l2 = hall.get_small_line().get_p0().euclideanDistance(hall.get_small_line().get_p1());
+
+    double dist = l1 / l2;
+
+    
+
+    double ajout_w = (((dist * init_w) - init_w) * ratio);
+    double ajout_h = (((dist * init_h) - init_h) * ratio);
+
+    this->width += ajout_w;
+    this->height += ajout_h;
+
+    this->x -= (ajout_w/2.0);
+    this->y -= (ajout_h/2.0);
+
+    angle += 30;
+
     return intersect(this->hall.get_big_line());
 }
 
 bool Spikers::intersect(Line l) {
-    SDL_Rect r;
-    r.w = (int) rect.at(0).euclideanDistance(rect.at(1));
-    r.h = (int) rect.at(1).euclideanDistance(rect.at(2));
-    r.x = center.get_x();
-    r.y = center.get_y();
+    SDL_Rect r = {static_cast<int>(this->x), static_cast<int>(this->y), this->width, this->height};
 
     int x1 = l.get_p0().get_x();
     int y1 = l.get_p0().get_y();
     int x2 = l.get_p1().get_x();
     int y2 = l.get_p1().get_y();
+
+    // printf("%d %d %d %d %d %d %d %d \n", this->x, this->y, this->width, this->height, x1, y1, x2, y2);
 
     return SDL_IntersectRectAndLine(&r, &x1, &y1, &x2, &y2);
 
@@ -164,28 +186,8 @@ void Spikers::draw(std::shared_ptr<SDL_Renderer> renderer) {
         return;
     }
 
-    // Trouver la position et la taille du rectangle du spiker
-    int x = rect.at(0).get_x();
-    int y = rect.at(0).get_y();
-    int width = 0;
-    int height = 0;
-    for (auto p : rect) {
-        if (p.get_x() < x)
-            x = p.get_x();
-        
-        if (p.get_y() < y)
-            y = p.get_y();
-    }
-    for (auto p : rect) {
-        if (p.get_x() - x > width)
-            width = p.get_x() - x;
-        
-        if (p.get_y() - y > height)
-            height = p.get_y() - y;
-    }
-
     // dessiner le spiker
-    SDL_Rect dest_rect = {x, y, width, height};
+    SDL_Rect dest_rect = {static_cast<int>(x), static_cast<int>(y), init_width, init_height};
     SDL_Texture* monImage = SDL_CreateTextureFromSurface(renderer.get(), image);  //La texture monImage contient maintenant l'image importée
     SDL_FreeSurface(image); //Équivalent du destroyTexture pour les surface, permet de libérer la mémoire quand on n'a plus besoin d'une surface
 
@@ -194,7 +196,10 @@ void Spikers::draw(std::shared_ptr<SDL_Renderer> renderer) {
         return;
     }
 
-    if (SDL_RenderCopy(renderer.get(), monImage, NULL, &dest_rect) != 0) {
+    dest_rect.w = width;
+    dest_rect.h = height;
+
+    if (SDL_RenderCopyEx(renderer.get(), monImage, NULL, &dest_rect, angle, NULL, SDL_FLIP_NONE) != 0) {
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
     }

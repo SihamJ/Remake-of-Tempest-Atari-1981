@@ -91,6 +91,10 @@ public:
         return lines;
     }
 
+    float length(){
+        return this->get_small_line().inLine(0.5).euclideanDistance(this->get_big_line().inLine(0.5));
+    }
+
     /**
      * @brief dessine les deux lignes
      * 

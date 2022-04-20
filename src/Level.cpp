@@ -189,9 +189,9 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     
     switch (i)
     {
-    case enemies_list::flippers:
-        e = std::make_shared<Flippers>("flippers", color);
-        break;
+    // case enemies_list::flippers:
+    //     e = std::make_shared<Flippers>("flippers", color);
+    //     break;
     case enemies_list::spikers:
         e = std::make_shared<Spikers>("spikers", color);
         break;
@@ -210,7 +210,7 @@ std::shared_ptr<Enemy> Level::new_enemy(){
 
     // we don't have the other enemies for now, so we generate only flippers by default
     default:
-        e = std::make_shared<Flippers>("flippers", color);
+        e = std::make_shared<Spikers>("spikers", color);
         break;
     }
     return e;

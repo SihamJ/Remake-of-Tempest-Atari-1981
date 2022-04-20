@@ -29,10 +29,16 @@
         this->bigLine = l;
     }
 
-    void Enemy::set(const Point& center, const Tunel& h, const std::array<Point, 4> &rect){
+    Tunel Enemy::get_hall(){
+        return this->hall;
+    }
+
+    void Enemy::set(const Point& center, const Point& start, const Tunel& h, const std::array<Point, 4> &rect){
         this->center = center;
         this->hall = h;
         this->rect = rect;
+        this->start = start;
+        this->dest = this->hall.get_big_line().inLine(0.5);
 
         int dist = hall.get_small_line().get_p0().euclideanDistance(hall.get_small_line().get_p1());
         width = dist/3;
@@ -71,11 +77,13 @@
         }
     }
 
-    void Enemy::set(Point&& center, Tunel&& h, std::array<Point, 4> &&rect){
+    void Enemy::set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect){
         std::cout << "moved values for enemy" << std::endl;
         this->center = center;
         this->hall = h;
         this->rect = rect;
+        this->start = start;
+        this->dest = h.get_big_line().inLine(0.5);
 
         int dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
         width = dist/3;

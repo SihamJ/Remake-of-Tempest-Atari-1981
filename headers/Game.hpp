@@ -20,6 +20,7 @@
 #include "Level.hpp"
 #include "SDLWrapper.hpp"
 #include "missile.hpp"
+#include "Collision.hpp"
 
 class Game {
 
@@ -83,6 +84,7 @@ private:
     // Le jeu donc progresse d'un niveau à l'autre en mettant à jour l'attribut level
     std::shared_ptr<Level> level;
 
+    std::vector<Collision> collisions;
 
 };
 

@@ -126,6 +126,7 @@ void Game::handle_events() {
  * 
  */
 void Game::update() {
+    
     // Ajout de points au centre jusqu'aux extrémités de l'octogone
     // à des temps aléatoires < à 40000 millisecondes entre chacun
     // sur des couloirs aléatoires
@@ -145,6 +146,7 @@ void Game::update() {
         
         Point p2 = Line(small_line.get_p1(), big_line.get_p1()).inLine(r1);
 
+        // THALES
         double r2 = r1 * small_line.get_p1().euclideanDistance(big_line.get_p1()) / small_line.get_p0().euclideanDistance(big_line.get_p0()) ;
 
         Point p3 = Line(small_line.get_p0(), big_line.get_p0()).inLine(r2);
@@ -153,14 +155,16 @@ void Game::update() {
 
         Point center = Point(Line(rect.at(0), rect.at(2)).intersect(Line(rect.at(1), rect.at(3))));
         
-        // instead of copying values, we move them by rvalue reference. They won't be needed afterwards.
-        enemy->set(std::move(center), std::move(hDest), std::move(rect));
-        enemy->build();
+        //instead of copying values, we move them by rvalue reference. They won't be needed afterwards.
+        enemy->set(std::move(center), std::move(small_line.inLine(0.5)), std::move(hDest), std::move(rect));
+        //enemy->build();
         
         enemies.push_back(enemy);
     }
     // Si on a dépassé les TICK millisecondes, on update
     if (SDL_GetTicks() - clock > TICK) {
+
+        // collisions.clear();
         // affiche l'horloge
         // std::cout << clock << std::endl;
         // vérifier qu'on delete les points
@@ -191,6 +195,10 @@ void Game::update() {
 
                     SDL_Rect result;
                     if (SDL_IntersectRect(&r_enemy, &r_missile, &result)){
+                        // Collision c { Point(result.x, result.y), Color(PURPLE), 2.0};
+                        // c.build();
+                        // render_color(PURPLE);
+                        // collisions.push_back(c);
                         enemies.erase(enemies.begin()+j);
                         break;
                     }
@@ -238,6 +246,10 @@ void Game::render() {
 
     render_color(std::move(map->get_color()));
     map->draw(renderer);
+
+    // for (auto i : collisions){
+    //     i.draw(renderer);
+    // }
 
     // plus besoin
     // render_color(YELLOW, 255);

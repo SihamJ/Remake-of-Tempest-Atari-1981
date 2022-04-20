@@ -52,50 +52,7 @@ void Spikers::set_center(const Point& center){
     this->center = center;
 }
 
-void Spikers::build() {
-    // std::cout << "Spikers build" << std::endl;
-    //line 1
-    Point p0, p1, p2, p3, p4, p5;
-    std::array<Line, 6> l;
-    
-    p0 = rect.at(0);
-    p1 = rect.at(2);
-    p3 = rect.at(1);
-    p4 = rect.at(3);
-
-    Line l2 = Line(p1, p3);
-    Point p = l2.inLine(0.5);
-    Line l3 = Line(center, p);
-    p2 = l3.inLine(0.5);
-
-    l2.set_line(p0, p4);
-    p = l2.inLine(0.5);
-    l3 = Line(center, p);
-    p5 = l3.inLine(0.5);
-
-    // p2.set_point(p1.get_x() -  ,center.get_y());
-
-    l[0] = Line(p0, p1);
-
-    // p3.set_point(center.get_x() + 5*(wx - center.get_x())/3 , center.get_y() - ch.get_y()/2);
-    l[1] = Line(p1, p2);
-
-    // p4.set_point(p2.get_x(), p2.get_y() + 2*ch.get_y()/3);
-    l[2] = Line(p2, p3);
-
-    // p5.set_point(p1.get_x(), p1.get_y() - 2*ch.get_y()/3);
-    l[3] = Line(p3, p4);
-
-    // p6.set_point(wx - 5*(wx - center.get_x())/3 , center.get_y() - ch.get_y()/2);
-    l[4] = Line(p4, p5);
-
-    l[5] = Line(p5, p0);
-
-    for(auto i : l){
-        this->lines.push_back(i);
-    }
-
-}
+void Spikers::build() {}
 
 void Spikers::clean(){
     this->lines.clear();
@@ -111,21 +68,15 @@ void Spikers::clean(){
  */
 bool Spikers::get_closer() {
     // avance de 3% // todo avec speed, ptetre un 0.003 * speed 
-    double ratio = 0.03;
+    double h0 = 0.03;
+    double z = Point(static_cast<int>(this->x), static_cast<int>(this->y)).euclideanDistance(this->dest);
+    double d = this->start.euclideanDistance(this->dest);
+    double ratio = 1 - ( (1-h0) / (d*d) ) * (z*z);
 
     double init_dist = hall.get_small_line().get_p0().euclideanDistance(hall.get_small_line().get_p1());
 
     double init_w = init_dist/3.0;
     double init_h = init_dist/3.0;
-
-    // Point centre_small_line = hall.get_small_line().inLine(0.5);
-
-    // double init_x = centre_small_line.get_x() - (init_w/2);
-    // double init_y = centre_small_line.get_y() - (init_h/2);
-
-    // Line center_line_test = Line{Point{static_cast<int>(init_x+(init_w/2.0)), static_cast<int>(init_y+(init_h/2.0))}, hall.get_big_line().inLine(0.5)};
-
-
 
     Line center_line = Line{hall.get_small_line().inLine(0.5), hall.get_big_line().inLine(0.5)};
 
@@ -147,8 +98,6 @@ bool Spikers::get_closer() {
     double l2 = hall.get_small_line().get_p0().euclideanDistance(hall.get_small_line().get_p1());
 
     double dist = l1 / l2;
-
-    
 
     double ajout_w = (((dist * init_w) - init_w) * ratio);
     double ajout_h = (((dist * init_h) - init_h) * ratio);

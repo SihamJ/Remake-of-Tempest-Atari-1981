@@ -16,4 +16,5 @@ std::shared_ptr<T> sdl_shared(T *t) {
     return std::shared_ptr<T>(t, [](T *t) { SDL_DelRes(t); });
 }
 
+
 #endif

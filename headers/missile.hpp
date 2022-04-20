@@ -53,13 +53,13 @@ class Missile {
 
 
         bool get_closer(){
-            // avance de 3% // todo avec speed, ptetre un 0.003 * speed 
-            //this->ratio = 1.0 / (this->pos.euclideanDistance(this->dest)) * 2.0;
+
+
             double h0 = 0.03;
             double z = this->pos.euclideanDistance(this->dest);
             double d = this->start.euclideanDistance(this->dest);
 
-            this->ratio = 1 - ( (1-h0) / (d*d) ) * (z*z);
+            double ratio = 1 - ( (1-h0) / (d*d) ) * (z*z);
             this->pos = Line(this->start, this->dest).inLine(ratio);
 
             return intersect(this->hall.get_small_line());

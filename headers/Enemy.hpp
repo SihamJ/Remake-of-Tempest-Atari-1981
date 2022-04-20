@@ -21,12 +21,14 @@ public:
     Point get_center();
     void set_bigLine(const Line& l);
 
-    void set(const Point& center, const Tunel& h, const std::array<Point, 4> &rect);
-    void set(Point&& center, Tunel&& h, std::array<Point, 4> &&rect);
+    void set(const Point& center, const Point& start, const Tunel& h, const std::array<Point, 4> &rect);
+    void set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect);
 
     virtual void draw(std::shared_ptr<SDL_Renderer> renderer);
 
     virtual std::string get_name();
+
+    Tunel get_hall();
 
     std::vector<Line> get_lines();
 
@@ -54,6 +56,8 @@ protected:
 
     // destination de l'ennemi
     Point dest;
+
+    Point start;
     // + la vitesse est haute + on se rapproche du centre avec get_closer
     int speed = 10;
     

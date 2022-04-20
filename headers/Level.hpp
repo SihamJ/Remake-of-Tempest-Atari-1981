@@ -22,6 +22,7 @@ class Level {
         int get_current_level();
         std::map<int, Color> get_enemies();
         Color get_player_color();
+        Color get_map_color();
         const int get_nb_enemies();
         void next_level();
         std::shared_ptr<Enemy> new_enemy();

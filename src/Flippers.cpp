@@ -9,9 +9,9 @@ Flippers::Flippers(std::string name)
 }
 
 Flippers::Flippers(std::string  name, Color& c)
-    : Flippers(name) 
+    : Enemy(c)
 {
-    this->color = c;
+    this->name = name;
 }
 
 //constructeur

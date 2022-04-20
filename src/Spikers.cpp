@@ -10,9 +10,9 @@ Spikers::Spikers(std::string name)
 }
 
 Spikers::Spikers(std::string  name, Color& c)
-    : Spikers(name) 
+    : Enemy(c)
 {
-    this->color = c;
+    this->name = name;
 }
 
 //constructeur

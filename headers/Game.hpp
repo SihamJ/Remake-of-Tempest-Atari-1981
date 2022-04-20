@@ -19,7 +19,7 @@
 #include "utils.hpp"
 #include "Level.hpp"
 #include "SDLWrapper.hpp"
-
+#include "missile.hpp"
 
 class Game {
 
@@ -60,7 +60,9 @@ private:
     std::shared_ptr<SDL_Renderer> renderer;
 
     // L'ensemble des points missiles alliés
-    std::vector<Point> vm;
+    // std::vector<Point> vm;
+
+    std::vector<std::shared_ptr<Missile>> vm;
 
     // Vecteur des ennemies courants
     std::vector<std::shared_ptr<Enemy>> enemies;

@@ -27,6 +27,7 @@ public:
     void draw(std::shared_ptr<SDL_Renderer> renderer);
     void clear();
     std::string get_name();
+    Tunel get_hall(int index);
 
 protected:
     int width;

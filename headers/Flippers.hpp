@@ -20,7 +20,6 @@ public:
     //constructeur par copie
     Flippers(const Flippers &other);
 
-
     //destructeur
     ~Flippers();
 

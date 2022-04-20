@@ -20,6 +20,10 @@ Color Level::get_player_color(){
     return this->current_player_color;
 }
 
+Color Level::get_map_color(){
+    return this->map->get_color();
+}
+
 void Level::print(){
     std::cout << "This is level " << this->current_level << std::endl;
     std::cout << "The tube is " << this->map->get_name() << std::endl;

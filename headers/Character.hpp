@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include "Line.hpp"
+#include "Color.hpp"
+#include "Tunel.hpp"
 
 class Character {
 
@@ -18,9 +20,22 @@ public:
         }
     }
 
-private:
+    virtual void clean(){
+        this->lines.clear();
+    }
+
+    virtual void build()=0;
+
+    std::vector<Line> get_lines(){ return this->lines; }
+    std::string get_name(){ return this->name; }
+    Color get_color(){ return this->color; }
+
+protected:
+
     std::vector<Line> lines;
     std::string name;
+    Color color;
+    Tunel hall;
 };
 
 #endif

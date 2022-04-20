@@ -3,38 +3,34 @@
 
 #include "Character.hpp"
 
-class Player : protected Character {
+
+class Player : public Character {
 
 public:
     // Constructeur
-    Player(){}
+    Player();
     // Destructeur
-    ~Player(){}
+    ~Player();
+
+    Player(const int& n_hall, const Tunel& hall, const Color& c);
 
     /**
      * @brief Get the n hall object
      * 
      * @return int 
      */
-    int get_n_hall() {
-        return n_hall;
-    }
+    int get_n_hall();
 
     /**
      * @brief incrémente le numéro du hall
      * 
      */
-    void incr_n_hall(int nbHall) {
-        n_hall = (n_hall + 1) % nbHall;
-    }
-
+    void incr_n_hall(int nbHall, const Tunel& h);
     /**
      * @brief décremente le numéro du hall
      * 
      */
-    void decr_n_hall(int nbHall) {
-        n_hall = (n_hall - 1 + nbHall) % nbHall;
-    }
+    void decr_n_hall(int nbHall, const Tunel&h);
 
     /**
      * @brief decremente les pdv et renvoie vrai si le player est mort
@@ -43,21 +39,17 @@ public:
      * @return true 
      * @return false 
      */
-    bool decr_life_point() {
-        if ((--life_point) <= 0) {
-            return true;
-        }
-        return false;
-    }
+    bool decr_life_point();
 
     /**
      * @brief Get the life point object
      * 
      * @return int 
      */
-    int get_life_point() {
-        return life_point;
-    }
+    int get_life_point();
+
+    void build() override;
+
 
 
 protected:
@@ -65,6 +57,7 @@ protected:
     int n_hall = 0;
     // point de vie
     int life_point = 20;
+
 };
 
 #endif

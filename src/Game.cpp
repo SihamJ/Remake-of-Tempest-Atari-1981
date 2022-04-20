@@ -53,7 +53,14 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
         // construction de la map
         map->build_map();
 
+        render_color(level->get_map_color());
+
         map->draw(renderer);
+
+        render_color(level->get_player_color());
+
+        this->player = Player(0, map->get_hall(0), this->level->get_player_color());
+        this->player.draw(renderer);
 
          // récupère le point central de la Map
         center.set_point(map->get_center().get_x(), map->get_center().get_y());
@@ -83,10 +90,10 @@ void Game::handle_events() {
         }
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_f) {
-                player.decr_n_hall(map->get_nb_hall());
+                player.decr_n_hall(map->get_nb_hall(), map->get_hall((player.get_n_hall() -1 + map->get_nb_hall())%map->get_nb_hall()));
             }
             if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_j) {
-                player.incr_n_hall(map->get_nb_hall());
+                player.incr_n_hall(map->get_nb_hall(), map->get_hall( (player.get_n_hall()+1) % map->get_nb_hall()));
             }
             if (event.key.keysym.sym == SDLK_SPACE){
                 // le couloir où le player se trouve
@@ -94,14 +101,17 @@ void Game::handle_events() {
                 // big line du couloir
                 std::array<int,4> big_line = h.get_big_line().get_coord();
                 // Le missile
-                Point missile;
-                missile.set_point((big_line[0]+big_line[2])/2,(big_line[1]+big_line[3])/2);
-                // le centre de la bigLine
-                missile.set_dest(center.get_point());
-                // draw
-                missile.draw(renderer);
+                // Point missile;
+                // missile.set_point((big_line[0]+big_line[2])/2,(big_line[1]+big_line[3])/2);
+                // // le centre de la bigLine
+                // missile.set_dest(center.get_point());
+                // // draw
+                // missile.draw(renderer);
+                std::shared_ptr<Missile> m = std::make_shared<Missile>(h);
+                m->set(std::move(h));
+                m->draw(renderer);
                 // ajoute le point au vecteur qui répertorie tous les missiles
-                vm.push_back(missile);
+                vm.push_back(m);
                 break;
             }
             break;
@@ -160,22 +170,27 @@ void Game::update() {
         // Rapproche tous les missiles de leur destination
         // détruit le missile si il a atteint sa cible
         for (int i = 0; i<vm.size(); i++) {
-            if (vm[i].get_closer()) {
+            if (vm[i]->get_closer()) {
                 vm.erase(vm.begin()+i);
             }
             else {
                 // test si y a collision entre missiles alliés et ennemies
-                int last_x = vm[i].get_point()[0];
-                int last_y = vm[i].get_point()[1];
+
+                SDL_Rect r_missile;
+                r_missile.w = vm[i]->get_width();
+                r_missile.h = vm[i]->get_height();
+                r_missile.x = vm[i]->get_x();
+                r_missile.y = vm[i]->get_y();
                
                 for (int j = 0; j<enemies.size(); j++) {
-                    SDL_Rect r;
-                    r.w = enemies[j]->get_rect().at(0).euclideanDistance(enemies[j]->get_rect().at(1));
-                    r.h = enemies[j]->get_rect().at(1).euclideanDistance(enemies[j]->get_rect().at(2));
-                    r.x = enemies[j]->get_center().get_x();
-                    r.y = enemies[j]->get_center().get_y();
-                    if (SDL_IntersectRectAndLine(&r, &last_x, &last_y, &last_x, &last_y) == SDL_TRUE) {
-                        vm.erase(vm.begin()+i);
+                    SDL_Rect r_enemy;
+                    r_enemy.w = enemies[j]->get_rect().at(0).euclideanDistance(enemies[j]->get_rect().at(1));
+                    r_enemy.h = enemies[j]->get_rect().at(1).euclideanDistance(enemies[j]->get_rect().at(2));
+                    r_enemy.x = enemies[j]->get_center().get_x();
+                    r_enemy.y = enemies[j]->get_center().get_y();
+
+                    SDL_Rect result;
+                    if (SDL_IntersectRect(&r_enemy, &r_missile, &result)){
                         enemies.erase(enemies.begin()+j);
                         break;
                     }
@@ -207,13 +222,12 @@ void Game::render() {
         std::cerr<<"Pb render clear SDL"<< std::endl;
         isRunning = false;
     }
-    // tous les dessins seront en jaune
-    render_color(YELLOW, 255);
 
+    render_color(YELLOW, 255);
+    
     // dessine tous ce qui doit être affiché
-        
     for (auto i : vm)
-        i.draw(renderer);
+        i->draw(renderer);
 
 
     for (auto i : enemies){
@@ -223,17 +237,16 @@ void Game::render() {
     }
 
     render_color(std::move(map->get_color()));
-
     map->draw(renderer);
 
-   
-    render_color(YELLOW, 255);
-    
-    
-    map->get_hall_list().at(player.get_n_hall()).draw(renderer);
+    // plus besoin
+    // render_color(YELLOW, 255);
+    // map->get_hall_list().at(player.get_n_hall()).draw(renderer);
+
+    render_color(std::move(level->get_player_color()));    
+    player.draw(renderer);
 
     render_color(YELLOW, 255);
-    
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());

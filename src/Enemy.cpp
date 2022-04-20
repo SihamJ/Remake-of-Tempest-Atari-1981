@@ -7,8 +7,8 @@
     }
 
     Enemy::Enemy(Color& c) 
-        : color(c)
     {
+        this->color = c;
         this->name = std::move(static_cast<std::string>("Enemy"));
     }
 

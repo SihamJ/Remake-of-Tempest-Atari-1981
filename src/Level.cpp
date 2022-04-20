@@ -175,8 +175,12 @@ void Level::next_level(){
 // TO DO: create the other enemies classes and uncomment the code
 
 std::shared_ptr<Enemy> Level::new_enemy(){
-    int i = rand() % 2;
-    if (i == 1) i++;
+    // affiche que des flippers et spikers
+    // int i = rand() % 2;
+    // if (i == 1) i++;
+
+    // force à afficher que des spikers
+    int i = 2;
 
     // int i = 2;
     std::cout << current_enemies.size() << std::endl;

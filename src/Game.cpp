@@ -92,7 +92,7 @@ void Game::handle_events() {
                 // le couloir où le player se trouve
                 Tunel h = vh[player.get_n_hall()];
                 // big line du couloir
-                std::array<int,4> big_line = h.get_big_line().get_coord();
+                std::array<double,4> big_line = h.get_big_line().get_coord();
                 // Le missile
                 Point missile;
                 missile.set_point((big_line[0]+big_line[2])/2,(big_line[1]+big_line[3])/2);

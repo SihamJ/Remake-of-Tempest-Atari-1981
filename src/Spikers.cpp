@@ -53,48 +53,8 @@ void Spikers::set_center(const Point& center){
 }
 
 void Spikers::build() {
-    // std::cout << "Spikers build" << std::endl;
-    //line 1
-    Point p0, p1, p2, p3, p4, p5;
-    std::array<Line, 6> l;
-    
-    p0 = rect.at(0);
-    p1 = rect.at(2);
-    p3 = rect.at(1);
-    p4 = rect.at(3);
-
-    Line l2 = Line(p1, p3);
-    Point p = l2.inLine(0.5);
-    Line l3 = Line(center, p);
-    p2 = l3.inLine(0.5);
-
-    l2.set_line(p0, p4);
-    p = l2.inLine(0.5);
-    l3 = Line(center, p);
-    p5 = l3.inLine(0.5);
-
-    // p2.set_point(p1.get_x() -  ,center.get_y());
-
-    l[0] = Line(p0, p1);
-
-    // p3.set_point(center.get_x() + 5*(wx - center.get_x())/3 , center.get_y() - ch.get_y()/2);
-    l[1] = Line(p1, p2);
-
-    // p4.set_point(p2.get_x(), p2.get_y() + 2*ch.get_y()/3);
-    l[2] = Line(p2, p3);
-
-    // p5.set_point(p1.get_x(), p1.get_y() - 2*ch.get_y()/3);
-    l[3] = Line(p3, p4);
-
-    // p6.set_point(wx - 5*(wx - center.get_x())/3 , center.get_y() - ch.get_y()/2);
-    l[4] = Line(p4, p5);
-
-    l[5] = Line(p5, p0);
-
-    for(auto i : l){
-        this->lines.push_back(i);
-    }
-
+    // Evalue le random point
+    random_p = ((rand() % 725) / 1000.0) + 0.25;
 }
 
 void Spikers::clean(){
@@ -110,8 +70,36 @@ void Spikers::clean(){
  * @return vrai si on a atteint l'objectif (= doit être détruit)
  */
 bool Spikers::get_closer() {
+
+    Point center_big_line = hall.get_big_line().inLine(0.5);
+    Point center_small_line = hall.get_small_line().inLine(0.5);
+
+    Line center_line = Line{center_small_line, center_big_line};
+
+    Point rand_p = center_line.inLine(random_p);
+
     // avance de 3% // todo avec speed, ptetre un 0.003 * speed 
     double ratio = 0.03;
+
+    SDL_Rect r = {static_cast<int>(x), static_cast<int>(y), 5, 5};
+
+    if (state != 1) {
+
+        // sert à savoir quand le spiker doit s'arrêter
+        int x1 = rand_p.get_x() - (center_big_line.get_y() - rand_p.get_y());
+        int y1 = rand_p.get_y() - (center_big_line.get_x() - rand_p.get_x());
+        int x2 = rand_p.get_x() + (center_big_line.get_y() - rand_p.get_y());
+        int y2 = rand_p.get_y() + (center_big_line.get_x() - rand_p.get_x());
+
+
+        // si le spiker a atteint sa cible
+        if (SDL_IntersectRectAndLine(&r, &x1, &y1, &x2, &y2) == SDL_TRUE)
+            state = 1;
+        
+    }
+
+    
+    
 
     double init_dist = hall.get_small_line().get_p0().euclideanDistance(hall.get_small_line().get_p1());
 
@@ -127,7 +115,6 @@ bool Spikers::get_closer() {
 
 
 
-    Line center_line = Line{hall.get_small_line().inLine(0.5), hall.get_big_line().inLine(0.5)};
 
     double x1 = center_line.get_p0().get_x();
     double y1 = center_line.get_p0().get_y();
@@ -140,19 +127,30 @@ bool Spikers::get_closer() {
     double diff_x = x2 - x1;
     double diff_y = y2 - y1;
 
-    this->x += diff_x;
-    this->y += diff_y;
+
+    // printf("diff_x : %f, diff_y : %f \n", diff_x, diff_y);
 
     double l1 = hall.get_big_line().get_p0().euclideanDistance(hall.get_big_line().get_p1());
     double l2 = hall.get_small_line().get_p0().euclideanDistance(hall.get_small_line().get_p1());
 
     double dist = l1 / l2;
 
+
+    double ajout_w = ((dist * init_w) - init_w) * ratio;
+    double ajout_h = ((dist * init_h) - init_h) * ratio;
     
+    if (state == 1) {
+        this->x -= diff_x;
+        this->y -= diff_y;
 
-    double ajout_w = (((dist * init_w) - init_w) * ratio);
-    double ajout_h = (((dist * init_h) - init_h) * ratio);
-
+        ajout_w *= (-1);
+        ajout_h *= (-1);
+    }
+    else {
+        this->x += diff_x;
+        this->y += diff_y;
+    }
+    
     this->width += ajout_w;
     this->height += ajout_h;
 
@@ -161,7 +159,19 @@ bool Spikers::get_closer() {
 
     angle += 30;
 
-    return intersect(this->hall.get_big_line());
+    if (state == 1) {
+        int x1 = hall.get_small_line().get_p0().get_x();
+        int y1 = hall.get_small_line().get_p0().get_y();
+        int x2 = hall.get_small_line().get_p1().get_x();
+        int y2 = hall.get_small_line().get_p1().get_y();
+
+        if (SDL_IntersectRectAndLine(&r, &x1, &y1, &x2, &y2) == SDL_TRUE)
+            state = 2;
+    }
+
+    return false;
+
+    // return intersect(this->hall.get_big_line());
 }
 
 bool Spikers::intersect(Line l) {
@@ -202,5 +212,19 @@ void Spikers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     if (SDL_RenderCopyEx(renderer.get(), monImage, NULL, &dest_rect, angle, NULL, SDL_FLIP_NONE) != 0) {
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
+    }
+
+    Point center_small_line = hall.get_small_line().inLine(0.5);
+
+    if (state == 0) {
+        SDL_RenderDrawLine(renderer.get(), center_small_line.get_x(), center_small_line.get_y(), x + (width/2.0), y + (height/2.0));
+    }
+    else {
+        Point center_big_line = hall.get_big_line().inLine(0.5);
+        Line center_line = Line{center_small_line, center_big_line};
+
+        Point rand_p = center_line.inLine(random_p);
+
+        SDL_RenderDrawLine(renderer.get(), center_small_line.get_x(), center_small_line.get_y(), rand_p.get_x(), rand_p.get_y());
     }
 }

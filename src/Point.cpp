@@ -2,7 +2,7 @@
 
     Point::Point(){}
 
-    Point::Point(int x, int y){
+    Point::Point(double x, double y){
         this->x = x;
         this->y = y;
     }
@@ -19,7 +19,7 @@
         this->r = r;
     }
 
-    Point::Point(std::array<int, 2> point){
+    Point::Point(std::array<double, 2> point){
         p = point;
     }
 
@@ -39,7 +39,7 @@
      * @param x 
      * @param y 
      */
-    void Point::set_point (int x, int y) {
+    void Point::set_point (double x, double y) {
         this->x = x;
         this->y = y;
     }
@@ -49,15 +49,15 @@
      * 
      * @return std::array<int, 2> 
      */
-    std::array<int, 2> Point::get_point () {
+    std::array<double, 2> Point::get_point () {
         return {this->x, this->y};
     }
 
-    int Point::get_x(){
+    double Point::get_x(){
         return this->x;
     }
 
-    int Point::get_y(){
+    double Point::get_y(){
         return this->y;
     }
 
@@ -110,7 +110,7 @@
      * 
      * @param dest 
      */
-    void Point::set_dest (std::array<int, 2> destination) {
+    void Point::set_dest (std::array<double, 2> destination) {
         dest = destination;
     }
 
@@ -119,7 +119,7 @@
      * 
      * @return std::array<int, 2> 
      */
-    std::array<int, 2> Point::get_dest () {
+    std::array<double, 2> Point::get_dest () {
         return dest;
     }
 

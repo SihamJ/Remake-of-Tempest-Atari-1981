@@ -15,7 +15,7 @@ public:
     // Constructeur
     Point();
 
-    Point(int x, int y);
+    Point(double x, double y);
 
     Point(float phi, float r);
 
@@ -23,7 +23,7 @@ public:
 
     Point(const Point &other);
 
-    Point(std::array<int, 2> point);
+    Point(std::array<double, 2> point);
 
     // Destructeur
     ~Point();
@@ -34,18 +34,18 @@ public:
      * @param x 
      * @param y 
      */
-    void set_point (int x, int y);
+    void set_point (double x, double y);
 
     /**
      * @brief Get the point object
      * 
      * @return std::array<int, 2> 
      */
-    std::array<int, 2> get_point ();
+    std::array<double, 2> get_point ();
 
-    int get_x();
+    double get_x();
 
-    int get_y();
+    double get_y();
 
     void set_polar(float phi, float r);
 
@@ -67,13 +67,13 @@ public:
      * 
      * @param dest 
      */
-    void set_dest (std::array<int, 2> destination);
+    void set_dest (std::array<double, 2> destination);
     /**
      * @brief Get the dest object
      * 
      * @return std::array<int, 2> 
      */
-    std::array<int, 2> get_dest () ;
+    std::array<double, 2> get_dest () ;
 
     /**
      * @brief Rapproche le point de la destination 
@@ -91,13 +91,13 @@ private:
     // + la vitesse est haute + on se rapproche du centre avec get_closer
     static int const speed = 10;
     // les coordonnées du point
-    std::array<int, 2> p;
+    std::array<double, 2> p;
     // destination du point
-    std::array<int, 2> dest;
+    std::array<double, 2> dest;
 
     // coordonnées cartésiennes
-    int x;
-    int y;
+    double x;
+    double y;
 
     //coordonnées polaires
     float phi;

@@ -94,7 +94,7 @@ void Line::redefine_parameters(){
     }
 }
 
-std::array<int, 4> Line::get_coord(){
+std::array<double, 4> Line::get_coord(){
     return {points[0].get_x(), points[0].get_y(), points[1].get_x(), points[1].get_y()};
 }
 
@@ -127,12 +127,12 @@ double Line::length(){
  * @return Point
  */
 Point Line::inLine(double ratio ){
-    int x, y;
-    int coeff1 = points[0].get_x() <= points[1].get_x() ? 1 : -1;
-    int coeff2 = points[0].get_y() <= points[1].get_y() ? 1 : -1;
+    double x, y;
+    double coeff1 = points[0].get_x() <= points[1].get_x() ? 1. : -1.;
+    double coeff2 = points[0].get_y() <= points[1].get_y() ? 1. : -1.;
 
-    x = (int) ((double)points[0].get_x() + (double)(coeff1 * abs(points[1].get_x() - points[0].get_x())) * ratio);
-    y = (int) ((double)points[0].get_y() + (double)(coeff2 * abs(points[1].get_y() - points[0].get_y())) * ratio);
+    x = (double)points[0].get_x() + (double)(coeff1 * abs(points[1].get_x() - points[0].get_x())) * ratio;
+    y = (double)points[0].get_y() + (double)(coeff2 * abs(points[1].get_y() - points[0].get_y())) * ratio;
 
     return Point{x,y};
 }

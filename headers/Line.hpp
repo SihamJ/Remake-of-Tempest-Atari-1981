@@ -42,7 +42,7 @@ public:
 
     void redefine_parameters();
 
-    std::array<int, 4> get_coord();
+    std::array<double, 4> get_coord();
 
     /**
      * @brief retourne le point d'intersection avec la droite passant par la ligne l

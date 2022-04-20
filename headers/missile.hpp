@@ -55,7 +55,7 @@ class Missile {
         bool get_closer(){
             // avance de 3% // todo avec speed, ptetre un 0.003 * speed 
             //this->ratio = 1.0 / (this->pos.euclideanDistance(this->dest)) * 2.0;
-            double h0 = 0.1;
+            double h0 = 0.03;
             double z = this->pos.euclideanDistance(this->dest);
             double d = this->start.euclideanDistance(this->dest);
 

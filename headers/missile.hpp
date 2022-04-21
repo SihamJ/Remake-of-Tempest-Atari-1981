@@ -66,7 +66,7 @@ class Missile {
         }
 
         bool intersect(Line l) {
-            SDL_Rect r = {this->pos.get_x(), this->pos.get_y(), this->width, this->height};
+            SDL_Rect r = {static_cast<int>(this->pos.get_x()), static_cast<int>(this->pos.get_y()), this->width, this->height};
 
             int x1 = l.get_p0().get_x();
             int y1 = l.get_p0().get_y();
@@ -88,7 +88,7 @@ class Missile {
             }
 
             // dessiner le spiker
-            SDL_Rect dest_rect = { this->pos.get_x(), this->pos.get_y(), init_width, init_height};
+            SDL_Rect dest_rect = { static_cast<int>(this->pos.get_x()), static_cast<int>(this->pos.get_y()), init_width, init_height};
             SDL_Texture* monImage = SDL_CreateTextureFromSurface(renderer.get(), image);  //La texture monImage contient maintenant l'image importée
             SDL_FreeSurface(image); //Équivalent du destroyTexture pour les surface, permet de libérer la mémoire quand on n'a plus besoin d'une surface
 

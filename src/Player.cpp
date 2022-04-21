@@ -43,6 +43,14 @@
         return life_point;
     }
 
+    int Player::get_score(){
+        return this->score;
+    }
+
+    void Player::incr_score(int points){
+        this->score += points;
+    }
+
     void Player::build(){
 
         Line big_line = this->hall.get_big_line();
@@ -71,5 +79,6 @@
         this->lines.push_back(Line(p5, p6));
         this->lines.push_back(Line(p6, p7));
         this->lines.push_back(Line(p7, p0));
+
     }
 

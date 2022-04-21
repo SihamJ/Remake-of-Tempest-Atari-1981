@@ -130,7 +130,7 @@ void Game::update() {
     // Ajout de points au centre jusqu'aux extrémités de l'octogone
     // à des temps aléatoires < à 40000 millisecondes entre chacun
     // sur des couloirs aléatoires
-    if (SDL_GetTicks() - clock_new_p > (rand()%1000000)) {
+    if (SDL_GetTicks() - clock_new_p > (rand()%500000)) {
         // maj horloge
         clock_new_p = SDL_GetTicks();
 
@@ -158,7 +158,6 @@ void Game::update() {
         //instead of copying values, we move them by rvalue reference. They won't be needed afterwards.
         enemy->set(std::move(center), std::move(small_line.inLine(0.5)), std::move(hDest), std::move(rect));
         enemy->build();
-        
         enemies.push_back(enemy);
     }
     // Si on a dépassé les TICK millisecondes, on update
@@ -199,6 +198,9 @@ void Game::update() {
                         // c.build();
                         // render_color(PURPLE);
                         // collisions.push_back(c);
+                        player.incr_score(enemies.at(j)->get_scoring());
+                        std::cout << "score: " << player.get_score() << std::endl;
+
                         enemies.erase(enemies.begin()+j);
                         vm.erase(vm.begin()+i);
                         break;
@@ -207,14 +209,43 @@ void Game::update() {
             }
         }
 
-         for (int i = 0; i<enemies.size(); i++) {
+        for (int i = 0; i<enemies.size(); i++) {
             if (enemies[i]->get_closer()) {
                 enemies.erase(enemies.begin()+i);
-                if (player.decr_life_point()) {
-                    std::cout << "Game over !" << std::endl;
-                    isRunning = false;
+            }
+        }
+
+        // collision entre missile et player
+        Line  l1_player{ player.get_lines().at(0)};
+        Line l2_player{ player.get_lines().at(3)};
+
+        int x1, x2, x3, x4, y1, y2, y3, y4;
+        x1 = static_cast<int>(l1_player.get_p0().get_x());
+        y1 = static_cast<int>(l1_player.get_p0().get_y());
+        x2 = static_cast<int>(l1_player.get_p1().get_x());
+        y2 = static_cast<int>(l1_player.get_p1().get_y());
+
+        x3 = static_cast<int>(l2_player.get_p0().get_x());
+        y3 = static_cast<int>(l2_player.get_p0().get_y());
+        x4 = static_cast<int>(l2_player.get_p1().get_x());
+        y4 = static_cast<int>(l2_player.get_p1().get_y());
+
+        for (int j = 0; j<enemies.size(); j++) {
+            SDL_Rect r_enemy;
+            r_enemy.w = enemies[j]->get_rect().at(0).euclideanDistance(enemies[j]->get_rect().at(1));
+            r_enemy.h = enemies[j]->get_rect().at(1).euclideanDistance(enemies[j]->get_rect().at(2));
+            r_enemy.x = enemies[j]->get_center().get_x();
+            r_enemy.y = enemies[j]->get_center().get_y();
+
+            // collision missile et player
+            if (SDL_IntersectRectAndLine(&r_enemy, &x1, &y1, &x2, &y2) 
+                    || SDL_IntersectRectAndLine(&r_enemy, &x3, &y3, &x4, &y4)) 
+                {
+                    std::cout << "collision player enemy" << std::endl;
+                    if(player.decr_life_point()){
+                        std::cout << "GAME OVER" << std::endl;
+                        this->isRunning = false;
                 }
-                std::cout << player.get_life_point() << std::endl;
             }
         }
     }
@@ -283,12 +314,12 @@ void Game::render_color(Color&& c){
 
 
 void Game::render_color(std::string color){
-    Color c { std::move(color) };
+    Color c { "", std::move(color) };
     SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), 255);
 }
 
 void Game::render_color(std::string color, const int opacity){
-    Color c { std::move(color), opacity };
+    Color c { "", std::move(color), opacity };
     SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), opacity);
 }
 

@@ -78,7 +78,7 @@ void Level::set_map(){
     //     this->map = std::make_shared<StylizedCross>();
     //     break;
     case maps_list::triangle:
-        this->map = std::make_shared<TriangleMap>(15, WIDTH, HEIGHT, c);
+        this->map = std::make_shared<TriangleMap>(9, WIDTH, HEIGHT, c);
         break;
     // case maps_list::clover:
     //     this->map = std::make_shared<Clover>();
@@ -111,7 +111,7 @@ void Level::set_map(){
     //     this->map = std::make_shared<InfinitySymbol>();
     //     break;
     default:
-        this->map = std::make_shared<TriangleMap>(15, WIDTH, HEIGHT, c);
+        this->map = std::make_shared<TriangleMap>(9, WIDTH, HEIGHT, c);
         break;
     }
 }
@@ -180,22 +180,21 @@ void Level::next_level(){
 
 std::shared_ptr<Enemy> Level::new_enemy(){
     // affiche que des flippers et spikers
-    // int i = rand() % 2;
-    // if (i == 1) i++;
+    int i = rand() % 2;
+    if (i == 1) i++;
 
     // force à afficher que des spikers
-    int i = 2;
+    //int i = 0;
 
     // int i = 2;
-    std::cout << current_enemies.size() << std::endl;
     Color color = this->current_enemies.at(i);
     std::shared_ptr<Enemy> e;
     
     switch (i)
     {
-    // case enemies_list::flippers:
-    //     e = std::make_shared<Flippers>("flippers", color);
-    //     break;
+    case enemies_list::flippers:
+        e = std::make_shared<Flippers>("flippers", color);
+        break;
     case enemies_list::spikers:
         e = std::make_shared<Spikers>("spikers", color);
         break;

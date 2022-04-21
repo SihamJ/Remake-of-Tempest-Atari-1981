@@ -7,40 +7,27 @@ class Spikers : public Enemy {
 
 public:
 
-    //constructeur
     Spikers();
-
-    //constructeur
     Spikers(std::string name);
-
-    //constructeur
     Spikers(std::string name, Color& c);
-
-    //constructeur
     Spikers(std::string name, const Point& center, const Tunel& h, const std::array<Point, 4> &rect);
-
-    //constructeur par copie
     Spikers(const Spikers &other);
 
-
-    //destructeur
     ~Spikers();
 
     void build() override;
-
-    void clean();
-
-    std::vector<Line> get_lines(){ return this->lines; }
+    const int get_scoring() override;
 
     void set_dest (const Point& destination);
     void set_tunnel(const Tunel& h);
     void set_rect(const std::array<Point, 4> rect);
     void set_center(const Point& center);
-    
+
+    void set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect) override;
 
     std::string get_name(){ return "Spikers";}
 
-    bool get_closer();
+    bool get_closer() override;
 
     bool intersect(Line l);
 
@@ -59,6 +46,10 @@ private:
     * 2 : il avance vers le point, avec la ligne déjà tracé
     */
     int state = 0;
+
+    // taille initial de l'image
+    const int init_width = 57;
+    const int init_height = 64;
     
 };
 

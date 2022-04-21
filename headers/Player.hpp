@@ -48,6 +48,9 @@ public:
      */
     int get_life_point();
 
+    int get_score();
+    void incr_score(int points);
+
     void build() override;
 
 
@@ -57,6 +60,7 @@ protected:
     int n_hall = 0;
     // point de vie
     int life_point = 20;
+    int score = 0;
 
 };
 

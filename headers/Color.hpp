@@ -10,11 +10,11 @@ class Color {
     public:
         Color();
 
-        Color(const int& r, const int& g, const int& b);
-        Color(std::string&& stream);
+        Color(std::string name, const int& r, const int& g, const int& b);
+        Color(std::string name, std::string&& stream);
 
-        Color(const int& r, const int& g, const int& b, const int& a);
-        Color(std::string&& stream, const int& opacity);
+        Color(std::string name, const int& r, const int& g, const int& b, const int& a);
+        Color(std::string name, std::string&& stream, const int& opacity);
 
 
 
@@ -24,13 +24,14 @@ class Color {
         const int get_g();
         const int get_b();
         const int get_a();
-        const void print();
+        std::string get_name();
 
     private:
         int r;
         int g;
         int b;
         int a=255;
+        std::string name;
 };
 
 

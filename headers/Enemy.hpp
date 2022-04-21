@@ -10,77 +10,56 @@ class Enemy {
 public:
 
     Enemy();
-
     Enemy(Color& c);
-
     Enemy(const Point& center, const Tunel& h, const std::array<Point, 4> &rect);
 
-    // ~Enemy(){}
     ~Enemy();
 
     Point get_center();
-    void set_bigLine(const Line& l);
-
-    void set(const Point& center, const Point& start, const Tunel& h, const std::array<Point, 4> &rect);
-    void set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect);
-
-    virtual void draw(std::shared_ptr<SDL_Renderer> renderer);
-
-    virtual std::string get_name();
-
     Tunel get_hall();
-
     std::vector<Line> get_lines();
-
     std::array<Point, 4> get_rect();
-
     Color get_color();
+    virtual std::string get_name();
+    virtual const int get_scoring()=0;
 
-    virtual void build();
-    virtual bool get_closer();
-    
-    // virtual void move();
-    // virtual void rotate();
-    // virtual void destroy();
-    // virtual void resize();
-    // virtual void replace();
+    virtual void draw(std::shared_ptr<SDL_Renderer> renderer)= 0;
+
+    void set_hall(const Tunel& hall);
+    void set_bigLine(const Line& l);
+    virtual void build()= 0;
+
+    virtual void set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect)= 0;
+    virtual bool get_closer()= 0;
 
 protected:
 
-    std::vector<Line> lines;
-    std::vector<Line> shadows;
     Color color;
-
     // nom de l'ennemi
     std::string name;
 
     // destination de l'ennemi
     Point dest;
-
     Point start;
+
     // + la vitesse est haute + on se rapproche du centre avec get_closer
     int speed = 10;
     
     // couloir auquel appartient l'ennemi
     Tunel hall;
+
     // centre de gravité. Servira comme position de départ (initialisé au centre de la map)
     Point center;
 
-    Line bigLine;
     // la taille du rectangle qui encadre l'ennemi
-
     std::array<Point, 4> rect;
 
     // coordonnee de l'image (top left corner du carré)
     double x, y;
 
-    // taille initial de l'image
-    const int init_width = 57;
-    const int init_height = 64;
-
     // taille à changer pr agrandir ou rétrécir l'image de l'ennemi
-    int width = 57;
-    int height = 64;
+    int width;
+    int height;
 
     // angle de rotation de l'image
     double angle;

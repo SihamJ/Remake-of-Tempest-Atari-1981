@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.6)
 
 add_subdirectory(SDL)
 install(DIRECTORY images DESTINATION .)
-file(COPY images/flipper.bmp images/player.bmp images/spiker.bmp images/tanker.bmp images/missile.bmp DESTINATION images)
+file(COPY images/flipper_RED.bmp images/flipper_GREEN.bmp images/flipper_PURPLE.bmp images/spiker_GREEN.bmp images/spiker_BLUE.bmp images/spiker_LIGHTBLUE.bmp images/spiker_RED.bmp images/tanker_PURPLE.bmp images/tanker_BLUE.bmp images/tanker_LIGHTBLUE.bmp images/missile.bmp DESTINATION images)
 
 project(Tempest LANGUAGES CXX)
 

@@ -20,26 +20,17 @@ public:
     Point get_center() const;
    
     virtual const int get_scoring() const  =0;
-    std::array<Point, 4> get_rect() const;
 
     virtual void set(Tunel&& h);
     virtual bool get_closer()= 0;
 
 protected:
 
-    // destination de l'ennemi
-    Point dest;
-    Point start;
-    Point pos;
-
     // + la vitesse est haute + on se rapproche du centre avec get_closer
     int speed = 10;
 
     // centre de gravité. Servira comme position de départ (initialisé au centre de la map)
     Point center;
-
-    // la taille du rectangle qui encadre l'ennemi
-    std::array<Point, 4> rect;
 
     // coordonnee de l'image (top left corner du carré)
     double x, y;

@@ -25,18 +25,20 @@ public:
     void set_tunnel(const Tunel& h);
     void set_rect(const std::array<Point, 4> rect);
     void set_center(const Point& center);
+    void set(Tunel&& h);
     
     std::string get_name(){ return "Flippers";}
     const int get_scoring() const { return this->scoring;}
     bool get_closer();
     void draw(std::shared_ptr<SDL_Renderer> renderer) override;
-    
-
     bool intersect(Line l);    
 
 private:
     const int scoring=150;
-    
+    const int init_width = 128;
+    const int init_height = 49;
+    int width;
+    int height;
 };
 
 

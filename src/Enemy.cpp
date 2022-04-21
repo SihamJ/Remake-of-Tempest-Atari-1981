@@ -38,29 +38,45 @@
         return this->center;
     }
 
-
-    std::array<Point, 4> Enemy::get_rect() const{ return this->rect;}
-
     bool Enemy::get_closer(){ return false; }
     
     void Enemy::set(Tunel&& h){
 
         this->hall = h;
 
-        Line small_line = this->hall.get_small_line();
-        Line big_line = this->hall.get_big_line();
-       
-        double r1 = 0.2;
-        Point p2 = Line(small_line.get_p1(), big_line.get_p1()).inLine(r1);
+        int dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
+        width = dist/3;
+        height = dist/3;
 
-        double r2 = r1 * small_line.get_p1().euclideanDistance(big_line.get_p1()) / small_line.get_p0().euclideanDistance(big_line.get_p0()) ;
-        Point p3 = Line(small_line.get_p0(), big_line.get_p0()).inLine(r2);
-        std::array<Point, 4> rect{small_line.get_p0(), small_line.get_p1(), p2, p3};
+        Point centre_small_line = hall.get_small_line().inLine(0.5);
+        Point centre_big_line = hall.get_big_line().inLine(0.5);
+
+        x = centre_small_line.get_x() - (width/2);
+        y = centre_small_line.get_y() - (height/2);
+
+        bool cond1 = false;
+
+        double segment_a = centre_big_line.get_x() - centre_small_line.get_x();
+        double segment_b = centre_big_line.get_y() - centre_small_line.get_y();
+        double segment_c = sqrt(segment_a * segment_a + segment_b * segment_b);
         
-        this->center = Point(Line(rect.at(0), rect.at(2)).intersect(Line(rect.at(1), rect.at(3))));
+        if (segment_a < 0.) {
+            segment_a *= -1.;
+            cond1 = true;
+        }
+
+        angle = acos(segment_a / segment_c) * (180.0/3.141592653589793238463);
         
-        this->rect = rect;
-        this->start = small_line.inLine(0.5);
-        this->pos = start;
-        this->dest = big_line.inLine(0.5);        
+        if (cond1) {
+            angle *= -1.;
+        }
+
+        if (segment_b > 0.) {
+            if (angle < 0.) {
+                angle -= 90.;
+            }
+            else {
+                angle += 90.;
+            }
+        }        
     }

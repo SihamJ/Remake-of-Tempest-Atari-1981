@@ -139,33 +139,33 @@ void Game::update() {
             else {
                 // test si y a collision entre missiles alliés et ennemies
 
-                SDL_Rect r_missile;
-                r_missile.w = vm[i]->get_width();
-                r_missile.h = vm[i]->get_height();
-                r_missile.x = vm[i]->get_x();
-                r_missile.y = vm[i]->get_y();
+                // SDL_Rect r_missile;
+                // r_missile.w = vm[i]->get_width();
+                // r_missile.h = vm[i]->get_height();
+                // r_missile.x = vm[i]->get_x();
+                // r_missile.y = vm[i]->get_y();
                
-                for (int j = 0; j<enemies.size(); j++) {
-                    SDL_Rect r_enemy;
-                    r_enemy.w = enemies[j]->get_rect().at(0).euclideanDistance(enemies[j]->get_rect().at(1));
-                    r_enemy.h = enemies[j]->get_rect().at(1).euclideanDistance(enemies[j]->get_rect().at(2));
-                    r_enemy.x = enemies[j]->get_center().get_x();
-                    r_enemy.y = enemies[j]->get_center().get_y();
+                // for (int j = 0; j<enemies.size(); j++) {
+                //     SDL_Rect r_enemy;
+                //     r_enemy.w = enemies[j]->get_rect().at(0).euclideanDistance(enemies[j]->get_rect().at(1));
+                //     r_enemy.h = enemies[j]->get_rect().at(1).euclideanDistance(enemies[j]->get_rect().at(2));
+                //     r_enemy.x = enemies[j]->get_center().get_x();
+                //     r_enemy.y = enemies[j]->get_center().get_y();
 
-                    SDL_Rect result;
-                    if (SDL_IntersectRect(&r_enemy, &r_missile, &result)){
-                        // Collision c { Point(result.x, result.y), Color(PURPLE), 2.0};
-                        // c.build();
-                        // render_color(PURPLE);
-                        // collisions.push_back(c);
-                        player.incr_score(enemies.at(j)->get_scoring());
-                        std::cout << "score: " << player.get_score() << std::endl;
+                //     SDL_Rect result;
+                //     if (SDL_IntersectRect(&r_enemy, &r_missile, &result)){
+                //         // Collision c { Point(result.x, result.y), Color(PURPLE), 2.0};
+                //         // c.build();
+                //         // render_color(PURPLE);
+                //         // collisions.push_back(c);
+                //         player.incr_score(enemies.at(j)->get_scoring());
+                //         std::cout << "score: " << player.get_score() << std::endl;
 
-                        enemies.erase(enemies.begin()+j);
-                        vm.erase(vm.begin()+i);
-                        break;
-                    }
-                }
+                //         enemies.erase(enemies.begin()+j);
+                //         vm.erase(vm.begin()+i);
+                //         break;
+                //     }
+                // }
             }
         }
 
@@ -190,24 +190,24 @@ void Game::update() {
         x4 = static_cast<int>(l2_player.get_p1().get_x());
         y4 = static_cast<int>(l2_player.get_p1().get_y());
 
-        for (int j = 0; j<enemies.size(); j++) {
-            SDL_Rect r_enemy;
-            r_enemy.w = enemies[j]->get_rect().at(0).euclideanDistance(enemies[j]->get_rect().at(1));
-            r_enemy.h = enemies[j]->get_rect().at(1).euclideanDistance(enemies[j]->get_rect().at(2));
-            r_enemy.x = enemies[j]->get_center().get_x();
-            r_enemy.y = enemies[j]->get_center().get_y();
+        // for (int j = 0; j<enemies.size(); j++) {
+        //     SDL_Rect r_enemy;
+        //     r_enemy.w = enemies[j]->get_rect().at(0).euclideanDistance(enemies[j]->get_rect().at(1));
+        //     r_enemy.h = enemies[j]->get_rect().at(1).euclideanDistance(enemies[j]->get_rect().at(2));
+        //     r_enemy.x = enemies[j]->get_center().get_x();
+        //     r_enemy.y = enemies[j]->get_center().get_y();
 
-            // collision missile et player
-            if (SDL_IntersectRectAndLine(&r_enemy, &x1, &y1, &x2, &y2) 
-                    || SDL_IntersectRectAndLine(&r_enemy, &x3, &y3, &x4, &y4)) 
-                {
-                    std::cout << "collision player enemy" << std::endl;
-                    if(player.decr_life_point()){
-                        std::cout << "GAME OVER" << std::endl;
-                        this->isRunning = false;
-                }
-            }
-        }
+        //     // collision missile et player
+        //     if (SDL_IntersectRectAndLine(&r_enemy, &x1, &y1, &x2, &y2) 
+        //             || SDL_IntersectRectAndLine(&r_enemy, &x3, &y3, &x4, &y4)) 
+        //         {
+        //             std::cout << "collision player enemy" << std::endl;
+        //             if(player.decr_life_point()){
+        //                 std::cout << "GAME OVER" << std::endl;
+        //                 this->isRunning = false;
+        //         }
+        //     }
+        // }
     }
 }
 

@@ -30,7 +30,7 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
         // pr utiliser rand avec des valeurs randoms
         srand (time(NULL));
 
-        this->score = Score();
+        this->textRenderer = TextRenderer();
 
         this->level = std::make_shared<Level>(1);
 
@@ -248,7 +248,9 @@ void Game::render() {
 
     render_color(YELLOW, 255);
     
-    this->score.draw(renderer, this->player.get_score());
+    this->textRenderer.draw(renderer, this->player.get_score(), WIDTH/3, 100, "YELLOW");
+
+    this->textRenderer.draw(renderer, this->player.get_life_point(), 2*WIDTH/3, 100, "LIGHT_BLUE");
     // màj du rendu
     SDL_RenderPresent(renderer.get());
 }

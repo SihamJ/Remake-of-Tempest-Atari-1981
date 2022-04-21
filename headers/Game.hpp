@@ -21,7 +21,7 @@
 #include "SDLWrapper.hpp"
 #include "missile.hpp"
 #include "Collision.hpp"
-#include "score.hpp"
+#include "text_renderer.hpp"
 
 class Game {
 
@@ -87,7 +87,7 @@ private:
 
     std::vector<Collision> collisions;
 
-    Score score;
+    TextRenderer textRenderer;
     
 
 };

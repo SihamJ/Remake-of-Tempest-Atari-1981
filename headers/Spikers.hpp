@@ -16,7 +16,6 @@ public:
 
     ~Spikers();
 
-    void build() override;
     const int get_scoring() const  override;
 
     void set_dest (const Point& destination);

@@ -24,7 +24,6 @@ Spikers::Spikers(std::string&& name,  Point&& center,  Tunel&& h)
     this->name = std::move(name);
     this->width = 57;
     this->height = 64;
-    build();
 }
 
 // copy constructor
@@ -34,7 +33,6 @@ Spikers::Spikers(const Spikers &other)
     this->name = static_cast<std::string>("Spikers");
     this->width = 57;
     this->height = 64;
-    build();
 }
 
 // move constructor
@@ -44,7 +42,6 @@ Spikers::Spikers(Spikers &&other)
     this->name = static_cast<std::string>("Spikers");
     this->width = 57;
     this->height = 64;
-    build();
 }
 
 //destructeur
@@ -118,12 +115,10 @@ void Spikers::set(Tunel&& h){
 // ################################################################################################ 
 // ################################################################################################ 
 
-void Spikers::build() {
-    // Evalue le random point
-    random_p = ((rand() % 725) / 1000.0) + 0.25;
-}
 
 bool Spikers::get_closer() {
+
+    this->random_p = ((rand() % 725) / 1000.0) + 0.25;
 
     Point center_big_line = hall.get_big_line().inLine(0.5);
     Point center_small_line = hall.get_small_line().inLine(0.5);

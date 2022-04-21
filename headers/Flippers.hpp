@@ -16,7 +16,6 @@ public:
 
     ~Flippers();
 
-    void build() override;
     void clean();
 
     std::vector<Line> get_lines(){ return this->lines; }

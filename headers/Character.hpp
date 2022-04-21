@@ -41,8 +41,6 @@ public:
         this->hall = hall;
     }
 
-    virtual void build()= 0;
-
 protected:
 
     std::vector<Line> lines;

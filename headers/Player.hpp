@@ -16,44 +16,23 @@ public:
 
     Player(const int& n_hall, const Tunel& hall, const Color& c);
     void operator=(Player other);
-    /**
-     * @brief Get the n hall object
-     * 
-     * @return int 
-     */
+
     int get_n_hall();
 
-    /**
-     * @brief incrémente le numéro du hall
-     * 
-     */
     void incr_n_hall(int nbHall, const Tunel& h);
-    /**
-     * @brief décremente le numéro du hall
-     * 
-     */
+
     void decr_n_hall(int nbHall, const Tunel&h);
 
-    /**
-     * @brief decremente les pdv et renvoie vrai si le player est mort
-     * renvoie faux quand il reste des pdv
-     * 
-     * @return true 
-     * @return false 
-     */
+
     bool decr_life_point();
 
-    /**
-     * @brief Get the life point object
-     * 
-     * @return int 
-     */
+    void build();
+
     int get_life_point();
 
     int get_score();
     void incr_score(int points);
 
-    void build() override;
 
     void draw(std::shared_ptr<SDL_Renderer> renderer) override;
 

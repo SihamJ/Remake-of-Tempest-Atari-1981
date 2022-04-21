@@ -3,15 +3,15 @@
 Flippers::Flippers(){}
 
 //constructeur
-Flippers::Flippers(std::string name)
+Flippers::Flippers(std::string&& name)
 {
     this->name = std::move(name);
     this->width = init_width;
     this->height = init_height;
 }
 
-Flippers::Flippers(std::string  name, Color& c)
-    : Enemy(c)
+Flippers::Flippers(std::string&&  name, Color&& c)
+    : Enemy(std::move(c))
 {
     this->name = name;
     this->width = init_width;
@@ -19,8 +19,8 @@ Flippers::Flippers(std::string  name, Color& c)
 }
 
 //constructeur
-Flippers::Flippers(std::string name, const Point& center, const Tunel& h, const std::array<Point, 4> &rect)
-    : Enemy(center, h, rect)
+Flippers::Flippers(std::string&& name, Point&& center, Tunel&& h)
+    : Enemy(std::move(center), std::move(h))
 {
     this->name = std::move(name);
     this->width = init_width;
@@ -38,28 +38,38 @@ Flippers::Flippers(const Flippers &other)
     build();
 }
 
+// move constructor
+Flippers::Flippers(Flippers &&other)
+    : Enemy(std::move(other))
+{
+    this->name = static_cast<std::string>("Flippers");
+    this->width = init_width;
+    this->height = init_height;
+    build();
+}
+
 //destructeur
 Flippers::~Flippers(){}
 
 
 
-void Flippers::set_dest (const Point& destination){
-    this->dest = destination;
+void Flippers::set_dest (Point&& destination){
+    this->dest = std::move(destination);
 }
 
-void Flippers::set_tunnel(const Tunel& h){
-    this->hall = h;
+void Flippers::set_tunnel(Tunel&& h){
+    this->hall = std::move(h);
 }
 
-void Flippers::set_rect(const std::array<Point, 4> rect){
-    this->rect = rect;
+void Flippers::set_rect(std::array<Point, 4>&& rect){
+    this->rect = std::move(rect);
 }
 
-void Flippers::set_center(const Point& center){
-    this->center = center;
+void Flippers::set_center(Point&& center){
+    this->center = std::move(center);
 }
 
-const int Flippers::get_scoring(){
+const int Flippers::get_scoring() const {
     return this->scoring;
 }
 
@@ -67,7 +77,7 @@ void Flippers::build() {}
 
 void Flippers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     std::string path;
-    path = static_cast<std::string>("images/flipper_") + this->get_color().get_name() + static_cast<std::string>(".bmp"); 
+    path = static_cast<std::string>("images/flipper_") + this->color.get_name() + static_cast<std::string>(".bmp"); 
 
     SDL_Surface* image = SDL_LoadBMP(path.c_str());
 

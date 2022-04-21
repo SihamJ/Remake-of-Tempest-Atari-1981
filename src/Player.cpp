@@ -82,3 +82,7 @@
 
     }
 
+    void Player::draw(std::shared_ptr<SDL_Renderer> renderer) {
+        for (auto i : this->lines)
+            i.draw(renderer);
+    }

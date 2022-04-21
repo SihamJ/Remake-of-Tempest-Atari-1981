@@ -40,14 +40,12 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
         if (renderer) {
             std::cout << "Renderer created" << std::endl;
         }
-
         // pr utiliser rand avec des valeurs randoms
         srand (time(NULL));
 
-        this->level = std::make_shared<Level>();
+        this->level = std::make_shared<Level>(1);
 
         this->level->next_level();
-
         this->map = level->get_map();
 
         // construction de la map
@@ -67,6 +65,9 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
 
         vh = map->get_hall_list();
         isRunning = true;
+
+        std::cout << "done" << std::endl;
+
 
     }
     else {

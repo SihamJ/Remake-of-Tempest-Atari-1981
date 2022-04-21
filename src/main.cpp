@@ -3,10 +3,10 @@
 // #define SDL_WINDOWPOS_CENTERED SDL_WINDOWPOS_CENTERED_DISPLAY(0)
 
 
-Game *game = nullptr;
+std::unique_ptr<Game> game;
 
 int main(int argc, char** argv) {
-    game = new Game();
+    game = std::make_unique<Game>();
 
     // 480 et 420 à la place de windowpos_centered 
     // psq la fenêtre s'affiche entre mes deux écrans chez moi

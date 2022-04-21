@@ -3,8 +3,8 @@
 
 Color::Color(){}
 
-Color::Color(std::string name, std::string&& stream)
-    : name(name)
+Color::Color(std::string&& name, std::string&& stream)
+    : name(std::move(name))
 {
     std::string c = stream;
     std::string r = c.substr(0, 3);
@@ -17,23 +17,23 @@ Color::Color(std::string name, std::string&& stream)
     this->a = 255;
 }
 
-Color::Color(std::string name, const int& r, const int& g, const int& b)
-    : name(name), r(r), g(g), b(b)
+Color::Color(std::string&& name, const int& r, const int& g, const int& b)
+    : name(std::move(name)), r(r), g(g), b(b)
 {
 
 }
 
 // constructor for manually defining rgb values
-Color::Color(std::string name, const int& r, const int& g, const int& b, const int& a)
-    : name(name), r(r), g(g), b(b), a(a)
+Color::Color(std::string&& name, const int& r, const int& g, const int& b, const int& a)
+    : name(std::move(name)), r(r), g(g), b(b), a(a)
 {
     
 }
 
 // constructor to be used with the predefined colors in utils.h
 // stream is a string describing the rgb values
-Color::Color(std::string name, std::string&& stream, const int& a)
-    : name(name), a(a)
+Color::Color(std::string&& name, std::string&& stream, const int& a)
+    : name(std::move(name)), a(a)
 {
     std::string c = stream;
     std::string r = c.substr(0, 3);
@@ -68,7 +68,7 @@ const int Color::get_a(){
     return this->a;
 }
 
-std::string Color::get_name(){
+const std::string Color::get_name(){
     return this->name;
 }
 

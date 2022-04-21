@@ -8,15 +8,16 @@ class Spikers : public Enemy {
 public:
 
     Spikers();
-    Spikers(std::string name);
-    Spikers(std::string name, Color& c);
-    Spikers(std::string name, const Point& center, const Tunel& h, const std::array<Point, 4> &rect);
+    Spikers(std::string&& name);
+    Spikers(std::string&& name, Color&& c);
+    Spikers(std::string&& name, Point&& center, Tunel&& h);
     Spikers(const Spikers &other);
+    Spikers(Spikers &&other);
 
     ~Spikers();
 
     void build() override;
-    const int get_scoring() override;
+    const int get_scoring() const  override;
 
     void set_dest (const Point& destination);
     void set_tunnel(const Tunel& h);
@@ -25,7 +26,7 @@ public:
 
     void set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect) override;
 
-    std::string get_name(){ return "Spikers";}
+    const std::string get_name(){ return this->name;}
 
     bool get_closer() override;
 

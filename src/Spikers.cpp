@@ -4,22 +4,22 @@
 Spikers::Spikers(){}
 
 //constructeur
-Spikers::Spikers(std::string name)
+Spikers::Spikers(std::string&& name)
 {
     this->name = std::move(name);
     this->width = 57;
     this->height = 64;
 }
 
-Spikers::Spikers(std::string  name, Color& c)
-    : Spikers(name) 
+Spikers::Spikers(std::string&&  name, Color&& c)
+    : Spikers(std::move(name)) 
 {
     this->color = c;
 }
 
 //constructeur
-Spikers::Spikers(std::string name, const Point& center, const Tunel& h, const std::array<Point, 4> &rect)
-    : Enemy(center, h, rect)
+Spikers::Spikers(std::string&& name,  Point&& center,  Tunel&& h)
+    : Enemy(std::move(center), std::move(h))
 {
     this->name = std::move(name);
     this->width = 57;
@@ -37,9 +37,25 @@ Spikers::Spikers(const Spikers &other)
     build();
 }
 
+// move constructor
+Spikers::Spikers(Spikers &&other)
+    : Enemy(std::move(other))
+{
+    this->name = static_cast<std::string>("Spikers");
+    this->width = 57;
+    this->height = 64;
+    build();
+}
+
 //destructeur
 Spikers::~Spikers(){}
 
+
+// ################################################################################################ 
+// ################################################################################################ 
+// #################################### FIN CONSTRUCTEURS #########################################
+// ################################################################################################ 
+// ################################################################################################ 
 
 
 void Spikers::set_dest (const Point& destination){
@@ -58,9 +74,61 @@ void Spikers::set_center(const Point& center){
     this->center = center;
 }
 
-const int Spikers::get_scoring(){
+const int Spikers::get_scoring() const {
     return this->scoring;
 }
+
+// ################################################################################################ 
+// ################################################################################################ 
+
+void Spikers::set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect){
+
+        this->center = center;
+        this->hall = h;
+        this->rect = rect;
+        this->start = start;
+        this->dest = h.get_big_line().inLine(0.5);
+
+        int dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
+        width = dist/3;
+        height = dist/3;
+
+        Point centre_small_line = hall.get_small_line().inLine(0.5);
+        Point centre_big_line = hall.get_big_line().inLine(0.5);
+
+        x = centre_small_line.get_x() - (width/2);
+        y = centre_small_line.get_y() - (height/2);
+
+        bool cond1 = false;
+
+        double segment_a = centre_big_line.get_x() - centre_small_line.get_x();
+        double segment_b = centre_big_line.get_y() - centre_small_line.get_y();
+        double segment_c = sqrt(segment_a * segment_a + segment_b * segment_b);
+        
+        if (segment_a < 0.) {
+            segment_a *= -1.;
+            cond1 = true;
+        }
+
+        angle = acos(segment_a / segment_c) * (180.0/3.141592653589793238463);
+        
+        if (cond1) {
+            angle *= -1.;
+        }
+
+        if (segment_b > 0.) {
+            if (angle < 0.) {
+                angle -= 90.;
+            }
+            else {
+                angle += 90.;
+            }
+        }
+        
+    }
+
+// ################################################################################################ 
+// ################################################################################################ 
 
 void Spikers::build() {
     // Evalue le random point
@@ -186,7 +254,7 @@ bool Spikers::intersect(Line l) {
 
 void Spikers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     std::string path;
-    path = static_cast<std::string>("images/spiker_") + this->get_color().get_name() + static_cast<std::string>(".bmp"); 
+    path = static_cast<std::string>("images/spiker_") + this->color.get_name() + static_cast<std::string>(".bmp"); 
 
     SDL_Surface* image = SDL_LoadBMP(path.c_str());
     if(!image)
@@ -228,48 +296,4 @@ void Spikers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     }
 }
 
-    void Spikers::set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect){
-
-        this->center = center;
-        this->hall = h;
-        this->rect = rect;
-        this->start = start;
-        this->dest = h.get_big_line().inLine(0.5);
-
-        int dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
-        width = dist/3;
-        height = dist/3;
-
-        Point centre_small_line = hall.get_small_line().inLine(0.5);
-        Point centre_big_line = hall.get_big_line().inLine(0.5);
-
-        x = centre_small_line.get_x() - (width/2);
-        y = centre_small_line.get_y() - (height/2);
-
-        bool cond1 = false;
-
-        double segment_a = centre_big_line.get_x() - centre_small_line.get_x();
-        double segment_b = centre_big_line.get_y() - centre_small_line.get_y();
-        double segment_c = sqrt(segment_a * segment_a + segment_b * segment_b);
-        
-        if (segment_a < 0.) {
-            segment_a *= -1.;
-            cond1 = true;
-        }
-
-        angle = acos(segment_a / segment_c) * (180.0/3.141592653589793238463);
-        
-        if (cond1) {
-            angle *= -1.;
-        }
-
-        if (segment_b > 0.) {
-            if (angle < 0.) {
-                angle -= 90.;
-            }
-            else {
-                angle += 90.;
-            }
-        }
-        
-    }
+    

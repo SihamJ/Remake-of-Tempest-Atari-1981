@@ -53,7 +53,7 @@ public:
 
     void build() override;
 
-
+    void draw(std::shared_ptr<SDL_Renderer> renderer) override;
 
 protected:
     // le numéro du hall dans lequel le joueur se trouve

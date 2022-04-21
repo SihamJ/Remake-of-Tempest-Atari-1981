@@ -14,21 +14,23 @@ public:
     Character(){}
     ~Character(){}
 
-    virtual void draw(std::shared_ptr<SDL_Renderer> renderer){
-        for (auto i : lines) {
-            i.draw(renderer);
-        }
-    }
+    virtual void draw(std::shared_ptr<SDL_Renderer> renderer)= 0;
 
     virtual void clean(){
         this->lines.clear();
     }
 
-    virtual void build()=0;
+    std::vector<Line> get_lines() const { return this->lines; }
+    virtual const std::string get_name() const  { return this->name; }
+    Tunel get_hall() const { return this->hall; }
+    Color get_color() const { return this->color; }
 
-    std::vector<Line> get_lines(){ return this->lines; }
-    std::string get_name(){ return this->name; }
-    Color get_color(){ return this->color; }
+
+    void set_hall(const Tunel& hall){
+        this->hall = hall;
+    }
+
+    virtual void build()= 0;
 
 protected:
 

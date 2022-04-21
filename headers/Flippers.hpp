@@ -8,10 +8,11 @@ class Flippers : public Enemy {
 public:
 
     Flippers();
-    Flippers(std::string  name);
-    Flippers(std::string  name, Color& c);
-    Flippers(std::string name, const Point& center, const Tunel& h, const std::array<Point, 4> &rect);
+    Flippers(std::string&& name);
+    Flippers(std::string&& name, Color&& c);
+    Flippers(std::string&& name, Point&& center, Tunel&& h);
     Flippers(const Flippers &other);
+    Flippers(Flippers &&other);
 
     ~Flippers();
 
@@ -20,23 +21,20 @@ public:
     void build() override;
     void clean();
     void draw(std::shared_ptr<SDL_Renderer> renderer) override;
-    const int get_scoring() override;
+    const int get_scoring() const override;
 
-    void set_dest (const Point& destination);
-    void set_tunnel(const Tunel& h);
-    void set_rect(const std::array<Point, 4> rect);
-    void set_center(const Point& center);
+    void set_dest (Point&& destination);
+    void set_tunnel(Tunel&& h);
+    void set_rect(std::array<Point, 4>&& rect);
+    void set_center(Point&& center);
     
     void set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect) override;
-    std::string get_name() override { return "Flippers";}
+    const std::string get_name() const  override { return this->name;}
     bool get_closer() override;
     bool intersect(Line l);    
 
 
 private:
-
-    std::vector<Line> lines;
-    Color color;
 
     // nb de points gagnés par le joueur s'il tue un flipper
     const int scoring=150;

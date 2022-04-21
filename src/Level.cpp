@@ -2,6 +2,10 @@
 
 Level::Level(){}
 
+Level::Level(int a){
+    std::cout << "Level constructor" << std::endl;
+}
+
 Level::~Level(){}
 
 std::shared_ptr<Tube> Level::get_map(){
@@ -180,12 +184,13 @@ void Level::next_level(){
 
 std::shared_ptr<Enemy> Level::new_enemy(){
     // affiche que des flippers et spikers
-    int i = rand() % 2;
-    if (i == 1) i++;
+    // int i = rand() % 2;
+    // if (i == 1) i++;
+
+    
+    int i = 0;
 
     // force à afficher que des spikers
-    //int i = 0;
-
     // int i = 2;
     Color color = this->current_enemies.at(i);
     std::shared_ptr<Enemy> e;
@@ -193,10 +198,10 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     switch (i)
     {
     case enemies_list::flippers:
-        e = std::make_shared<Flippers>("flippers", color);
+        e = std::make_shared<Flippers>("flippers", std::move(color));
         break;
     case enemies_list::spikers:
-        e = std::make_shared<Spikers>("spikers", color);
+        e = std::make_shared<Spikers>("spikers", std::move(color));
         break;
     // case enemies_list::tankers:
     //     e = std::make_shared<Tankers>("tankers", color);
@@ -213,7 +218,7 @@ std::shared_ptr<Enemy> Level::new_enemy(){
 
     // we don't have the other enemies for now, so we generate only flippers by default
     default:
-        e = std::make_shared<Spikers>("spikers", color);
+        e = std::make_shared<Flippers>("flippers", std::move(color));
         break;
     }
     return e;

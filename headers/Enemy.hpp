@@ -1,42 +1,29 @@
 #ifndef __ENEMY_HPP__
 #define __ENEMY_HPP__
 
-
+#include "Character.hpp"
 #include "Line.hpp"
 #include "Tunel.hpp"
 
-class Enemy {
+class Enemy : public Character {
 
 public:
 
     Enemy();
-    Enemy(Color& c);
-    Enemy(const Point& center, const Tunel& h, const std::array<Point, 4> &rect);
+    Enemy(Color&& c);
+    Enemy(Point&& center, Tunel&& h);
 
     ~Enemy();
 
-    Point get_center();
-    Tunel get_hall();
-    std::vector<Line> get_lines();
-    std::array<Point, 4> get_rect();
-    Color get_color();
-    virtual std::string get_name();
-    virtual const int get_scoring()=0;
-
-    virtual void draw(std::shared_ptr<SDL_Renderer> renderer)= 0;
-
-    void set_hall(const Tunel& hall);
-    void set_bigLine(const Line& l);
-    virtual void build()= 0;
+    Point get_center() const;
+   
+    virtual const int get_scoring() const  =0;
+    std::array<Point, 4> get_rect() const;
 
     virtual void set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect)= 0;
     virtual bool get_closer()= 0;
 
 protected:
-
-    Color color;
-    // nom de l'ennemi
-    std::string name;
 
     // destination de l'ennemi
     Point dest;
@@ -44,9 +31,6 @@ protected:
 
     // + la vitesse est haute + on se rapproche du centre avec get_closer
     int speed = 10;
-    
-    // couloir auquel appartient l'ennemi
-    Tunel hall;
 
     // centre de gravité. Servira comme position de départ (initialisé au centre de la map)
     Point center;

@@ -6,43 +6,28 @@
         this->name = std::move(static_cast<std::string>("Enemy"));
     }
 
-    Enemy::Enemy(Color& c) 
+    Enemy::Enemy(Color&& c) 
     {
-        this->color = c;
+        this->color = std::move(c);
         this->name = std::move(static_cast<std::string>("Enemy"));
     }
 
-    Enemy::Enemy(const Point& center, const Tunel& h, const std::array<Point, 4> &rect)
-        :  center(center), hall(h), rect(rect)
+    Enemy::Enemy(Point&& center, Tunel&& h)
+        :  center(std::move(center))
     {
-        name = std::move(static_cast<std::string>("Enemy"));
+        this->name = std::move(static_cast<std::string>("Enemy"));
+        this->hall = std::move(h);
     }
     
     // ~Enemy(){}
     Enemy::~Enemy(){}
 
-    Point Enemy::get_center(){
+    Point Enemy::get_center() const{
         return this->center;
     }
 
-    Tunel Enemy::get_hall(){
-        return this->hall;
-    }
 
-
-    void Enemy::set_hall(const Tunel& hall){
-        this->hall = hall;
-    }
-
-    std::string Enemy::get_name(){
-        return "Enemy";
-    }
-
-    Color Enemy::get_color(){
-        return this->color;
-    }
-
-    std::array<Point, 4> Enemy::get_rect(){ return this->rect;}
+    std::array<Point, 4> Enemy::get_rect() const{ return this->rect;}
 
     bool Enemy::get_closer(){ return false; }
     

@@ -13,9 +13,11 @@
 #include "utils.hpp"
 #include "Color.hpp"
 
+
 class Level {
     public:
         Level();
+        Level(int a);
         ~Level();
 
         std::shared_ptr<Tube> get_map();
@@ -69,18 +71,18 @@ class Level {
                                                                     { enemies_list::flippers, Color("YELLOW", YELLOW) }, { enemies_list::tankers, Color("PURPLE", PURPLE) }, 
                                                                     { enemies_list::spikers, Color("BLUE", BLUE) }, { enemies_list::pulsars, Color("YELLOW", YELLOW)} };
         const Color level1_16_map_color { "BLUE", BLUE };
-        const Color level17_32_map_color {"RED",  RED };
-        const Color level33_48_map_color {"YELLOW",  YELLOW };
+        const Color level17_32_map_color { "RED",  RED };
+        const Color level33_48_map_color { "YELLOW",  YELLOW };
         const Color level49_64_map_color { "LIGHTBLUE", LIGHT_BLUE };
         const Color level65_80_map_color { "BLACK", BLACK };
-        const Color level81_96_map_color {"GREEN", GREEN };
+        const Color level81_96_map_color { "GREEN", GREEN };
 
-        const Color level1_16_player_color {"RED",  RED };
-        const Color level17_32_player_color {"GREEN", GREEN };
+        const Color level1_16_player_color { "RED",  RED };
+        const Color level17_32_player_color { "GREEN", GREEN };
         const Color level33_48_player_color { "BLUE", BLUE };
         const Color level49_64_player_color { "BLUE", BLUE };
         const Color level65_80_player_color { "YELLOW", YELLOW };
-        const Color level81_96_player_color {"RED",   RED };
+        const Color level81_96_player_color { "RED",   RED };
 
         
 };

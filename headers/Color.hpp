@@ -18,11 +18,11 @@ class Color {
 
         ~Color();
 
-        const int get_r();
-        const int get_g();
-        const int get_b();
-        const int get_a();
-        const std::string get_name();
+        const int get_r() const;
+        const int get_g() const;
+        const int get_b() const;
+        const int get_a() const;
+        const std::string get_name() const;
 
     private:
         int r;

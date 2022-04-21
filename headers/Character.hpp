@@ -12,6 +12,17 @@ class Character {
 public:
 
     Character(){}
+
+    Character(const Character& other)
+        : name(other.name), hall(other.hall), color(other.color), lines(other.lines)
+    {
+    }
+
+    Character(const Character&& other)
+        : name(std::move(other.name)), hall(std::move(other.hall)), color(std::move(other.color)), lines(std::move(other.lines))
+    {
+    }
+
     ~Character(){}
 
     virtual void draw(std::shared_ptr<SDL_Renderer> renderer)= 0;

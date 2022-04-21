@@ -5,11 +5,35 @@
     // Destructeur
     Player::~Player(){}
 
+    Player::Player(Player&& other)
+        : Character(std::move(other))
+    {
+        this->n_hall = std::move(other.n_hall);
+        this->hall = std::move(other.hall);
+        this->color = std::move(other.color);
+        this->build();
+    }
+
+    Player::Player(const Player& other)
+        : Character(other)
+    {
+        this->n_hall = other.n_hall;
+        this->hall = other.hall;
+        this->color = other.color;
+        this->build();
+    }
 
     Player::Player(const int& n_hall, const Tunel& hall, const Color& c){
         this->n_hall = n_hall;
         this->hall = hall;
         this->color = c;
+        this->build();
+    }
+
+    void Player::operator=(Player other){
+        this->n_hall = other.n_hall;
+        this->hall = other.hall;
+        this->color = other.color;
         this->build();
     }
 

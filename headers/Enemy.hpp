@@ -12,6 +12,8 @@ public:
     Enemy();
     Enemy(Color&& c);
     Enemy(Point&& center, Tunel&& h);
+    Enemy(const Enemy& other);
+    Enemy( Enemy&& other);
 
     ~Enemy();
 
@@ -20,7 +22,7 @@ public:
     virtual const int get_scoring() const  =0;
     std::array<Point, 4> get_rect() const;
 
-    virtual void set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect)= 0;
+    virtual void set(Tunel&& h);
     virtual bool get_closer()= 0;
 
 protected:
@@ -28,6 +30,7 @@ protected:
     // destination de l'ennemi
     Point dest;
     Point start;
+    Point pos;
 
     // + la vitesse est haute + on se rapproche du centre avec get_closer
     int speed = 10;

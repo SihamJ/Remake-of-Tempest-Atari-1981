@@ -81,10 +81,21 @@ const int Spikers::get_scoring() const {
 // ################################################################################################ 
 // ################################################################################################ 
 
-void Spikers::set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect){
+void Spikers::set(Tunel&& h){
 
-        this->center = center;
         this->hall = h;
+
+        Line small_line = this->hall.get_small_line();
+        Line big_line = this->hall.get_big_line();
+       
+        double r1 = 0.2;
+        Point p2 = Line(small_line.get_p1(), big_line.get_p1()).inLine(r1);
+        double r2 = r1 * small_line.get_p1().euclideanDistance(big_line.get_p1()) / small_line.get_p0().euclideanDistance(big_line.get_p0()) ;
+        Point p3 = Line(small_line.get_p0(), big_line.get_p0()).inLine(r2);
+        std::array<Point, 4> rect{small_line.get_p0(), small_line.get_p1(), p2, p3};
+        
+        this->center = Point(Line(rect.at(0), rect.at(2)).intersect(Line(rect.at(1), rect.at(3))));
+        
         this->rect = rect;
         this->start = start;
         this->dest = h.get_big_line().inLine(0.5);

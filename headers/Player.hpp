@@ -9,11 +9,13 @@ class Player : public Character {
 public:
     // Constructeur
     Player();
+    Player(Player&& other);
+    Player(const Player& other);
     // Destructeur
     ~Player();
 
     Player(const int& n_hall, const Tunel& hall, const Color& c);
-
+    void operator=(Player other);
     /**
      * @brief Get the n hall object
      * 

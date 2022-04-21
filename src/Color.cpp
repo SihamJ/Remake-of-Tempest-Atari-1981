@@ -49,26 +49,26 @@ Color::Color(std::string&& name, std::string&& stream, const int& a)
 Color::~Color(){}
 
 // get red value
-const int Color::get_r(){
+const int Color::get_r() const{
     return this->r;
 }
 
 // get green value
-const int Color::get_g(){
+const int Color::get_g() const{
     return this->g;
 }
 
 // get blue value
-const int Color::get_b(){
+const int Color::get_b() const{
     return this->b;
 }
 
 // get opacity value
-const int Color::get_a(){
+const int Color::get_a() const{
     return this->a;
 }
 
-const std::string Color::get_name(){
+const std::string Color::get_name() const{
     return this->name;
 }
 

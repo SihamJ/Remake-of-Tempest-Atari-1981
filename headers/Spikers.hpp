@@ -24,7 +24,7 @@ public:
     void set_rect(const std::array<Point, 4> rect);
     void set_center(const Point& center);
 
-    void set(Point&& center, Point&& start, Tunel&& h, std::array<Point, 4> &&rect) override;
+    void set(Tunel&& h);
 
     const std::string get_name(){ return this->name;}
 

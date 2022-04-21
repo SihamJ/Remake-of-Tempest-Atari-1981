@@ -21,6 +21,7 @@
 #include "SDLWrapper.hpp"
 #include "missile.hpp"
 #include "Collision.hpp"
+#include "score.hpp"
 
 class Game {
 
@@ -85,6 +86,9 @@ private:
     std::shared_ptr<Level> level;
 
     std::vector<Collision> collisions;
+
+    Score score;
+    
 
 };
 

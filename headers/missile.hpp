@@ -11,9 +11,23 @@ class Missile {
         ~Missile(){};
 
         //constructeur
-        Missile(const Tunel& h)
-        {
+        Missile(const Tunel& h){
             this->hall = h;
+            int dist = this->hall.get_small_line().get_p0().euclideanDistance(this->hall.get_small_line().get_p1());
+            this->width = dist/2.0;
+            this->height = dist/2.0;
+            this->pos = this->hall.get_big_line().inLine(0.5);
+            this->dest = this->hall.get_small_line().inLine(0.5);
+            this->start = this->pos;
+        }
+        Missile(const Tunel&& h){
+            this->hall = std::move(h);
+            int dist = this->hall.get_small_line().get_p0().euclideanDistance(this->hall.get_small_line().get_p1());
+            this->width = dist/2.0;
+            this->height = dist/2.0;
+            this->pos = this->hall.get_big_line().inLine(0.5);
+            this->dest = this->hall.get_small_line().inLine(0.5);
+            this->start = this->pos;
         }
 
         int get_width(){
@@ -36,36 +50,20 @@ class Missile {
             return this->pos;
         }
 
-        void set(Tunel&& h){
-
-            std::cout << "moved values for Missile" << std::endl;
-            this->hall = h;
-
-            int dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
-            this->width = dist/2.0;
-            this->height = dist/2.0;
-
-            this->pos = h.get_big_line().inLine(0.5);
-
-            this->dest = h.get_small_line().inLine(0.5);
-            this->start = this->pos;
-        }
-
-
         bool get_closer(){
 
-
-            double h0 = 0.03;
+            double h0 = this->hall.get_small_line().length() / this->hall.get_big_line().length();
             double z = this->pos.euclideanDistance(this->dest);
             double d = this->start.euclideanDistance(this->dest);
 
-            double ratio = 1 - ( (1-h0) / (d*d) ) * (z*z);
-            this->pos = Line(this->start, this->dest).inLine(ratio);
+            double h = 1 - ( (1-h0) / (d*d) ) * (z*z);
+            this->pos = Line(this->start, this->dest).inLine(h);
 
             return intersect(this->hall.get_small_line());
         }
 
         bool intersect(Line l) {
+
             SDL_Rect r = {static_cast<int>(this->pos.get_x()), static_cast<int>(this->pos.get_y()), this->width, this->height};
 
             int x1 = l.get_p0().get_x();
@@ -108,10 +106,6 @@ class Missile {
 
     private:
 
-
-        // + la vitesse est haute + on se rapproche du centre avec get_closer
-        int speed = 10;
-        double ratio = 0;
         // couloir auquel appartient l'ennemi
         Tunel hall;
 
@@ -119,21 +113,15 @@ class Missile {
         Point start;
         Point pos;
 
-        Line trajectoire;
-
-        // coordonnee de l'image (top left corner du carré)
-        // double x, y;
-
         // taille initial de l'image
-        const int init_width = 57;
-        const int init_height = 64;
+        const int init_width = 40;
+        const int init_height = 40;
 
         // taille à changer pr agrandir ou rétrécir l'image de l'ennemi
-        int width = 57;
-        int height = 64;
+        int width = 40;
+        int height = 40;
+        int angle = 0;
 
-        // angle de rotation de l'image
-        double angle;
 };
 
 

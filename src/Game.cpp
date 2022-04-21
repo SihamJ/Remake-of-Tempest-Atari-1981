@@ -1,21 +1,8 @@
 #include "../headers/Game.hpp"
 
 
-/**
- * @brief Construct a new Game:: Game object
- * 
- */
-Game::Game() {
-
-}
-
-/**
- * @brief Destroy the Game:: Game object
- * 
- */
-Game::~Game() {
-
-}
+Game::Game() {}
+Game::~Game() {}
 
 /**
  * @brief Initialise le jeu
@@ -42,6 +29,8 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
         }
         // pr utiliser rand avec des valeurs randoms
         srand (time(NULL));
+
+        this->score = Score();
 
         this->level = std::make_shared<Level>(1);
 
@@ -99,18 +88,8 @@ void Game::handle_events() {
             if (event.key.keysym.sym == SDLK_SPACE){
                 // le couloir où le player se trouve
                 Tunel h = vh[player.get_n_hall()];
-                // big line du couloir
-                std::array<double,4> big_line = h.get_big_line().get_coord();
-                // Le missile
-                // Point missile;
-                // missile.set_point((big_line[0]+big_line[2])/2,(big_line[1]+big_line[3])/2);
-                // // le centre de la bigLine
-                // missile.set_dest(center.get_point());
-                // // draw
-                // missile.draw(renderer);
-                std::shared_ptr<Missile> m = std::make_shared<Missile>(h);
-                m->set(std::move(h));
-                m->draw(renderer);
+
+                std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(h));
                 // ajoute le point au vecteur qui répertorie tous les missiles
                 vm.push_back(m);
                 break;
@@ -139,37 +118,17 @@ void Game::update() {
 
         // un couloir aléatoire entre les couloirs de la map
         Tunel hDest = vh[rand() % vh.size()];
-
-        Line small_line = hDest.get_small_line();
-        Line big_line = hDest.get_big_line();
-
-        double r1 = 0.2;
-        
-        Point p2 = Line(small_line.get_p1(), big_line.get_p1()).inLine(r1);
-
-        // THALES
-        double r2 = r1 * small_line.get_p1().euclideanDistance(big_line.get_p1()) / small_line.get_p0().euclideanDistance(big_line.get_p0()) ;
-
-        Point p3 = Line(small_line.get_p0(), big_line.get_p0()).inLine(r2);
-
-        std::array<Point, 4> rect{small_line.get_p0(), small_line.get_p1(), p2, p3};
-
-        Point center = Point(Line(rect.at(0), rect.at(2)).intersect(Line(rect.at(1), rect.at(3))));
         
         //instead of copying values, we move them by rvalue reference. They won't be needed afterwards.
-        enemy->set(std::move(center), std::move(small_line.inLine(0.5)), std::move(hDest), std::move(rect));
-        enemy->build();
+        enemy->set(std::move(hDest));
+
         enemies.push_back(enemy);
     }
     // Si on a dépassé les TICK millisecondes, on update
     if (SDL_GetTicks() - clock > TICK) {
 
         // collisions.clear();
-        // affiche l'horloge
-        // std::cout << clock << std::endl;
-        // vérifier qu'on delete les points
-        // std::cout << vp.size() << std::endl;
-        // màj de clock
+
         clock = SDL_GetTicks();
         // Rapproche tous les missiles de leur destination
         // détruit le missile si il a atteint sa cible
@@ -265,7 +224,7 @@ void Game::render() {
     }
 
     render_color(YELLOW, 255);
-    
+   // this->score.draw(renderer, 120);
     // dessine tous ce qui doit être affiché
     for (auto i : vm)
         i->draw(renderer);
@@ -284,15 +243,12 @@ void Game::render() {
     //     i.draw(renderer);
     // }
 
-    // plus besoin
-    // render_color(YELLOW, 255);
-    // map->get_hall_list().at(player.get_n_hall()).draw(renderer);
-
     render_color(std::move(level->get_player_color()));    
     player.draw(renderer);
 
     render_color(YELLOW, 255);
     
+    this->score.draw(renderer, this->player.get_score());
     // màj du rendu
     SDL_RenderPresent(renderer.get());
 }

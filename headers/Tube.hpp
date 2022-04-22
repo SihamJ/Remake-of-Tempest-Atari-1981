@@ -37,8 +37,8 @@ protected:
     int nbHall;
     Point center;
     Color color;
-    // Shape inner_shape;
-    // Shape outer_shape;
+    const int thickness = 4;
+
     
 };
 

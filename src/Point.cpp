@@ -96,7 +96,11 @@
 
 
     void Point::draw( std::shared_ptr<SDL_Renderer> renderer) {
-        SDL_RenderDrawPoint(renderer.get(), p.x, p.y);
+        for(int i =0; i<this->thickness; i++){
+            SDL_RenderDrawPoint(renderer.get(), p.x+i, p.y);
+            SDL_RenderDrawPoint(renderer.get(), p.x+i, p.y+i);
+            SDL_RenderDrawPoint(renderer.get(), p.x, p.y+i);
+        }
     }
 
     // retourne la distance euclidienne à un autre point

@@ -72,8 +72,8 @@ void TriangleMap::build_map(){
     smallLines.push_back( Point(smallTriangle[0].get_x(), smallTriangle[0].get_y()));
 
     for(int i = 1; i < hallPerSide; i++){
-        Point p1 = linesB[0].inLine((double)i/(double)hallPerSide);
-        Point p2 = linesS[0].inLine((double)i/(double)hallPerSide);
+        Point p1 = linesB[0].inLine(static_cast<double>(i)/static_cast<double>(hallPerSide));
+        Point p2 = linesS[0].inLine(static_cast<double>(i)/static_cast<double>(hallPerSide));
         bigLines.push_back(p1);
         smallLines.push_back(p2);
     }
@@ -82,8 +82,8 @@ void TriangleMap::build_map(){
     smallLines.push_back( Point(smallTriangle[1].get_x(), smallTriangle[1].get_y()));
 
     for(int i = 1; i < hallPerSide; i++){
-        Point p1 = linesB[1].inLine( (double)i/(double)hallPerSide);
-        Point p2 = linesS[1].inLine((double)i/(double)hallPerSide);
+        Point p1 = linesB[1].inLine( static_cast<double>(i)/static_cast<double>(hallPerSide));
+        Point p2 = linesS[1].inLine(static_cast<double>(i)/static_cast<double>(hallPerSide));
         bigLines.push_back(p1);
         smallLines.push_back(p2);
     }
@@ -92,8 +92,8 @@ void TriangleMap::build_map(){
     smallLines.push_back(Point(smallTriangle[2].get_x(), smallTriangle[2].get_y()));
 
     for(int i = 1; i < nbLastSide; i++){
-        Point p1 = linesB[2].inLine((double)i/(double)nbLastSide);
-        Point p2 = linesS[2].inLine((double)i/(double)nbLastSide);
+        Point p1 = linesB[2].inLine(static_cast<double>(i)/static_cast<double>(nbLastSide));
+        Point p2 = linesS[2].inLine(static_cast<double>(i)/static_cast<double>(nbLastSide));
         bigLines.push_back(p1);
         smallLines.push_back(p2);
     }
@@ -103,7 +103,7 @@ void TriangleMap::build_map(){
 
     // linking
     for(int i = 0; i < nbHall; i++){
-        Tunel h = Tunel(bigLines.at(i), bigLines.at((i+1) % bigLines.size()), smallLines.at(i), smallLines.at((i+1) % smallLines.size()));
+        Tunel h = Tunel(bigLines.at(i), bigLines.at((i+1) % bigLines.size()), smallLines.at(i), smallLines.at((i+1) % smallLines.size()), this->thickness);
         h.set_angle();
         this->add_Hall(h);
     }

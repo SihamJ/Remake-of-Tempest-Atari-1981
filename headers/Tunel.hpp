@@ -19,6 +19,11 @@ public:
         lines[1] = Line(x3, y3, x4, y4);
     }
 
+    Tunel(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int thickness){
+        lines[0] = Line(x1, y1, x2, y2, thickness);
+        lines[1] = Line(x3, y3, x4, y4, thickness);
+    }
+
     Tunel(Line smallLine, Line bigLine){
         lines[0] = smallLine;
         lines[1] = bigLine;
@@ -33,9 +38,19 @@ public:
         lines[1] = Line(p3, p4);
     }
 
+    Tunel(Point p1, Point p2, Point p3, Point p4, int thickness){
+        lines[0] = Line(p1, p2, thickness);
+        lines[1] = Line(p3, p4, thickness);
+    }
+
     Tunel(std::array<Point, 4> points){
         lines[0] = Line(points[0], points[1]);
         lines[1] = Line(points[2], points[3]);
+    }
+    
+    Tunel(std::array<Point, 4> points, int thickness){
+        lines[0] = Line(points[0], points[1], thickness);
+        lines[1] = Line(points[2], points[3], thickness);
     }
 
     // destructeur
@@ -113,10 +128,19 @@ public:
     void draw(std::shared_ptr<SDL_Renderer> renderer) {
         lines[0].draw(renderer);
         lines[1].draw(renderer);
-        Line l1(lines[0].get_p1(), lines[1].get_p1());
-        Line l2(lines[0].get_p0(), lines[1].get_p0());
+        Line l1(lines[0].get_p1(), lines[1].get_p1(), lines[0].get_thickness());
+        Line l2(lines[0].get_p0(), lines[1].get_p0(), lines[0].get_thickness());
         l1.draw(renderer);
         l2.draw(renderer);
+    }
+
+    void draw_shadow(std::shared_ptr<SDL_Renderer> renderer) {
+        lines[0].draw_shadow(renderer);
+        lines[1].draw_shadow(renderer);
+        Line l1(lines[0].get_p1(), lines[1].get_p1(), lines[0].get_thickness());
+        Line l2(lines[0].get_p0(), lines[1].get_p0(), lines[0].get_thickness());
+        l1.draw_shadow(renderer);
+        l2.draw_shadow(renderer);
     }
 
 private:

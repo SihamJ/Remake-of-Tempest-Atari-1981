@@ -95,18 +95,20 @@
         Point p0 = l2.inLine(0.9);
         Point p4 = l3.inLine(0.9);
 
-        this->lines.push_back(Line(p0, p1));
-        this->lines.push_back(Line(p1, p2));
-        this->lines.push_back(Line(p2, p3));
-        this->lines.push_back(Line(p3, p4));
-        this->lines.push_back(Line(p4, p5));
-        this->lines.push_back(Line(p5, p6));
-        this->lines.push_back(Line(p6, p7));
-        this->lines.push_back(Line(p7, p0));
+        this->lines.push_back(Line(p0, p1, this->thickness));
+        this->lines.push_back(Line(p1, p2, this->thickness));
+        this->lines.push_back(Line(p2, p3, this->thickness));
+        this->lines.push_back(Line(p3, p4, this->thickness));
+        this->lines.push_back(Line(p4, p5, this->thickness));
+        this->lines.push_back(Line(p5, p6, this->thickness));
+        this->lines.push_back(Line(p6, p7, this->thickness));
+        this->lines.push_back(Line(p7, p0, this->thickness));
 
     }
 
     void Player::draw(std::shared_ptr<SDL_Renderer> renderer) {
+        for (auto i : this->lines)
+            i.draw_shadow(renderer);
         for (auto i : this->lines)
             i.draw(renderer);
     }

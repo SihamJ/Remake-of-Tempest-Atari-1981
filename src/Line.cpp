@@ -3,29 +3,68 @@
 
 Line::Line(){}
 
-Line::Line(std::array<Point, 2> points){
+Line::Line(const std::array<Point, 2>& points){
     this->points = points;
-
     calculate_parameters();
 }
 
-Line::Line(Point p1, Point p2){
+Line::Line(const std::array<Point, 2>& points, int thickness){
+    this->points = points;
+    this->thickness = thickness;
+    calculate_parameters();
+}
+
+Line::Line(std::array<Point, 2>&& points){
+    this->points = std::move(points);
+    calculate_parameters();
+}
+
+Line::Line(std::array<Point, 2>&& points, int thickness){
+    this->points = std::move(points);
+    this->thickness = thickness;
+    calculate_parameters();
+}
+
+Line::Line(const Point& p1, const Point& p2){
     points[0] = p1;
     points[1] = p2;
-
     calculate_parameters();
-    
+}
+
+Line::Line(const Point& p1, const Point& p2, int thickness){
+    points[0] = p1;
+    points[1] = p2;
+    this->thickness = thickness;
+    calculate_parameters();
+}
+
+Line::Line(Point&& p1, Point&& p2){
+    points[0] = std::move(p1);
+    points[1] = std::move(p2);
+    calculate_parameters();
+}
+
+Line::Line(Point&& p1, Point&& p2, int thickness){
+    points[0] = std::move(p1);
+    points[1] = std::move(p2);
+    this->thickness = thickness;
+    calculate_parameters();
 }
 
 Line::Line(int x1, int y1, int x2, int y2){
     points[0].set_point(x1, y1);
     points[1].set_point(x2, y2);
+    calculate_parameters();
+}
 
+Line::Line(int x1, int y1, int x2, int y2, int thickness){
+    points[0].set_point(x1, y1);
+    points[1].set_point(x2, y2);
+    this->thickness = thickness;
     calculate_parameters();
 }
 
 Line::~Line(){}
-
 
 
 void Line::set_line(Point p1, Point p2){
@@ -85,12 +124,20 @@ Line Line::get_y_projected(){
     return Line { 0, static_cast<int>(this->get_p0().get_y()), 0, static_cast<int>(this->get_p1().get_y()) };
 }
 
+int Line::get_thickness(){
+    return this->thickness;
+}
+
 void Line::set_p0(Point p){
     this->points[0] = p;
 }
 
 void Line::set_p1(Point p){
     this->points[1] = p;
+}
+
+void Line::set_thickness(int thickness){
+    this->thickness = thickness;
 }
 
 bool Line::is_within(Point& p){
@@ -176,6 +223,56 @@ Point Line::inLine(double ratio ){
 }
 
 void Line::draw(std::shared_ptr<SDL_Renderer> renderer){
-    SDL_RenderDrawLine(renderer.get(), points[0].get_x(), points[0].get_y(), points[1].get_x(), points[1].get_y());
+
+    int xstep = 0;
+    int ystep = 0;
+
+    if(this->get_y_projected().length() >= 0 && this->get_y_projected().length() > this->get_x_projected().length())
+        xstep++;
+
+    else if(this->get_x_projected().length() >= 0 && this->get_y_projected().length() < this->get_x_projected().length())
+        ystep++;
+
+    else if(this->get_y_projected().length() == this->get_x_projected().length() && (this->get_y_projected().length() > 0 || this->get_x_projected().length()))
+    {
+        xstep++;
+        ystep++;
+    }
+    else 
+        return;
+    
+    for(int i = 0, j=0 ; i < this->thickness && j < this->thickness; i +=xstep, j+=ystep)
+        SDL_RenderDrawLine(renderer.get(), points[0].get_x()+i, points[0].get_y()+j, points[1].get_x()+i, points[1].get_y()+j);
+}
+
+void Line::draw_shadow(std::shared_ptr<SDL_Renderer> renderer){
+
+    Uint8 r, g, b, a;
+    SDL_GetRenderDrawColor(renderer.get(), &r, &g, &b, &a);
+
+    int xstep = 0;
+    int ystep = 0;
+    int x1start = points[0].get_x();
+    int y1sart = points[0].get_y();
+    int x2start = points[1].get_x();
+    int y2start = points[1].get_y();
+
+    if(this->get_y_projected().length() >= 0 && this->get_y_projected().length() > this->get_x_projected().length())
+        xstep++;
+
+    else if(this->get_x_projected().length() >= 0 && this->get_y_projected().length() < this->get_x_projected().length())
+        ystep++;
+
+    else if(this->get_y_projected().length() == this->get_x_projected().length() && (this->get_y_projected().length() > 0 || this->get_x_projected().length()))
+    {
+        xstep++;
+        ystep++;
+    }
+    else 
+        return;
+    SDL_SetRenderDrawColor(renderer.get(), 0, 80, 40, 255);
+    for(int i = 0, j=0 ; i < this->thickness && j < this->thickness; i +=xstep, j+=ystep)
+        SDL_RenderDrawLine(renderer.get(), x1start-i, y1sart-j, x2start-i, y2start-j);
+    SDL_SetRenderDrawColor(renderer.get(), r, g, b, a);
 }
 

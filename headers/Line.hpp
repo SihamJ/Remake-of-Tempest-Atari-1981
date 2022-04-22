@@ -11,11 +11,18 @@ public:
 
     Line();
 
-    Line(std::array<Point, 2> points);
+    Line(const std::array<Point, 2>& points);
+    Line(std::array<Point, 2>&& points);
+    Line(const std::array<Point, 2>& points, int thickness);
+    Line(std::array<Point, 2>&& points, int thickness);
 
-    Line(Point p1, Point p2);
+    Line(const Point& p1, const Point& p2);
+    Line(Point&& p1, Point&& p2);
+    Line(const Point& p1, const Point& p2, int thickness);
+    Line(Point&& p1, Point&& p2, int thickness);
 
     Line(int x1, int y1, int x2, int y2);
+    Line(int x1, int y1, int x2, int y2, int thickness);
 
     ~Line();
 
@@ -42,9 +49,13 @@ public:
     Line get_x_projected();
     Line get_y_projected();
 
+    int get_thickness();
+
     void set_p0(Point p);
 
     void set_p1(Point p);
+
+    void set_thickness(int thickness);
 
     void redefine_parameters();
 
@@ -54,22 +65,14 @@ public:
 
     std::array<double, 4> get_coord();
 
-    /**
-     * @brief retourne le point d'intersection avec la droite passant par la ligne l
-     * 
-     * @return Point* 
-     */
     Point intersect(Line l);
 
     double length();
-    /**
-     * @brief retourne un point sur la ligne avec un ratio ( si ratio = 1/2, c'est le point au milieu de la ligne)
-     * 
-     * @return Point
-     */
+
     Point inLine(double ratio );
 
     void draw(std::shared_ptr<SDL_Renderer> renderer);
+    void draw_shadow(std::shared_ptr<SDL_Renderer> renderer);
 
 private:
     std::array<Point, 2> points;
@@ -77,6 +80,7 @@ private:
     // paramètres de l'équation de la droite 
     double a;
     double b;
+    int thickness = 1;
 };
 
 #endif

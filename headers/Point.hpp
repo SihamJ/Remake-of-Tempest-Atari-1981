@@ -48,6 +48,8 @@ private:
     double x;
     double y;
 
+    int thickness = 5;
+
     //coordonnées polaires
     float phi;
     float r;

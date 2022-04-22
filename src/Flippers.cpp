@@ -100,7 +100,7 @@ void Flippers::clean(){
 
 bool Flippers::get_closer() {
 
-    double h0 = this->hall.get_small_line().length() / this->hall.get_big_line().length();
+    double h0 = this->speed * this->hall.get_small_line().length() / this->hall.get_big_line().length();
     double z = this->center.euclideanDistance(this->hall.get_big_line().inLine(0.5));
     double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->hall.get_big_line().inLine(0.5));
     double h = 1 - ((1-h0) / (d*d)) * (z*z);

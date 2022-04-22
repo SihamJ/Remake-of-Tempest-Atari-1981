@@ -106,7 +106,7 @@ bool Line::beyond_scope(Point &p){
     double min_y = this->get_p1().get_y() < this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
     double max_x = this->get_p1().get_x() > this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
     double min_x = this->get_p1().get_x() < this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
-    bool res= !( min_y < p.get_y() &&  p.get_y() < max_y && min_x < p.get_x() && p.get_x() < max_x);
+    bool res= !( min_y <= p.get_y() &&  p.get_y() <= max_y && min_x <= p.get_x() && p.get_x() <= max_x);
 
     return res;
 }

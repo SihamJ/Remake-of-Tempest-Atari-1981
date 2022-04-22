@@ -146,7 +146,8 @@ void Spikers::set(Tunel&& h){
 // ################################################################################################ 
 
 
-bool Spikers::get_closer() {    
+bool Spikers::get_closer() {  
+
     Point c = hall.get_small_line().inLine(0.5);
     // std::cout << "state " << state << std::endl;
     // std::cout << "enemy center: " << center.get_x() << ", " << center.get_y() << std::endl;
@@ -157,17 +158,22 @@ bool Spikers::get_closer() {
     // Update state if necessary
     // I did an overload of the oprator == in class Point to do this operation:
 
-    if(this->state == 0 && Line(this->limit_init.inLine(0.5), this->hall.get_small_line().inLine(0.5)).beyond_scope(this->center))
+    if(this->state == 0 && this->center == this->limit_init.inLine(0.5))
     {
         this->state = 1;
-        this->center = this->limit_init.inLine(0.5);
+        // this->width = (this->limit_init.length()/3.);
+        // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        // this->center = this->limit_init.inLine(0.5);
+        
         std::cout << "from state 0 to 1" << std::endl;
     }
 
-    else if(this->state == 1 && Line(this->limit_init.inLine(0.5), this->hall.get_small_line().inLine(0.5)).beyond_scope(this->center))
+    else if(this->state == 1 && this->center == this->hall.get_small_line().inLine(0.5))
     {
         this->state = 2;
-        this->center = this->hall.get_small_line().inLine(0.5);
+        // this->center = this->hall.get_small_line().inLine(0.5);
+        // this->width = (this->hall.get_small_line().length()/3.);
+        // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
         std::random_device rd;  // Will be used to obtain a seed for the random number engine
         std::mt19937 gen(rd());
         std::uniform_real_distribution<double> rand (0.1, this->random_p_init);
@@ -193,17 +199,21 @@ bool Spikers::get_closer() {
         std::cout << "from state 1 to 2" << std::endl;
     }
 
-    else if(this->state == 2 && Line(this->current_limit.inLine(0.5), this->hall.get_small_line().inLine(0.5)).beyond_scope(this->center))
+    else if(this->state == 2 && this->center == this->current_limit.inLine(0.5))
     {
         this->state = 3;
-        this->center = this->hall.get_small_line().inLine(0.5);
+        // this->center = this->hall.get_small_line().inLine(0.5);
+        // this->width = (this->hall.get_small_line().length()/3.);
+        // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
         std::cout << "from state 2 to 3" << std::endl;
     }
 
-    else if(this->state == 3 && Line(this->current_limit.inLine(0.5), this->hall.get_small_line().inLine(0.5)).beyond_scope(this->center))
+    else if(this->state == 3 && this->center == this->hall.get_small_line().inLine(0.5))
     {
         this->state = 2;
-        this->center = this->current_limit.inLine(0.5);
+        // this->center = this->current_limit.inLine(0.5);
+        // this->width = (this->current_limit.length()/3.);
+        // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
         std::random_device rd;  // Will be used to obtain a seed for the random number engine
         std::mt19937 gen(rd());
         std::uniform_real_distribution<double> rand (0.1, this->random_p_init);
@@ -230,11 +240,11 @@ bool Spikers::get_closer() {
         std::cout << "from state 3 to 2" << std::endl;
     }
 
-
+    
     // Movement
     if (this->state == 0){
 
-        double h0 = this->hall.get_small_line().length() / this->limit_init.length();
+        double h0 = this->speed * this->hall.get_small_line().length() / this->limit_init.length();
         double z = this->center.euclideanDistance(this->limit_init.inLine(0.5));
         double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->limit_init.inLine(0.5));
         double h = 1 - ((1-h0) / (d*d)) * (z*z);
@@ -242,7 +252,7 @@ bool Spikers::get_closer() {
         this->center = Line(this->hall.get_small_line().inLine(0.5), this->limit_init.inLine(0.5)).inLine(h);
 
         this->width = h * (this->limit_init.length()/3.);
-        this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        this->height = this->width;//<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
 
         this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
         this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
@@ -250,15 +260,15 @@ bool Spikers::get_closer() {
 
     else if(this->state == 1){
 
-        double h0 = this->hall.get_small_line().length() / this->limit_init.length();
-        double z = this->center.euclideanDistance(this->limit_init.inLine(0.5));
+        double h0 = this->speed * this->hall.get_small_line().length() / this->limit_init.length();
+        double z = this->center.euclideanDistance(this->hall.get_small_line().inLine(0.5));
         double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->limit_init.inLine(0.5));
         double h = 1 - ((1-h0) / (d*d)) * (z*z);
 
         this->center = Line(this->limit_init.inLine(0.5), this->hall.get_small_line().inLine(0.5)).inLine(h);
 
-        this->width = h * (this->hall.get_small_line().length()/3.);
-        this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        this->width = (this->hall.get_small_line().length()/3.) / h;
+        this->height = this->width;//<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
 
         this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
         this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
@@ -266,7 +276,7 @@ bool Spikers::get_closer() {
 
     else if(this->state == 2){
 
-        double h0 = this->hall.get_small_line().length() / this->current_limit.length();
+        double h0 = this->speed*this->hall.get_small_line().length() / this->current_limit.length();
         double z = this->center.euclideanDistance(this->current_limit.inLine(0.5));
         double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->current_limit.inLine(0.5));
         double h = (1 - ((1-h0) / (d*d)) * (z*z));
@@ -274,7 +284,7 @@ bool Spikers::get_closer() {
         this->center = Line(this->hall.get_small_line().inLine(0.5), this->current_limit.inLine(0.5)).inLine(h);
 
         this->width = h * (this->current_limit.length()/3.);
-        this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        this->height = this->width;// * static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
 
         this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
         this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
@@ -283,15 +293,15 @@ bool Spikers::get_closer() {
 
     else if(this->state == 3){
 
-        double h0 = this->hall.get_small_line().length() / this->current_limit.length();
+        double h0 = this->speed*this->hall.get_small_line().length() / this->current_limit.length();
         double z = this->center.euclideanDistance(this->hall.get_small_line().inLine(0.5));
         double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->current_limit.inLine(0.5));
         double h = 1 - ((1-h0) / (d*d)) * (z*z);
 
         this->center = Line(this->current_limit.inLine(0.5), this->hall.get_small_line().inLine(0.5)).inLine(h);
 
-        this->width = h * (this->hall.get_small_line().length()/3.);
-        this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        this->width = (this->hall.get_small_line().length()/3.) / h;
+        this->height = this->width;//static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
 
         this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
         this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);

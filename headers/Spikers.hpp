@@ -47,6 +47,7 @@ private:
     * 0 : vient d'apparaitre, avance vers un point random
     * 1 : à atteint le point, la ligne est tracé, il recule vers le centre
     * 2 : il avance vers le point, avec la ligne déjà tracé
+    * 3 : il recule vers le centre après avoir atteint le point random
     */
     int state = 0;
 

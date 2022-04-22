@@ -110,8 +110,9 @@ void Game::update() {
     // Ajout de points au centre jusqu'aux extrémités de l'octogone
     // à des temps aléatoires < à 40000 millisecondes entre chacun
     // sur des couloirs aléatoires
-    if (SDL_GetTicks() - clock_new_p > (rand()%100000)) {
+    if ( SDL_GetTicks() - clock_new_p > (rand()%100000)) {
         // maj horloge
+        generated = true;
         clock_new_p = SDL_GetTicks();
 
         std::shared_ptr<Enemy> enemy = this->level->new_enemy();

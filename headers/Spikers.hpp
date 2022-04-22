@@ -42,7 +42,7 @@ public:
 
 private:
     const int scoring=50;
-
+    const long double speed = 0.001;
     // entre 0.25 et 0.75, le point jusqu'au quel le spiker avance
     // 0.25 proche du centre, 0.75 proche de l'exterieur de la map
     float random_p;

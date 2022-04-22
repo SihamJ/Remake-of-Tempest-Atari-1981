@@ -16,7 +16,7 @@ enum color  { red = 0XFF0000,  white = 0XFFFFFF, black = 0X000000, light_blue = 
 #define TICK 100
 
 // width and height of our window
-#define WIDTH 1200
+#define WIDTH 1400
 #define HEIGHT 800
 
 

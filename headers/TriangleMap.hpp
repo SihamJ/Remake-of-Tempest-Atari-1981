@@ -21,7 +21,7 @@ public:
     void set_medians(const int width);
 
     // calcul des coordonnées du triangle intérieur
-    void set_small_triangle(const double ratio);
+    void set_small_triangle(const long  double ratio);
 
     // Constructions des couloirs
     void build_map() override;

@@ -9,15 +9,15 @@ class Collision {
     public:
         Collision();
         Collision(const Point& center);
-        Collision(const Point& center, const Color& c, const double& length);
+        Collision(const Point& center, const Color& c, const long  double& length);
         ~Collision();
 
         Point get_center();
         Color get_color();
-        double get_length();
+        long  double get_length();
         void set_center(const Point&& center);
         void set_color(const Color&& color);
-        void set_length(const double&& length);
+        void set_length(const long  double&& length);
 
         void build();
         void draw(std::shared_ptr<SDL_Renderer> renderer);
@@ -25,7 +25,7 @@ class Collision {
     protected:
         Point center;
         Color color;
-        double length;
+        long  double length;
         std::vector<Line> lines;
 };
 

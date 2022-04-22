@@ -52,11 +52,11 @@ class Missile {
 
         bool get_closer(){
 
-            double h0 = this->hall.get_small_line().length() / this->hall.get_big_line().length();
-            double z = this->pos.euclideanDistance(this->dest);
-            double d = this->start.euclideanDistance(this->dest);
+            long  double h0 = this->hall.get_small_line().length() / this->hall.get_big_line().length();
+            long  double z = this->pos.euclideanDistance(this->dest);
+            long  double d = this->start.euclideanDistance(this->dest);
 
-            double h = 1 - ( (1-h0) / (d*d) ) * (z*z);
+            long  double h = 1 - ( (1-h0) / (d*d) ) * (z*z);
             this->pos = Line(this->start, this->dest).inLine(h);
 
             return intersect(this->hall.get_small_line());

@@ -51,7 +51,7 @@ void Flippers::set(Tunel&& h){
         this->hall = h;
 
         double dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
-        this->width = dist/2.;
+        this->width = dist/3.;
         this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
 
         Point centre_small_line = hall.get_small_line().inLine(0.5);
@@ -73,24 +73,26 @@ void Flippers::clean(){
 
 bool Flippers::get_closer() {
 
-    double h0 = this->speed * this->hall.get_small_line().length() / this->hall.get_big_line().length();
-    double z = this->center.euclideanDistance(this->hall.get_big_line().inLine(0.5));
-    double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->hall.get_big_line().inLine(0.5));
-    double h = 1 - ((1-h0) / (d*d)) * (z*z);
+    long double h0 = this->speed;//(this->hall.get_small_line().length() / this->hall.get_big_line().length());
+    long double z = this->center.euclideanDistance(this->hall.get_big_line().inLine(0.5));
+    long double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->hall.get_big_line().inLine(0.5));
+    long double h = (1. - ((1.-h0) / (d*d)) * (z*z));
 
     this->center = Line(this->hall.get_small_line().inLine(0.5), this->hall.get_big_line().inLine(0.5)).inLine(h);
-    this->width = h * this->hall.get_big_line().length();
-    this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
 
-    this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
-    this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
+    this->width = h * this->hall.get_big_line().length();
+    this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
+    std::cout << z << std::endl;
+    this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
+    this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
 
     //return false;
     return intersect(this->hall.get_big_line());
 }
 
 bool Flippers::intersect(Line l) {
-    SDL_Rect r = {static_cast<int>(this->x), static_cast<int>(this->y), this->width, this->height};
+
+    SDL_Rect r = {static_cast<int>(this->x), static_cast<int>(this->y + height), static_cast<int>(this->x + this->width), static_cast<int>(this->y + this->height)};
 
     int x1 = l.get_p0().get_x();
     int y1 = l.get_p0().get_y();

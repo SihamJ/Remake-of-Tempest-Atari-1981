@@ -50,17 +50,17 @@ void Tankers::set(Tunel&& h){
 
         this->hall = h;
 
-        double dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
+        long double dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
         this->width = dist/2.;
-        this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
 
         Point centre_small_line = hall.get_small_line().inLine(0.5);
         this->center = centre_small_line;
 
         Point centre_big_line = hall.get_big_line().inLine(0.5);
 
-        x = centre_small_line.get_x() - ( static_cast<double>(width)/2.0);
-        y = centre_small_line.get_y() - ( static_cast<double>(height)/2.0);
+        x = centre_small_line.get_x() - ( static_cast<long double>(width)/2.0);
+        y = centre_small_line.get_y() - ( static_cast<long double>(height)/2.0);
 
         this->angle = this->hall.get_angle();
 
@@ -73,17 +73,17 @@ void Tankers::clean(){
 
 bool Tankers::get_closer() {
 
-    double h0 = this->hall.get_small_line().length() / this->hall.get_big_line().length();
-    double z = this->center.euclideanDistance(this->hall.get_big_line().inLine(0.5));
-    double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->hall.get_big_line().inLine(0.5));
-    double h = 1 - ((1-h0) / (d*d)) * (z*z);
+    long double h0 = this->speed;//this->hall.get_small_line().length() / this->hall.get_big_line().length();
+    long double z = this->center.euclideanDistance(this->hall.get_big_line().inLine(0.5));
+    long double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->hall.get_big_line().inLine(0.5));
+    long double h = this->speed * (1 - ((1-h0) / (d*d)) * (z*z));
 
     this->center = Line(this->hall.get_small_line().inLine(0.5), this->hall.get_big_line().inLine(0.5)).inLine(h);
     this->width = h * this->hall.get_big_line().length();
-    this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+    this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
 
-    this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
-    this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
+    this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
+    this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
 
     //return false;
     return intersect(this->hall.get_big_line());

@@ -74,7 +74,7 @@ void Spikers::set(Tunel&& h){
 
         std::random_device rd;  // Will be used to obtain a seed for the random number engine
         std::mt19937 gen(rd());
-        std::uniform_real_distribution<double> rand (0.25, 0.75);
+        std::uniform_real_distribution<long double> rand (0.25, 0.75);
 
         this->random_p = rand(gen);
         this->random_p_init = this->random_p;
@@ -87,8 +87,8 @@ void Spikers::set(Tunel&& h){
         Point bp0 = this->hall.get_big_line().get_p0();
         Point bp1 = this->hall.get_big_line().get_p1();
 
-        double segment1 = this->random_p_init * (sp0.euclideanDistance(bp0));
-        double segment2 = this->random_p_init * (sp1.euclideanDistance(bp1));
+        long double segment1 = this->random_p_init * (sp0.euclideanDistance(bp0));
+        long double segment2 = this->random_p_init * (sp1.euclideanDistance(bp1));
         Line l1 = Line(sp0, bp0);
         Line l2 = Line(sp1, bp1);
 
@@ -108,8 +108,8 @@ void Spikers::set(Tunel&& h){
 
         Point centre_big_line = hall.get_big_line().inLine(0.5);
 
-        x = centre_small_line.get_x() - ( static_cast<double>(width)/2.0);
-        y = centre_small_line.get_y() - ( static_cast<double>(height)/2.0);
+        x = centre_small_line.get_x() - ( static_cast<long double>(width)/2.0);
+        y = centre_small_line.get_y() - ( static_cast<long double>(height)/2.0);
 
         this->angle = this->hall.get_angle();
         
@@ -135,7 +135,7 @@ bool Spikers::get_closer() {
     {
         this->state = 1;
         // this->width = (this->limit_init.length()/3.);
-        // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        // this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
         // this->center = this->limit_init.inLine(0.5);
         
         // std::cout << "from state 0 to 1" << std::endl;
@@ -146,10 +146,10 @@ bool Spikers::get_closer() {
         this->state = 2;
         // this->center = this->hall.get_small_line().inLine(0.5);
         // this->width = (this->hall.get_small_line().length()/3.);
-        // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        // this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
         // std::random_device rd;  // Will be used to obtain a seed for the random number engine
         // std::mt19937 gen(rd());
-        // std::uniform_real_distribution<double> rand (0.1, this->random_p_init);
+        // std::uniform_real_distribution<long double> rand (0.1, this->random_p_init);
 
         // this->random_p = rand(gen);
 
@@ -160,8 +160,8 @@ bool Spikers::get_closer() {
         // Point bp0 = this->hall.get_big_line().get_p0();
         // Point bp1 = this->hall.get_big_line().get_p1();
 
-        // double segment1 = this->random_p * (sp0.euclideanDistance(bp0));
-        // double segment2 = this->random_p * (sp1.euclideanDistance(bp1));
+        // long double segment1 = this->random_p * (sp0.euclideanDistance(bp0));
+        // long double segment2 = this->random_p * (sp1.euclideanDistance(bp1));
         // Line l1 = Line(sp0, bp0);
         // Line l2 = Line(sp1, bp1);
 
@@ -178,7 +178,7 @@ bool Spikers::get_closer() {
         this->state = -1;
         // this->center = this->hall.get_small_line().inLine(0.5);
         // this->width = (this->hall.get_small_line().length()/3.);
-        // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        // this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
         // std::cout << "from state 2 to 3" << std::endl;
     }
 
@@ -188,10 +188,10 @@ bool Spikers::get_closer() {
         this->state = -1;
         // this->center = this->current_limit.inLine(0.5);
         // this->width = (this->current_limit.length()/3.);
-        // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        // this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
         std::random_device rd;  // Will be used to obtain a seed for the random number engine
         std::mt19937 gen(rd());
-        std::uniform_real_distribution<double> rand (0.1, this->random_p_init);
+        std::uniform_real_distribution<long double> rand (0.1, this->random_p_init);
 
         this->random_p = rand(gen);
 
@@ -202,8 +202,8 @@ bool Spikers::get_closer() {
         Point bp0 = this->hall.get_big_line().get_p0();
         Point bp1 = this->hall.get_big_line().get_p1();
 
-        double segment1 = this->random_p * (sp0.euclideanDistance(bp0));
-        double segment2 = this->random_p * (sp1.euclideanDistance(bp1));
+        long double segment1 = this->random_p * (sp0.euclideanDistance(bp0));
+        long double segment2 = this->random_p * (sp1.euclideanDistance(bp1));
         Line l1 = Line(sp0, bp0);
         Line l2 = Line(sp1, bp1);
 
@@ -219,68 +219,65 @@ bool Spikers::get_closer() {
     // Movement
     if (this->state == 0){
 
-        double h0 = this->speed * this->hall.get_small_line().length() / this->limit_init.length();
-        double z = this->center.euclideanDistance(this->limit_init.inLine(0.5));
-        double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->limit_init.inLine(0.5));
-        double h = 1 - ((1-h0) / (d*d)) * (z*z);
+        long double h0 =  this->speed;//(this->hall.get_small_line().length() / this->limit_init.length());
+        long double z = this->center.euclideanDistance(this->limit_init.inLine(0.5));
+        long double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->limit_init.inLine(0.5));
+        long double h = (1. - ((1.-h0) / (d*d)) * (z*z));
 
         this->center = Line(this->hall.get_small_line().inLine(0.5), this->limit_init.inLine(0.5)).inLine(h);
 
         this->width = h * (this->limit_init.length()/3.);
-        this->height = this->width;//<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
-
-        this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
-        this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
+        this->height = this->width;//<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
+        this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
+        this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
     }
 
     else if(this->state == 1){
 
-        double h0 = this->speed * this->hall.get_small_line().length() / this->limit_init.length();
-        double z = this->center.euclideanDistance(this->hall.get_small_line().inLine(0.5));
-        double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->limit_init.inLine(0.5));
-        double h = 1 - ((1-h0) / (d*d)) * (z*z);
+        long double h0 = this->speed;//(this->hall.get_small_line().length() / this->limit_init.length());
+        long double z = this->center.euclideanDistance(this->hall.get_small_line().inLine(0.5));
+        long double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->limit_init.inLine(0.5));
+        long double h = (1. - ((1.-h0) / (d*d)) * (z*z));
 
         this->center = Line(this->limit_init.inLine(0.5), this->hall.get_small_line().inLine(0.5)).inLine(h);
 
-        this->width = (this->hall.get_small_line().length()/3.) / h;
-        this->height = this->width;//<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
-
-        this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
-        this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
+        this->width = (this->limit_init.length()/3.) * (1-h) ;
+        this->height = this->width;//<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
+        this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
+        this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
     }
 
     // TO DO changer déplacement ennemi en envoie d'un missile ennemi
     else if(this->state == 2){
 
-        double h0 = this->speed*this->hall.get_small_line().length() / this->current_limit.length();
-        double z = this->center.euclideanDistance(this->current_limit.inLine(0.5));
-        double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->current_limit.inLine(0.5));
-        double h = (1 - ((1-h0) / (d*d)) * (z*z));
+        long double h0 = this->speed;//(this->hall.get_small_line().length() / this->current_limit.length());
+        long double z = this->center.euclideanDistance(this->current_limit.inLine(0.5));
+        long double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->current_limit.inLine(0.5));
+        long double h = (1. - ((1.-h0) / (d*d)) * (z*z));
 
         this->center = Line(this->hall.get_small_line().inLine(0.5), this->current_limit.inLine(0.5)).inLine(h);
 
         this->width = h * (this->current_limit.length()/3.);
-        this->height = this->width;// * static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
-
-        this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
-        this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
+        this->height = this->width;// * static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
+        this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
+        this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
 
     }
     // Cet état sera supprimé
     else if(this->state == 3){
 
-        double h0 = this->speed*this->hall.get_small_line().length() / this->current_limit.length();
-        double z = this->center.euclideanDistance(this->hall.get_small_line().inLine(0.5));
-        double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->current_limit.inLine(0.5));
-        double h = 1 - ((1-h0) / (d*d)) * (z*z);
+        long double h0 = this->speed;//(this->hall.get_small_line().length() / this->current_limit.length());
+        long double z = this->center.euclideanDistance(this->hall.get_small_line().inLine(0.5));
+        long double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->current_limit.inLine(0.5));
+        long double h = (1. - ((1.-h0) / (d*d)) * (z*z));
 
         this->center = Line(this->current_limit.inLine(0.5), this->hall.get_small_line().inLine(0.5)).inLine(h);
 
-        this->width = (this->hall.get_small_line().length()/3.) / h;
-        this->height = this->width;//static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        this->width = (this->hall.get_small_line().length()/3.) *(1-h);
+        this->height = this->width;//static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
 
-        this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
-        this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
+        this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
+        this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
 
     }
     return false;
@@ -364,8 +361,8 @@ void Spikers::update_line_limit() {
     Point bp0 = this->hall.get_big_line().get_p0();
     Point bp1 = this->hall.get_big_line().get_p1();
 
-    double segment1 = this->random_p_init * (sp0.euclideanDistance(bp0));
-    double segment2 = this->random_p_init * (sp1.euclideanDistance(bp1));
+    long double segment1 = this->random_p_init * (sp0.euclideanDistance(bp0));
+    long double segment2 = this->random_p_init * (sp1.euclideanDistance(bp1));
     Line l1 = Line(sp0, bp0);
     Line l2 = Line(sp1, bp1);
 

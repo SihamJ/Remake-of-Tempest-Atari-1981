@@ -70,20 +70,20 @@ Line::~Line(){}
 void Line::set_line(Point p1, Point p2){
     this->points[0] = p1;
     this->points[1] = p2;
-    a = (double)( p1.get_y() - p2.get_y()) / (double)(p1.get_x() - p2.get_x());
-    b = p1.get_y() - (double) (a * p1.get_x());
+    a = (long double)( p1.get_y() - p2.get_y()) / (long double)(p1.get_x() - p2.get_x());
+    b = p1.get_y() - (long double) (a * p1.get_x());
 }
 
-void Line::set_parameters(double a, double b){
+void Line::set_parameters(long double a, long double b){
     this->a = a;
     this->b = b;
 }
 
-std::array<double, 2> Line::get_parameters(){
+std::array<long double, 2> Line::get_parameters(){
     return {a, b};
 }
 
-double Line::get_slope(){
+long double Line::get_slope(){
     return this->a;
 }
 
@@ -99,12 +99,12 @@ void Line::calculate_parameters(){
     // (D): x = b (droite verticale, a devrait être à l'infini)
     if(points[0].get_x() == points[1].get_x()){
         a = 99999999.0;
-        b = (double) points[0].get_y();
+        b = (long double) points[0].get_y();
     }
     // cas normal
     else {
-        a = (double)( points[1].get_y() - points[0].get_y()) / (double)(points[1].get_x() - points[0].get_x());
-        b = points[0].get_y() - (double) (a * points[0].get_x());
+        a = (long double)( points[1].get_y() - points[0].get_y()) / (long double)(points[1].get_x() - points[0].get_x());
+        b = points[0].get_y() - (long double) (a * points[0].get_x());
     }
 }
 
@@ -142,14 +142,14 @@ void Line::set_thickness(int thickness){
 
 bool Line::is_within(Point& p){
         
-    double a = this->get_slope();
+    long double a = this->get_slope();
 
     bool on = (p.get_y() - this->get_p0().get_y()) == a * (p.get_x() - this->get_p0().get_x());
 
-    double max_y = this->get_p1().get_y() > this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
-    double min_y = this->get_p1().get_y() < this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
-    double max_x = this->get_p1().get_x() > this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
-    double min_x = this->get_p1().get_x() < this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
+    long double max_y = this->get_p1().get_y() > this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
+    long double min_y = this->get_p1().get_y() < this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
+    long double max_x = this->get_p1().get_x() > this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
+    long double min_x = this->get_p1().get_x() < this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
 
     bool between = ( min_y <= p.get_y() <= max_y && min_x <= p.get_x() <= max_x);
 
@@ -157,10 +157,10 @@ bool Line::is_within(Point& p){
 }
 
 bool Line::beyond_scope(Point &p){
-    double max_y = this->get_p1().get_y() > this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
-    double min_y = this->get_p1().get_y() < this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
-    double max_x = this->get_p1().get_x() > this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
-    double min_x = this->get_p1().get_x() < this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
+    long double max_y = this->get_p1().get_y() > this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
+    long double min_y = this->get_p1().get_y() < this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
+    long double max_x = this->get_p1().get_x() > this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
+    long double min_x = this->get_p1().get_x() < this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
     bool res= !( min_y <= p.get_y() &&  p.get_y() <= max_y && min_x <= p.get_x() && p.get_x() <= max_x);
 
     return res;
@@ -170,16 +170,16 @@ void Line::redefine_parameters(){
     // (D): x = b (droite verticale, a devrait être à l'infini)
     if(points[0].get_x() == points[1].get_x()){
         this->a = 99999999.0;
-        this->b = (double) points[0].get_y();
+        this->b = (long double) points[0].get_y();
     }
     // cas normal
     else {
-        this->a = (double)( points[1].get_y() - points[0].get_y()) / (double)(points[1].get_x() - points[0].get_x());
-        this->b = points[0].get_y() - (double) (this->a * points[0].get_x());
+        this->a = (long double)( points[1].get_y() - points[0].get_y()) / (long double)(points[1].get_x() - points[0].get_x());
+        this->b = points[0].get_y() - (long double) (this->a * points[0].get_x());
     }
 }
 
-std::array<double, 4> Line::get_coord(){
+std::array<long double, 4> Line::get_coord(){
     return {points[0].get_x(), points[0].get_y(), points[1].get_x(), points[1].get_y()};
 }
 
@@ -202,7 +202,7 @@ Point Line::intersect(Line l){
 
 }
 
-double Line::length(){
+long double Line::length(){
     return  this->get_p0().euclideanDistance(this->get_p1());
 }
 
@@ -211,15 +211,15 @@ double Line::length(){
  * 
  * @return Point
  */
-Point Line::inLine(double ratio ){
-    double x, y;
-    double coeff1 = points[0].get_x() <= points[1].get_x() ? 1. : -1.;
-    double coeff2 = points[0].get_y() <= points[1].get_y() ? 1. : -1.;
+Point Line::inLine(long double ratio ){
+    long double x, y;
+    long double coeff1 = points[0].get_x() <= points[1].get_x() ? 1. : -1.;
+    long double coeff2 = points[0].get_y() <= points[1].get_y() ? 1. : -1.;
 
-    x = (double)points[0].get_x() + (double)(coeff1 * abs(points[1].get_x() - points[0].get_x())) * ratio;
-    y = (double)points[0].get_y() + (double)(coeff2 * abs(points[1].get_y() - points[0].get_y())) * ratio;
+    x = points[0].get_x() + coeff1 * abs(points[1].get_x() - points[0].get_x()) * ratio;
+    y = points[0].get_y() + coeff2 * abs(points[1].get_y() - points[0].get_y()) * ratio;
 
-    return Point{x,y};
+    return Point{ x, y};
 }
 
 void Line::draw(std::shared_ptr<SDL_Renderer> renderer){

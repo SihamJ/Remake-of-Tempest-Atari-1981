@@ -7,7 +7,7 @@
     {
     }
 
-    Collision::Collision(const Point& center, const Color& c, const double& length)
+    Collision::Collision(const Point& center, const Color& c, const long double& length)
         : center(center), color(c), length(length)
     {
     }
@@ -34,12 +34,12 @@
         // Eq Cercle : (x−a)² + (y−b)² = r²   || (a,b) =  center
 
         std::vector<Point> points;
-        float y_max = this->center.get_y() + this->length/2.0;
-        float y_min = this->center.get_y() - this->length/2.0;
-        float y_step = (y_max - y_min) / 8.0;
+        long  double y_max = this->center.get_y() + this->length/2.0;
+        long  double y_min = this->center.get_y() - this->length/2.0;
+        long  double y_step = (y_max - y_min) / 8.0;
         
-        float y = y_min;
-        float x;
+        long  double y = y_min;
+        long  double x;
 
         for (int i = 0; i < 4; i++){
             x = sqrt(this->length*this->length - (y - this->center.get_y())*(y - this->center.get_y())) + this->center.get_x();

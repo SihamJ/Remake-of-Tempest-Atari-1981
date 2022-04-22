@@ -70,15 +70,15 @@ public:
 
     void set_angle(){
 
-        double hypotenus = this->get_small_line().length();
-        double x_project = this->get_small_line().get_x_projected().length();
-        double y_project = this->get_small_line().get_y_projected().length();
+        long  double hypotenus = this->get_small_line().length();
+        long  double x_project = this->get_small_line().get_x_projected().length();
+        long  double y_project = this->get_small_line().get_y_projected().length();
 
-        double angle = 0.;
-        double x1 = this->get_small_line().get_p0().get_x();
-        double y1 = this->get_small_line().get_p0().get_y();
-        double x2 = this->get_big_line().get_p0().get_x();
-        double y2 = this->get_big_line().get_p0().get_y();
+        long  double angle = 0.;
+        long  double x1 = this->get_small_line().get_p0().get_x();
+        long  double y1 = this->get_small_line().get_p0().get_y();
+        long  double x2 = this->get_big_line().get_p0().get_x();
+        long  double y2 = this->get_big_line().get_p0().get_y();
 
         if(y_project == 0)
             return;
@@ -103,7 +103,7 @@ public:
         this->angle = angle * (180.0/3.141592653589793238463) + 180.;
     }
 
-    double get_angle(){
+    long  double get_angle(){
         return this->angle;
     }
 
@@ -120,7 +120,7 @@ public:
         return lines;
     }
 
-    float length(){
+    long  double length(){
         return this->get_small_line().inLine(0.5).euclideanDistance(this->get_big_line().inLine(0.5));
     }
 
@@ -150,7 +150,7 @@ public:
 private:
     // les deux lignes
     std::array<Line, 2> lines;
-    double angle;
+    long  double angle;
 };
 
 #endif

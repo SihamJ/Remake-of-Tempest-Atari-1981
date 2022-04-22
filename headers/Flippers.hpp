@@ -36,6 +36,7 @@ private:
     const int scoring=150;
     const int init_width = 128;
     const int init_height = 49;
+    const long double speed = 0.0000000000000001;
     int width;
     int height;
 };

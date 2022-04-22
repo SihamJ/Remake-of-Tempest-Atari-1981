@@ -4,6 +4,7 @@
 #include "Character.hpp"
 #include "Line.hpp"
 #include "Tunel.hpp"
+#include <cmath>
 
 class Enemy : public Character {
 
@@ -29,20 +30,20 @@ public:
 protected:
 
     // + la vitesse est haute + on se rapproche du centre avec get_closer
-    const float speed = 1;
+     //0.000000000000001;//
 
     // centre de gravité. Servira comme position de départ (initialisé au centre de la map)
     Point center;
 
     // coordonnee de l'image (top left corner du carré)
-    double x, y;
+    long double x, y;
 
     // taille à changer pr agrandir ou rétrécir l'image de l'ennemi
     int width;
     int height;
 
     // angle de rotation de l'image
-    double angle;
+    long double angle;
 
 };
 

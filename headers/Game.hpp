@@ -45,7 +45,7 @@ public:
     bool running();
 
 private:
-
+    bool generated = false;
     // temps enregistré pr faire des updates toutes les x secondes
     Uint32 clock = 0;
 

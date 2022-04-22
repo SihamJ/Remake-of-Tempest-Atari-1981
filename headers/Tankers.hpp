@@ -38,6 +38,7 @@ private:
     const int init_height = 49;
     int width;
     int height;
+    const long double speed = 0.0000000000000001;
 };
 
 

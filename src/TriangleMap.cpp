@@ -46,7 +46,7 @@ void TriangleMap::set_medians(const int width){
 }
 
 // calcul des coordonnées du triangle intérieur
-void TriangleMap::set_small_triangle(const double ratio){
+void TriangleMap::set_small_triangle(const long  double ratio){
     smallTriangle[0] = medians[0].inLine(ratio);
     smallTriangle[1] = medians[1].inLine(ratio);
     smallTriangle[2].set_point(bigTriangle[2].get_x(), bigTriangle[2].get_y() + abs(bigTriangle[0].get_y() - bigTriangle[2].get_y())*ratio);
@@ -72,8 +72,8 @@ void TriangleMap::build_map(){
     smallLines.push_back( Point(smallTriangle[0].get_x(), smallTriangle[0].get_y()));
 
     for(int i = 1; i < hallPerSide; i++){
-        Point p1 = linesB[0].inLine(static_cast<double>(i)/static_cast<double>(hallPerSide));
-        Point p2 = linesS[0].inLine(static_cast<double>(i)/static_cast<double>(hallPerSide));
+        Point p1 = linesB[0].inLine(static_cast<long  double>(i)/static_cast<long  double>(hallPerSide));
+        Point p2 = linesS[0].inLine(static_cast<long  double>(i)/static_cast<long  double>(hallPerSide));
         bigLines.push_back(p1);
         smallLines.push_back(p2);
     }
@@ -82,8 +82,8 @@ void TriangleMap::build_map(){
     smallLines.push_back( Point(smallTriangle[1].get_x(), smallTriangle[1].get_y()));
 
     for(int i = 1; i < hallPerSide; i++){
-        Point p1 = linesB[1].inLine( static_cast<double>(i)/static_cast<double>(hallPerSide));
-        Point p2 = linesS[1].inLine(static_cast<double>(i)/static_cast<double>(hallPerSide));
+        Point p1 = linesB[1].inLine( static_cast<long  double>(i)/static_cast<long  double>(hallPerSide));
+        Point p2 = linesS[1].inLine(static_cast<long  double>(i)/static_cast<long  double>(hallPerSide));
         bigLines.push_back(p1);
         smallLines.push_back(p2);
     }
@@ -92,8 +92,8 @@ void TriangleMap::build_map(){
     smallLines.push_back(Point(smallTriangle[2].get_x(), smallTriangle[2].get_y()));
 
     for(int i = 1; i < nbLastSide; i++){
-        Point p1 = linesB[2].inLine(static_cast<double>(i)/static_cast<double>(nbLastSide));
-        Point p2 = linesS[2].inLine(static_cast<double>(i)/static_cast<double>(nbLastSide));
+        Point p1 = linesB[2].inLine(static_cast<long  double>(i)/static_cast<long  double>(nbLastSide));
+        Point p2 = linesS[2].inLine(static_cast<long  double>(i)/static_cast<long  double>(nbLastSide));
         bigLines.push_back(p1);
         smallLines.push_back(p2);
     }

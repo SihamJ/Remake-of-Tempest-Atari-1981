@@ -30,11 +30,11 @@ public:
 
     void set_line(Point p1, Point p2);
 
-    void set_parameters(double a, double b);
+    void set_parameters(long double a, long double b);
 
-    std::array<double, 2> get_parameters();
+    std::array<long double, 2> get_parameters();
 
-    double get_slope();
+    long double get_slope();
 
     std::array<Point, 2> get_points();
 
@@ -63,13 +63,13 @@ public:
 
     bool beyond_scope(Point &p);
 
-    std::array<double, 4> get_coord();
+    std::array<long double, 4> get_coord();
 
     Point intersect(Line l);
 
-    double length();
+    long double length();
 
-    Point inLine(double ratio );
+    Point inLine(long double ratio );
 
     void draw(std::shared_ptr<SDL_Renderer> renderer);
     void draw_shadow(std::shared_ptr<SDL_Renderer> renderer);
@@ -80,8 +80,8 @@ private:
     std::array<Point, 2> points;
 
     // paramètres de l'équation de la droite 
-    double a;
-    double b;
+    long double a;
+    long double b;
     int thickness = 1;
 };
 

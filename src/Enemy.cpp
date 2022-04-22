@@ -56,9 +56,9 @@
 
         bool cond1 = false;
 
-        double segment_a = centre_big_line.get_x() - centre_small_line.get_x();
-        double segment_b = centre_big_line.get_y() - centre_small_line.get_y();
-        double segment_c = sqrt(segment_a * segment_a + segment_b * segment_b);
+        long double segment_a = centre_big_line.get_x() - centre_small_line.get_x();
+        long double segment_b = centre_big_line.get_y() - centre_small_line.get_y();
+        long double segment_c = sqrt(segment_a * segment_a + segment_b * segment_b);
         
         if (segment_a < 0.) {
             segment_a *= -1.;

@@ -153,55 +153,24 @@ void Game::update() {
                     if (e->get_name().compare("spikers") == 0) {
                         if (e->get_hall() == vm[i]->get_hall()) {
                             Spikers * enemy_spiker = dynamic_cast<Spikers*>(&(*e));
-                            if (enemy_spiker == nullptr)
+                            if (enemy_spiker == nullptr) {
+                                printf("null ??\n");
                                 return;
-                            Line random_p = enemy_spiker->get_line_current_limit();
-                            int x1 = random_p.get_p0().get_x();
-                            int y1 = random_p.get_p0().get_y();
-                            int x2 = random_p.get_p1().get_x();
-                            int y2 = random_p.get_p1().get_y();
+                            }
+                            // Line random_p = enemy_spiker->get_line_limit();
+                            // int x1 = static_cast<int>(random_p.get_p0().get_x());
+                            // int y1 = static_cast<int>(random_p.get_p0().get_y());
+                            // int x2 = static_cast<int>(random_p.get_p1().get_x());
+                            // int y2 = static_cast<int>(random_p.get_p1().get_y());
 
-                            SDL_Rect r = e->get_rect();
-
-                            printf("jsuis là\n");
-                            if (SDL_IntersectRectAndLine(&r, &x1, &y1, &x2, &y2) == SDL_TRUE) {
-                                printf("non ?\n");
+                            // if (SDL_IntersectRectAndLine(&r, &x1, &y1, &x2, &y2) == SDL_TRUE) {
                                 vm.erase(vm.begin()+i);
                                 enemy_spiker->decrease_random_p();
                                 enemy_spiker->update_line_limit();
-                            }
+                            // }
                         }
                     }
                 }
-                // test si y a collision entre missiles alliés et ennemies
-
-                // SDL_Rect r_missile;
-                // r_missile.w = vm[i]->get_width();
-                // r_missile.h = vm[i]->get_height();
-                // r_missile.x = vm[i]->get_x();
-                // r_missile.y = vm[i]->get_y();
-               
-                // for (int j = 0; j<enemies.size(); j++) {
-                //     SDL_Rect r_enemy;
-                //     r_enemy.w = enemies[j]->get_rect().at(0).euclideanDistance(enemies[j]->get_rect().at(1));
-                //     r_enemy.h = enemies[j]->get_rect().at(1).euclideanDistance(enemies[j]->get_rect().at(2));
-                //     r_enemy.x = enemies[j]->get_center().get_x();
-                //     r_enemy.y = enemies[j]->get_center().get_y();
-
-                //     SDL_Rect result;
-                //     if (SDL_IntersectRect(&r_enemy, &r_missile, &result)){
-                //         // Collision c { Point(result.x, result.y), Color(PURPLE), 2.0};
-                //         // c.build();
-                //         // render_color(PURPLE);
-                //         // collisions.push_back(c);
-                //         player.incr_score(enemies.at(j)->get_scoring());
-                //         std::cout << "score: " << player.get_score() << std::endl;
-
-                //         enemies.erase(enemies.begin()+j);
-                //         vm.erase(vm.begin()+i);
-                //         break;
-                //     }
-                // }
             }
         }
 
@@ -212,38 +181,19 @@ void Game::update() {
         }
 
         // collision entre missile et player
-        Line  l1_player{ player.get_lines().at(0)};
-        Line l2_player{ player.get_lines().at(3)};
+        // Line  l1_player{ player.get_lines().at(0)};
+        // Line l2_player{ player.get_lines().at(3)};
 
-        int x1, x2, x3, x4, y1, y2, y3, y4;
-        x1 = static_cast<int>(l1_player.get_p0().get_x());
-        y1 = static_cast<int>(l1_player.get_p0().get_y());
-        x2 = static_cast<int>(l1_player.get_p1().get_x());
-        y2 = static_cast<int>(l1_player.get_p1().get_y());
+        // int x1, x2, x3, x4, y1, y2, y3, y4;
+        // x1 = static_cast<int>(l1_player.get_p0().get_x());
+        // y1 = static_cast<int>(l1_player.get_p0().get_y());
+        // x2 = static_cast<int>(l1_player.get_p1().get_x());
+        // y2 = static_cast<int>(l1_player.get_p1().get_y());
 
-        x3 = static_cast<int>(l2_player.get_p0().get_x());
-        y3 = static_cast<int>(l2_player.get_p0().get_y());
-        x4 = static_cast<int>(l2_player.get_p1().get_x());
-        y4 = static_cast<int>(l2_player.get_p1().get_y());
-
-        // for (int j = 0; j<enemies.size(); j++) {
-        //     SDL_Rect r_enemy;
-        //     r_enemy.w = enemies[j]->get_rect().at(0).euclideanDistance(enemies[j]->get_rect().at(1));
-        //     r_enemy.h = enemies[j]->get_rect().at(1).euclideanDistance(enemies[j]->get_rect().at(2));
-        //     r_enemy.x = enemies[j]->get_center().get_x();
-        //     r_enemy.y = enemies[j]->get_center().get_y();
-
-        //     // collision missile et player
-        //     if (SDL_IntersectRectAndLine(&r_enemy, &x1, &y1, &x2, &y2) 
-        //             || SDL_IntersectRectAndLine(&r_enemy, &x3, &y3, &x4, &y4)) 
-        //         {
-        //             std::cout << "collision player enemy" << std::endl;
-        //             if(player.decr_life_point()){
-        //                 std::cout << "GAME OVER" << std::endl;
-        //                 this->isRunning = false;
-        //         }
-        //     }
-        // }
+        // x3 = static_cast<int>(l2_player.get_p0().get_x());
+        // y3 = static_cast<int>(l2_player.get_p0().get_y());
+        // x4 = static_cast<int>(l2_player.get_p1().get_x());
+        // y4 = static_cast<int>(l2_player.get_p1().get_y());
     }
 }
 

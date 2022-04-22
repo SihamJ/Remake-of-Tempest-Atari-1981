@@ -108,6 +108,10 @@ class Missile {
             }
         }
 
+        SDL_Rect get_rect() {
+            return SDL_Rect{static_cast<int>(pos.get_x()), static_cast<int>(pos.get_y()), width, height};
+        }
+
     private:
 
         // couloir auquel appartient l'ennemi

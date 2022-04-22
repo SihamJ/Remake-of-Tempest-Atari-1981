@@ -123,7 +123,18 @@ void Game::update() {
         //instead of copying values, we move them by rvalue reference. They won't be needed afterwards.
         enemy->set(std::move(hDest));
 
-        enemies.push_back(enemy);
+        // faux si y a déjà un spiker sur le couloir
+        bool enemy_valid = true;
+
+        for (auto e : enemies) {
+            if (e->get_name().compare("spikers") == 0 && e->get_hall() == enemy->get_hall()) {
+                enemy_valid = false;
+                break;
+            }
+        }
+
+        if (enemy_valid)
+            enemies.push_back(enemy);
     }
     // Si on a dépassé les TICK millisecondes, on update
     if (SDL_GetTicks() - clock > TICK) {

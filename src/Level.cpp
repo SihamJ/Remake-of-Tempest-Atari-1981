@@ -200,7 +200,7 @@ std::shared_ptr<Enemy> Level::new_enemy(){
    // i = 1;
 
     // force à afficher que des spikers
-    //i = 2;
+    i = 2;
 
     Color color = this->current_enemies.at(i);
     std::shared_ptr<Enemy> e;

@@ -187,11 +187,15 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     // int i = rand() % 2;
     // if (i == 1) i++;
 
+    // force à afficher que des flippers
+    // int i = 0;
     
-    int i = 0;
+    //force à afficher que des tankers
+    int i = 1;
 
     // force à afficher que des spikers
     // int i = 2;
+
     Color color = this->current_enemies.at(i);
     std::shared_ptr<Enemy> e;
     
@@ -203,17 +207,17 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     case enemies_list::spikers:
         e = std::make_shared<Spikers>("spikers", std::move(color));
         break;
-    // case enemies_list::tankers:
-    //     e = std::make_shared<Tankers>("tankers", color);
-    //     break;
+    case enemies_list::tankers:
+        e = std::make_shared<Tankers>("tankers", std::move(color));
+        break;
     // case enemies_list::superzapper:
-    //     e = std::make_shared<SuperZapper>("superzapper", color);
+    //     e = std::make_shared<SuperZapper>("superzapper", std::move(color));
     //     break;
     // case enemies_list::pulsars:
-    //     e = std::make_shared<Pulsars>("pulsars", color);
+    //     e = std::make_shared<Pulsars>("pulsars", std::move(color));
     //     break;
     // case enemies_list::fuseballs:
-    //     e = std::make_shared<Fuseballs>("fuseballs", color);
+    //     e = std::make_shared<Fuseballs>("fuseballs", std::move(color));
     //     break;
 
     // we don't have the other enemies for now, so we generate only flippers by default

@@ -80,3 +80,7 @@
             }
         }        
     }
+
+SDL_Rect Enemy::get_rect() {
+    return SDL_Rect{static_cast<int>(x), static_cast<int>(y), width, height};
+}

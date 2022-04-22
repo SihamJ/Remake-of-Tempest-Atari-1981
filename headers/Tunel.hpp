@@ -108,12 +108,12 @@ public:
     }
 
     Line get_big_line () {
-        return lines[0];
+        return lines.at(0);
     }
 
 
     Line get_small_line () {
-        return lines[1];
+        return lines.at(1);
     }
 
     std::array<Line, 2> get_lines(){
@@ -141,6 +141,10 @@ public:
         Line l2(lines[0].get_p0(), lines[1].get_p0(), lines[0].get_thickness());
         l1.draw_shadow(renderer);
         l2.draw_shadow(renderer);
+    }
+    
+    bool operator==(Tunel &&t) {
+        return (get_small_line() == t.get_small_line() && get_big_line() == t.get_big_line());
     }
 
 private:

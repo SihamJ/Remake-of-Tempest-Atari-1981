@@ -276,3 +276,6 @@ void Line::draw_shadow(std::shared_ptr<SDL_Renderer> renderer){
     SDL_SetRenderDrawColor(renderer.get(), r, g, b, a);
 }
 
+bool Line::operator==(Line &&l) {
+    return (this->get_p0() == l.get_p0() && this->get_p1() == l.get_p1());
+}

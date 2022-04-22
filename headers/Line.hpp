@@ -74,6 +74,8 @@ public:
     void draw(std::shared_ptr<SDL_Renderer> renderer);
     void draw_shadow(std::shared_ptr<SDL_Renderer> renderer);
 
+    bool operator==(Line &&l);
+
 private:
     std::array<Point, 2> points;
 

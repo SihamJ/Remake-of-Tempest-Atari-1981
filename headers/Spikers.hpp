@@ -30,9 +30,15 @@ public:
 
     bool get_closer() override;
 
+    Line get_line_current_limit();
+
+    void decrease_random_p();
+
     bool intersect(Line l);
 
     void draw(std::shared_ptr<SDL_Renderer> renderer) override;
+
+    void update_line_limit();
 
 private:
     const int scoring=50;

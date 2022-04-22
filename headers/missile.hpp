@@ -77,6 +77,10 @@ class Missile {
 
         }
 
+        Tunel get_hall() {
+            return this->hall;
+        }
+
         void draw(std::shared_ptr<SDL_Renderer> renderer) {
             SDL_Surface* image = SDL_LoadBMP("images/missile.bmp");
             if(!image)

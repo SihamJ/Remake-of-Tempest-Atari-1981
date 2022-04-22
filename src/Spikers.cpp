@@ -138,7 +138,7 @@ bool Spikers::get_closer() {
         // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
         // this->center = this->limit_init.inLine(0.5);
         
-        std::cout << "from state 0 to 1" << std::endl;
+        // std::cout << "from state 0 to 1" << std::endl;
     }
 
     else if(this->state == 1 && this->center == this->hall.get_small_line().inLine(0.5))
@@ -179,7 +179,7 @@ bool Spikers::get_closer() {
         // this->center = this->hall.get_small_line().inLine(0.5);
         // this->width = (this->hall.get_small_line().length()/3.);
         // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
-        std::cout << "from state 2 to 3" << std::endl;
+        // std::cout << "from state 2 to 3" << std::endl;
     }
 
     // cet état sera supprimé
@@ -212,7 +212,7 @@ bool Spikers::get_closer() {
 
         this->current_limit.set_points({pp0, pp1});
 
-        std::cout << "from state 3 to 2" << std::endl;
+        // std::cout << "from state 3 to 2" << std::endl;
     }
 
     
@@ -348,4 +348,30 @@ void Spikers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     }
 }
 
+Line Spikers::get_line_current_limit() {
+    return this->current_limit;
+}
     
+void Spikers::decrease_random_p() {
+    this->random_p -= 0.5;
+    if (random_p < 0.) random_p = 0.;
+}
+
+void Spikers::update_line_limit() {
+    // On calcule la ligne limit de déplacement du spiker (parallèle à big line)
+    Point sp0 = this->hall.get_small_line().get_p0();
+    Point sp1 = this->hall.get_small_line().get_p1();
+    Point bp0 = this->hall.get_big_line().get_p0();
+    Point bp1 = this->hall.get_big_line().get_p1();
+
+    double segment1 = this->random_p_init * (sp0.euclideanDistance(bp0));
+    double segment2 = this->random_p_init * (sp1.euclideanDistance(bp1));
+    Line l1 = Line(sp0, bp0);
+    Line l2 = Line(sp1, bp1);
+
+    Point pp0 = l1.inLine(segment1 / l1.length());
+    Point pp1 = l2.inLine(segment2 / l2.length());
+
+    this->limit_init.set_points({pp0, pp1});
+
+}

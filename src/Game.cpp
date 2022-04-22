@@ -116,7 +116,7 @@ void Game::update() {
 
         std::shared_ptr<Enemy> enemy = this->level->new_enemy();
 
-        // un couloir aléatoire entre les couloirs de la map
+        // un couloir aléatoire parmis les couloirs de la map
         Tunel hDest = vh[rand() % vh.size()];
         
         //instead of copying values, we move them by rvalue reference. They won't be needed afterwards.
@@ -137,6 +137,30 @@ void Game::update() {
                 vm.erase(vm.begin()+i);
             }
             else {
+                for (auto e : enemies) {
+                    if (e->get_name().compare("spikers") == 0) {
+                        if (e->get_hall() == vm[i]->get_hall()) {
+                            Spikers * enemy_spiker = dynamic_cast<Spikers*>(&(*e));
+                            if (enemy_spiker == nullptr)
+                                return;
+                            Line random_p = enemy_spiker->get_line_current_limit();
+                            int x1 = random_p.get_p0().get_x();
+                            int y1 = random_p.get_p0().get_y();
+                            int x2 = random_p.get_p1().get_x();
+                            int y2 = random_p.get_p1().get_y();
+
+                            SDL_Rect r = e->get_rect();
+
+                            printf("jsuis là\n");
+                            if (SDL_IntersectRectAndLine(&r, &x1, &y1, &x2, &y2) == SDL_TRUE) {
+                                printf("non ?\n");
+                                vm.erase(vm.begin()+i);
+                                enemy_spiker->decrease_random_p();
+                                enemy_spiker->update_line_limit();
+                            }
+                        }
+                    }
+                }
                 // test si y a collision entre missiles alliés et ennemies
 
                 // SDL_Rect r_missile;

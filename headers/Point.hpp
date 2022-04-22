@@ -38,6 +38,8 @@ public:
     bool get_closer();
     double euclideanDistance(Point p);
 
+    bool operator==(Point&& other);
+    
 
 private:
 

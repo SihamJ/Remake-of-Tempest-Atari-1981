@@ -62,8 +62,6 @@ void Flippers::set(Tunel&& h){
         x = centre_small_line.get_x() - ( static_cast<double>(width)/2.0);
         y = centre_small_line.get_y() - ( static_cast<double>(height)/2.0);
 
-        bool cond1 = false;
-
         double segment_a = centre_big_line.get_x() - centre_small_line.get_x();
         double segment_b = centre_big_line.get_y() - centre_small_line.get_y();
         double segment_c = sqrt(segment_a * segment_a + segment_b * segment_b);

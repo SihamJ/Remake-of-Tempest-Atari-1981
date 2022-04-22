@@ -188,7 +188,7 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     // if (i == 1) i++;
 
     
-    int i = 0;
+    int i = 2;
 
     // force à afficher que des spikers
     // int i = 2;

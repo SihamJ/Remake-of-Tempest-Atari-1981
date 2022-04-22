@@ -41,26 +41,10 @@ public:
     // destructeur
     ~Tunel(){}
 
-    /**
-     * @brief Set the big line object
-     * 
-     * @param x1 
-     * @param y1 
-     * @param x2 
-     * @param y2 
-     */
     void set_big_line (int x1, int y1, int x2, int y2) {
         lines[1] = Line(x1, y1, x2, y2);
     }
 
-    /**
-     * @brief Set the small line object
-     * 
-     * @param x1 
-     * @param y1 
-     * @param x2 
-     * @param y2 
-     */
     void set_small_line (int x1, int y1, int x2, int y2) {
         lines[0] = Line(x1, y1, x2, y2);
     }
@@ -69,20 +53,50 @@ public:
         this->lines = lines;
     }
 
-    /**
-     * @brief Get the big line object
-     * 
-     * @return std::array<int, 4> 
-     */
+    void set_angle(){
+
+        double hypotenus = this->get_small_line().length();
+        double x_project = this->get_small_line().get_x_projected().length();
+        double y_project = this->get_small_line().get_y_projected().length();
+
+        double angle = 0.;
+        double x1 = this->get_small_line().get_p0().get_x();
+        double y1 = this->get_small_line().get_p0().get_y();
+        double x2 = this->get_big_line().get_p0().get_x();
+        double y2 = this->get_big_line().get_p0().get_y();
+
+        if(y_project == 0)
+            return;
+        if(x_project == 0){
+            this->angle = 90.;
+            return;
+        }
+
+        if(x1 >= x2 && y1 >= y2){
+            angle =  - acos(x_project / hypotenus);
+        }
+        else if(x1 >= x2 && y1 <= y2){
+            angle =  - acos(x_project / hypotenus);
+        }
+        else if(x1 <= x2 && y1 >= y2){
+            angle = acos(x_project / hypotenus);
+        }
+        else if(x1 <= x2 && y1 <= y2){
+            angle =  acos(x_project / hypotenus);
+        }
+
+        this->angle = angle * (180.0/3.141592653589793238463) + 180.;
+    }
+
+    double get_angle(){
+        return this->angle;
+    }
+
     Line get_big_line () {
         return lines[0];
     }
 
-    /**
-     * @brief Get the small line object
-     * 
-     * @return std::array<int, 4> 
-     */
+
     Line get_small_line () {
         return lines[1];
     }
@@ -95,11 +109,7 @@ public:
         return this->get_small_line().inLine(0.5).euclideanDistance(this->get_big_line().inLine(0.5));
     }
 
-    /**
-     * @brief dessine les deux lignes
-     * 
-     * @param renderer 
-     */
+
     void draw(std::shared_ptr<SDL_Renderer> renderer) {
         lines[0].draw(renderer);
         lines[1].draw(renderer);
@@ -112,6 +122,7 @@ public:
 private:
     // les deux lignes
     std::array<Line, 2> lines;
+    double angle;
 };
 
 #endif

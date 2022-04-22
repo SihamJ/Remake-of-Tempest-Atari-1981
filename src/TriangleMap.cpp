@@ -7,7 +7,7 @@ TriangleMap::TriangleMap(const int nbHall, const int width, const int height, co
     : Tube("Triangle", nbHall, c)
 {
         this->width = 2*width/3;
-        this->height = 3*height/5;
+        this->height = 4*height/5;
 
         set_big_triangle(width, height);
 
@@ -103,7 +103,9 @@ void TriangleMap::build_map(){
 
     // linking
     for(int i = 0; i < nbHall; i++){
-        this->add_Hall( Tunel(bigLines.at(i), bigLines.at((i+1) % bigLines.size()), smallLines.at(i), smallLines.at((i+1) % smallLines.size())) );
+        Tunel h = Tunel(bigLines.at(i), bigLines.at((i+1) % bigLines.size()), smallLines.at(i), smallLines.at((i+1) % smallLines.size()));
+        h.set_angle();
+        this->add_Hall(h);
     }
 
 }

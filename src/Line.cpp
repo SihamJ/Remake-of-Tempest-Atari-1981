@@ -77,6 +77,14 @@ Point Line::get_p1(){
     return points[1];
 }
 
+Line Line::get_x_projected(){
+    return Line { static_cast<int>(this->get_p0().get_x()), 0, static_cast<int>(this->get_p1().get_x()), 0 };
+}
+
+Line Line::get_y_projected(){
+    return Line { 0, static_cast<int>(this->get_p0().get_y()), 0, static_cast<int>(this->get_p1().get_y()) };
+}
+
 void Line::set_p0(Point p){
     this->points[0] = p;
 }

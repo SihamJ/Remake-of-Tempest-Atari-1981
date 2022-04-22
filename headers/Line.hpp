@@ -39,6 +39,9 @@ public:
 
     Point get_p1();
 
+    Line get_x_projected();
+    Line get_y_projected();
+
     void set_p0(Point p);
 
     void set_p1(Point p);

@@ -82,7 +82,7 @@ void Level::set_map(){
     //     this->map = std::make_shared<StylizedCross>();
     //     break;
     case maps_list::triangle:
-        this->map = std::make_shared<TriangleMap>(9, WIDTH, HEIGHT, c);
+        this->map = std::make_shared<TriangleMap>(15, WIDTH, HEIGHT, c);
         break;
     // case maps_list::clover:
     //     this->map = std::make_shared<Clover>();
@@ -194,10 +194,10 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     // if (i == 1) i++;
 
     // force à afficher que des flippers
-    // int i = 0;
+    //i = 0;
     
     //force à afficher que des tankers
-   // int i = 1;
+   // i = 1;
 
     // force à afficher que des spikers
     //i = 2;

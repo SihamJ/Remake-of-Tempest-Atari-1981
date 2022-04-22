@@ -67,6 +67,10 @@ const int Spikers::get_scoring() const {
     return this->scoring;
 }
 
+long double Spikers::get_speed(){
+    return this->speed;
+}
+
 // ################################################################################################ 
 // ################################################################################################ 
 
@@ -119,7 +123,7 @@ void Spikers::set(Tunel&& h){
 // ################################################################################################ 
 
 
-bool Spikers::get_closer() {  
+bool Spikers::get_closer(long double h) {  
 
     Point c = hall.get_small_line().inLine(0.5);
     // std::cout << "state " << state << std::endl;

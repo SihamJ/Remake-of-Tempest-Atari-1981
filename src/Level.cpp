@@ -40,6 +40,24 @@ int Level::get_current_level(){
     return this->current_level;
 }
 
+long double Level::get_h(long double h0, long double d, long double z){
+
+    if(this->current_level > 0 && this->current_level < 17){
+        return (1. - ((1.-h0) / sqrt(std::cbrtl(d*d*d*d*d*d*d))) * sqrt(std::cbrtl(z*z*z*z*z*z*z)));
+        //return (1. - ((1.-h0) / sqrt(std::cbrtl(d*d*d*d*d*d*d*d))) * sqrt(std::cbrtl(z*z*z*z*z*z*z*z)));
+        //return (1. - ((1.-h0) / std::cbrtl(d*d*d*d*d)) * std::cbrtl(z*z*z*z*z));
+        //return (1. - ((1.-h0) / (d*d)) * (z*z));
+    }
+    else if(this->current_level >= 17 && this->current_level < 33){
+        return (1. - ((1.-h0) / sqrt(std::cbrtl(d*d*d*d*d*d*d*d))) * sqrt(std::cbrtl(z*z*z*z*z*z*z*z)));
+    }
+    else if(this->current_level >= 33 && this->current_level < 49){
+        return (1. - ((1.-h0) / std::cbrtl(d*d*d*d*d)) * std::cbrtl(z*z*z*z*z));
+    }
+    else {
+        return (1. - ((1.-h0) / (d*d)) * (z*z));
+    }
+}
 // TO DO: create the other maps and uncomment this code
 void Level::set_map(){
 
@@ -194,7 +212,7 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     // if (i == 1) i++;
 
     // force à afficher que des flippers
-    //i = 0;
+    i = 0;
     
     //force à afficher que des tankers
    // i = 1;

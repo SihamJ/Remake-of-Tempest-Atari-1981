@@ -30,6 +30,7 @@ class Level {
         void next_level();
         std::shared_ptr<Enemy> new_enemy();
         void print();
+        long double get_h(long double h0, long double d, long double z);
 
     private:
         void set_map();

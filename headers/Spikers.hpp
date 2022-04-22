@@ -25,10 +25,10 @@ public:
     void set_center(const Point& center);
 
     void set(Tunel&& h);
-
+    long double get_speed();
     const std::string get_name(){ return this->name;}
 
-    bool get_closer() override;
+    bool get_closer(long double h) override;
 
     Line get_line_current_limit();
 

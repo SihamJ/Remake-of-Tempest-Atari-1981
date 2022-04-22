@@ -45,6 +45,9 @@ void Tankers::set_tunnel(const Tunel& h) { this->hall = h; }
 
 void Tankers::set_center(const Point& center) { this->center = center; }
 
+long double Tankers::get_speed(){
+    return this->speed;
+}
 
 void Tankers::set(Tunel&& h){
 
@@ -71,12 +74,7 @@ void Tankers::clean(){
 }
 
 
-bool Tankers::get_closer() {
-
-    long double h0 = this->speed;//this->hall.get_small_line().length() / this->hall.get_big_line().length();
-    long double z = this->center.euclideanDistance(this->hall.get_big_line().inLine(0.5));
-    long double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->hall.get_big_line().inLine(0.5));
-    long double h = this->speed * (1 - ((1-h0) / (d*d)) * (z*z));
+bool Tankers::get_closer(long double h) {
 
     this->center = Line(this->hall.get_small_line().inLine(0.5), this->hall.get_big_line().inLine(0.5)).inLine(h);
     this->width = h * this->hall.get_big_line().length();

@@ -19,7 +19,7 @@ public:
     void clean();
 
     std::vector<Line> get_lines(){ return this->lines; }
-
+    long double get_speed();
     void set_dest (const Point& destination);
     void set_tunnel(const Tunel& h);
     void set_rect(const std::array<Point, 4> rect);
@@ -28,7 +28,7 @@ public:
     
     std::string get_name(){ return "Flippers";}
     const int get_scoring() const { return this->scoring;}
-    bool get_closer();
+    bool get_closer(long double h) override;
     void draw(std::shared_ptr<SDL_Renderer> renderer) override;
     bool intersect(Line l);    
 
@@ -36,7 +36,7 @@ private:
     const int scoring=150;
     const int init_width = 128;
     const int init_height = 49;
-    const long double speed = 0.0000000000000001;
+    const long double speed = 0.01;
     int width;
     int height;
 };

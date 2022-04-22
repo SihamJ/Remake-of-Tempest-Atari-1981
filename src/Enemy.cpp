@@ -38,7 +38,7 @@
         return this->center;
     }
 
-    bool Enemy::get_closer(){ return false; }
+    bool Enemy::get_closer(long double h){ return false; }
     
     void Enemy::set(Tunel&& h){
 

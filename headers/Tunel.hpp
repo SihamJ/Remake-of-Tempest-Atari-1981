@@ -69,38 +69,43 @@ public:
     }
 
     void set_angle(){
-
+        this->angle = 0.;
         long  double hypotenus = this->get_small_line().length();
         long  double x_project = this->get_small_line().get_x_projected().length();
         long  double y_project = this->get_small_line().get_y_projected().length();
 
-        long  double angle = 0.;
         long  double x1 = this->get_small_line().get_p0().get_x();
         long  double y1 = this->get_small_line().get_p0().get_y();
         long  double x2 = this->get_big_line().get_p0().get_x();
         long  double y2 = this->get_big_line().get_p0().get_y();
 
-        if(y_project == 0)
+        if(y_project == 0){
+            //std::cout << " y project is 0, angle is " << angle <<std::endl;
             return;
+
+        }
+        std::cout << hypotenus << std::endl;
         if(x_project == 0){
             this->angle = 90.;
             return;
         }
 
         if(x1 >= x2 && y1 >= y2){
-            angle =  - acos(x_project / hypotenus);
+            this->angle =  - acos(x_project / hypotenus);
         }
         else if(x1 >= x2 && y1 <= y2){
-            angle =  - acos(x_project / hypotenus);
+            this->angle =  - acos(x_project / hypotenus);
         }
         else if(x1 <= x2 && y1 >= y2){
-            angle = acos(x_project / hypotenus);
+            this->angle = acos(x_project / hypotenus);
         }
         else if(x1 <= x2 && y1 <= y2){
-            angle =  acos(x_project / hypotenus);
+            this->angle =  acos(x_project / hypotenus);
         }
 
-        this->angle = angle * (180.0/3.141592653589793238463) + 180.;
+        
+        this->angle = this->angle * (180.0/3.141592653589793238463) + 180.;
+        
     }
 
     long  double get_angle(){

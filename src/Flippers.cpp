@@ -45,7 +45,9 @@ void Flippers::set_tunnel(const Tunel& h) { this->hall = h; }
 
 void Flippers::set_center(const Point& center) { this->center = center; }
 
-
+long double Flippers::get_speed(){
+    return this->speed;
+}
 void Flippers::set(Tunel&& h){
 
         this->hall = h;
@@ -63,7 +65,7 @@ void Flippers::set(Tunel&& h){
         y = centre_small_line.get_y() - ( static_cast<double>(height)/2.0);
 
         this->angle = this->hall.get_angle();
-
+        
     }
 
 void Flippers::clean(){
@@ -71,28 +73,24 @@ void Flippers::clean(){
 }
 
 
-bool Flippers::get_closer() {
+bool Flippers::get_closer(long double h) {
 
-    long double h0 = this->speed;//(this->hall.get_small_line().length() / this->hall.get_big_line().length());
-    long double z = this->center.euclideanDistance(this->hall.get_big_line().inLine(0.5));
-    long double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->hall.get_big_line().inLine(0.5));
-    long double h = (1. - ((1.-h0) / (d*d)) * (z*z));
 
     this->center = Line(this->hall.get_small_line().inLine(0.5), this->hall.get_big_line().inLine(0.5)).inLine(h);
 
-    this->width = h * this->hall.get_big_line().length();
+    this->width = 0.8*h * this->hall.get_big_line().length();
     this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
-    std::cout << z << std::endl;
+    // std::cout << z << std::endl;
     this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
     this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
 
-    //return false;
+    return false;
     return intersect(this->hall.get_big_line());
 }
 
 bool Flippers::intersect(Line l) {
 
-    SDL_Rect r = {static_cast<int>(this->x), static_cast<int>(this->y + height), static_cast<int>(this->x + this->width), static_cast<int>(this->y + this->height)};
+    SDL_Rect r = {static_cast<int>(this->x), static_cast<int>(this->y + height/2.), static_cast<int>(this->x + this->width), static_cast<int>(this->y + this->height/2.)};
 
     int x1 = l.get_p0().get_x();
     int y1 = l.get_p0().get_y();
@@ -128,7 +126,7 @@ void Flippers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     dest_rect.w = width;
     dest_rect.h = height;
 
-    if (SDL_RenderCopyEx(renderer.get(), monImage, NULL, &dest_rect, angle, NULL, SDL_FLIP_NONE) != 0) {
+    if (SDL_RenderCopyEx(renderer.get(), monImage, NULL, &dest_rect, this->angle, NULL, SDL_FLIP_NONE) != 0) {
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
     }

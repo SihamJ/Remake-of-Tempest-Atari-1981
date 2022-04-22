@@ -112,7 +112,6 @@ void Game::update() {
     // sur des couloirs aléatoires
     if ( SDL_GetTicks() - clock_new_p > (rand()%100000)) {
         // maj horloge
-        generated = true;
         clock_new_p = SDL_GetTicks();
 
         std::shared_ptr<Enemy> enemy = this->level->new_enemy();
@@ -195,7 +194,11 @@ void Game::update() {
         }
 
         for (int i = 0; i<enemies.size(); i++) {
-            if (enemies[i]->get_closer()) {
+            long double h0 = enemies.at(i)->get_speed();
+            long double d = enemies.at(i)->get_hall().get_small_line().inLine(0.5).euclideanDistance(enemies.at(i)->get_hall().get_big_line().inLine(0.5));
+            long double z = enemies.at(i)->get_center().euclideanDistance(enemies.at(i)->get_hall().get_big_line().inLine(0.5));
+            long double h = this->level->get_h(h0, d, z);
+            if (enemies[i]->get_closer(h)) {
                 enemies.erase(enemies.begin()+i);
             }
         }

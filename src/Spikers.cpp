@@ -72,42 +72,72 @@ const int Spikers::get_scoring() const {
 
 void Spikers::set(Tunel&& h){
 
-        this->hall = h;
+        std::random_device rd;  // Will be used to obtain a seed for the random number engine
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<double> rand (0.25, 0.75);
 
+        this->random_p = rand(gen);
+        this->random_p_init = this->random_p;
+        this->hall = h;
+        this->state = 0;
+
+        // On calcule la ligne limit de déplacement du spiker (parallèle à big line)
+        Point sp0 = this->hall.get_small_line().get_p0();
+        Point sp1 = this->hall.get_small_line().get_p1();
+        Point bp0 = this->hall.get_big_line().get_p0();
+        Point bp1 = this->hall.get_big_line().get_p1();
+
+        double segment1 = this->random_p_init * (sp0.euclideanDistance(bp0));
+        double segment2 = this->random_p_init * (sp1.euclideanDistance(bp1));
+        Line l1 = Line(sp0, bp0);
+        Line l2 = Line(sp1, bp1);
+
+        Point pp0 = l1.inLine(segment1 / l1.length());
+        Point pp1 = l2.inLine(segment2 / l2.length());
+
+        this->limit_init.set_points({pp0, pp1});
+
+
+        // on calcule l'angle de rotation de l'image
         int dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
         width = dist/3;
         height = dist/3;
 
         Point centre_small_line = hall.get_small_line().inLine(0.5);
+        this->center = centre_small_line;
+
         Point centre_big_line = hall.get_big_line().inLine(0.5);
 
-        x = centre_small_line.get_x() - (width/2);
-        y = centre_small_line.get_y() - (height/2);
-
-        bool cond1 = false;
+        x = centre_small_line.get_x() - ( static_cast<double>(width)/2.0);
+        y = centre_small_line.get_y() - ( static_cast<double>(height)/2.0);
 
         double segment_a = centre_big_line.get_x() - centre_small_line.get_x();
         double segment_b = centre_big_line.get_y() - centre_small_line.get_y();
         double segment_c = sqrt(segment_a * segment_a + segment_b * segment_b);
-        
-        if (segment_a < 0.) {
-            segment_a *= -1.;
-            cond1 = true;
+
+        if(this->hall.get_small_line().get_p0().get_y() == this->hall.get_small_line().get_p1().get_y()){
+            this->angle = 0.;
+            return;
+        }
+        if(this->hall.get_small_line().get_p0().get_x() == this->hall.get_small_line().get_p1().get_x()){
+            this->angle = 90.;
+            return;
         }
 
-        angle = acos(segment_a / segment_c) * (180.0/3.141592653589793238463);
-        
-        if (cond1) {
-            angle *= -1.;
+        if(segment_a < 0. && segment_b < 0.0) {
+            this->angle = -acos( segment_a / segment_c ) * (180.0/3.141592653589793238463) - 90.;
         }
-
-        if (segment_b > 0.) {
-            if (angle < 0.) {
-                angle -= 90.;
-            }
-            else {
-                angle += 90.;
-            }
+        else if (segment_a < 0. && segment_b > 0.0) {
+            this->angle = acos( - segment_b / segment_c ) * (180.0/3.141592653589793238463);
+        }
+        else if(segment_a > 0. && segment_b < 0.) {
+            this->angle = acos( - segment_a / segment_c ) * (180.0/3.141592653589793238463) + 90.;
+        }
+        else if(segment_a > 0. && segment_b > 0.) {
+            this->angle = -acos( segment_b / segment_c )  * (180.0/3.141592653589793238463);
+        }
+        else {
+            this->angle = 0.;
         }
         
     }
@@ -116,109 +146,169 @@ void Spikers::set(Tunel&& h){
 // ################################################################################################ 
 
 
-bool Spikers::get_closer() {
+bool Spikers::get_closer() {  
 
-    this->random_p = ((rand() % 725) / 1000.0) + 0.25;
+    Point c = hall.get_small_line().inLine(0.5);
+    // std::cout << "state " << state << std::endl;
+    // std::cout << "enemy center: " << center.get_x() << ", " << center.get_y() << std::endl;
+    // std::cout << "small line center: " << c.get_x() << ", " << c.get_y() << std::endl;
+    // std::cout << "init limit center: " << limit_init.inLine(0.5).get_x() << ", " << limit_init.inLine(0.5).get_y() << std::endl;
+    // std::cout << "curr limit center: " << current_limit.inLine(0.5).get_x() << ", " << current_limit.inLine(0.5).get_y() << std::endl;
 
-    Point center_big_line = hall.get_big_line().inLine(0.5);
-    Point center_small_line = hall.get_small_line().inLine(0.5);
+    // Update state if necessary
+    // I did an overload of the oprator == in class Point to do this operation:
 
-    Line center_line = Line{center_small_line, center_big_line};
-
-    Point rand_p = center_line.inLine(random_p);
-
-    // avance de 3% // todo avec speed, ptetre un 0.003 * speed 
-    double ratio = 0.03;
-
-    SDL_Rect r = {static_cast<int>(x), static_cast<int>(y), 5, 5};
-
-    if (state != 1) {
-
-        // sert à savoir quand le spiker doit s'arrêter
-        int x1 = rand_p.get_x() - (center_big_line.get_y() - rand_p.get_y());
-        int y1 = rand_p.get_y() - (center_big_line.get_x() - rand_p.get_x());
-        int x2 = rand_p.get_x() + (center_big_line.get_y() - rand_p.get_y());
-        int y2 = rand_p.get_y() + (center_big_line.get_x() - rand_p.get_x());
-
-
-        // si le spiker a atteint sa cible
-        if (SDL_IntersectRectAndLine(&r, &x1, &y1, &x2, &y2) == SDL_TRUE)
-            state = 1;
+    if(this->state == 0 && this->center == this->limit_init.inLine(0.5))
+    {
+        this->state = 1;
+        // this->width = (this->limit_init.length()/3.);
+        // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        // this->center = this->limit_init.inLine(0.5);
         
+        std::cout << "from state 0 to 1" << std::endl;
     }
 
+    else if(this->state == 1 && this->center == this->hall.get_small_line().inLine(0.5))
+    {
+        this->state = 2;
+        // this->center = this->hall.get_small_line().inLine(0.5);
+        // this->width = (this->hall.get_small_line().length()/3.);
+        // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        std::random_device rd;  // Will be used to obtain a seed for the random number engine
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<double> rand (0.1, this->random_p_init);
 
-    double init_dist = hall.get_small_line().get_p0().euclideanDistance(hall.get_small_line().get_p1());
+        this->random_p = rand(gen);
 
-    double init_w = init_dist/3.0;
-    double init_h = init_dist/3.0;
+        // On calcule la ligne limit de déplacement courant du spiker (parallèle à big line)
+        // Formule de THALES
+        Point sp0 = this->hall.get_small_line().get_p0();
+        Point sp1 = this->hall.get_small_line().get_p1();
+        Point bp0 = this->hall.get_big_line().get_p0();
+        Point bp1 = this->hall.get_big_line().get_p1();
 
-    // Point centre_small_line = hall.get_small_line().inLine(0.5);
+        double segment1 = this->random_p * (sp0.euclideanDistance(bp0));
+        double segment2 = this->random_p * (sp1.euclideanDistance(bp1));
+        Line l1 = Line(sp0, bp0);
+        Line l2 = Line(sp1, bp1);
 
-    // double init_x = centre_small_line.get_x() - (init_w/2);
-    // double init_y = centre_small_line.get_y() - (init_h/2);
+        Point pp0 = l1.inLine(segment1 / l1.length());
+        Point pp1 = l2.inLine(segment2 / l2.length());
 
-    // Line center_line_test = Line{Point{static_cast<int>(init_x+(init_w/2.0)), static_cast<int>(init_y+(init_h/2.0))}, hall.get_big_line().inLine(0.5)};
+        this->current_limit.set_points({pp0, pp1});
+        std::cout << "from state 1 to 2" << std::endl;
+    }
 
+    else if(this->state == 2 && this->center == this->current_limit.inLine(0.5))
+    {
+        this->state = 3;
+        // this->center = this->hall.get_small_line().inLine(0.5);
+        // this->width = (this->hall.get_small_line().length()/3.);
+        // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        std::cout << "from state 2 to 3" << std::endl;
+    }
 
+    else if(this->state == 3 && this->center == this->hall.get_small_line().inLine(0.5))
+    {
+        this->state = 2;
+        // this->center = this->current_limit.inLine(0.5);
+        // this->width = (this->current_limit.length()/3.);
+        // this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+        std::random_device rd;  // Will be used to obtain a seed for the random number engine
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<double> rand (0.1, this->random_p_init);
 
+        this->random_p = rand(gen);
 
-    double x1 = center_line.get_p0().get_x();
-    double y1 = center_line.get_p0().get_y();
- 
-    Point coord_vector = center_line.inLine(ratio);
+        // On calcule la ligne limit de déplacement courant du spiker (parallèle à big line)
+        // Formule de THALES
+        Point sp0 = this->hall.get_small_line().get_p0();
+        Point sp1 = this->hall.get_small_line().get_p1();
+        Point bp0 = this->hall.get_big_line().get_p0();
+        Point bp1 = this->hall.get_big_line().get_p1();
 
-    double x2 = coord_vector.get_x();
-    double y2 = coord_vector.get_y();
+        double segment1 = this->random_p * (sp0.euclideanDistance(bp0));
+        double segment2 = this->random_p * (sp1.euclideanDistance(bp1));
+        Line l1 = Line(sp0, bp0);
+        Line l2 = Line(sp1, bp1);
 
-    double diff_x = x2 - x1;
-    double diff_y = y2 - y1;
+        Point pp0 = l1.inLine(segment1 / l1.length());
+        Point pp1 = l2.inLine(segment2 / l2.length());
 
+        this->current_limit.set_points({pp0, pp1});
 
-    // printf("diff_x : %f, diff_y : %f \n", diff_x, diff_y);
+        std::cout << "from state 3 to 2" << std::endl;
+    }
 
-    double l1 = hall.get_big_line().get_p0().euclideanDistance(hall.get_big_line().get_p1());
-    double l2 = hall.get_small_line().get_p0().euclideanDistance(hall.get_small_line().get_p1());
-
-    double dist = l1 / l2;
-
-
-    double ajout_w = ((dist * init_w) - init_w) * ratio;
-    double ajout_h = ((dist * init_h) - init_h) * ratio;
     
-    if (state == 1) {
-        this->x -= diff_x;
-        this->y -= diff_y;
+    // Movement
+    if (this->state == 0){
 
-        ajout_w *= (-1);
-        ajout_h *= (-1);
-    }
-    else {
-        this->x += diff_x;
-        this->y += diff_y;
-    }
-    
-    this->width += ajout_w;
-    this->height += ajout_h;
+        double h0 = this->speed * this->hall.get_small_line().length() / this->limit_init.length();
+        double z = this->center.euclideanDistance(this->limit_init.inLine(0.5));
+        double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->limit_init.inLine(0.5));
+        double h = 1 - ((1-h0) / (d*d)) * (z*z);
 
-    this->x -= (ajout_w/2.0);
-    this->y -= (ajout_h/2.0);
+        this->center = Line(this->hall.get_small_line().inLine(0.5), this->limit_init.inLine(0.5)).inLine(h);
 
-    angle += 30;
+        this->width = h * (this->limit_init.length()/3.);
+        this->height = this->width;//<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
 
-    if (state == 1) {
-        int x1 = hall.get_small_line().get_p0().get_x();
-        int y1 = hall.get_small_line().get_p0().get_y();
-        int x2 = hall.get_small_line().get_p1().get_x();
-        int y2 = hall.get_small_line().get_p1().get_y();
-
-        if (SDL_IntersectRectAndLine(&r, &x1, &y1, &x2, &y2) == SDL_TRUE)
-            state = 2;
+        this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
+        this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
     }
 
+    else if(this->state == 1){
+
+        double h0 = this->speed * this->hall.get_small_line().length() / this->limit_init.length();
+        double z = this->center.euclideanDistance(this->hall.get_small_line().inLine(0.5));
+        double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->limit_init.inLine(0.5));
+        double h = 1 - ((1-h0) / (d*d)) * (z*z);
+
+        this->center = Line(this->limit_init.inLine(0.5), this->hall.get_small_line().inLine(0.5)).inLine(h);
+
+        this->width = (this->hall.get_small_line().length()/3.) / h;
+        this->height = this->width;//<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+
+        this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
+        this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
+    }
+
+    else if(this->state == 2){
+
+        double h0 = this->speed*this->hall.get_small_line().length() / this->current_limit.length();
+        double z = this->center.euclideanDistance(this->current_limit.inLine(0.5));
+        double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->current_limit.inLine(0.5));
+        double h = (1 - ((1-h0) / (d*d)) * (z*z));
+
+        this->center = Line(this->hall.get_small_line().inLine(0.5), this->current_limit.inLine(0.5)).inLine(h);
+
+        this->width = h * (this->current_limit.length()/3.);
+        this->height = this->width;// * static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+
+        this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
+        this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
+
+    }
+
+    else if(this->state == 3){
+
+        double h0 = this->speed*this->hall.get_small_line().length() / this->current_limit.length();
+        double z = this->center.euclideanDistance(this->hall.get_small_line().inLine(0.5));
+        double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->current_limit.inLine(0.5));
+        double h = 1 - ((1-h0) / (d*d)) * (z*z);
+
+        this->center = Line(this->current_limit.inLine(0.5), this->hall.get_small_line().inLine(0.5)).inLine(h);
+
+        this->width = (this->hall.get_small_line().length()/3.) / h;
+        this->height = this->width;//static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+
+        this->x = this->center.get_x() - ( static_cast<double>(this->width)/2.0);
+        this->y = this->center.get_y() - ( static_cast<double>(this->height)/2.0);
+
+    }
     return false;
-
-    // return intersect(this->hall.get_big_line());
+    //return intersect(this->hall.get_big_line());
 }
 
 bool Spikers::intersect(Line l) {
@@ -265,17 +355,17 @@ void Spikers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     }
 
     Point center_small_line = hall.get_small_line().inLine(0.5);
+    // this->limit_init.draw(renderer);
+    // this->current_limit.draw(renderer);
 
     if (state == 0) {
-        SDL_RenderDrawLine(renderer.get(), center_small_line.get_x(), center_small_line.get_y(), x + (width/2.0), y + (height/2.0));
+        Line l(center_small_line, this->center);
+        l.draw(renderer);
     }
+
     else {
-        Point center_big_line = hall.get_big_line().inLine(0.5);
-        Line center_line = Line{center_small_line, center_big_line};
-
-        Point rand_p = center_line.inLine(random_p);
-
-        SDL_RenderDrawLine(renderer.get(), center_small_line.get_x(), center_small_line.get_y(), rand_p.get_x(), rand_p.get_y());
+        Line l(center_small_line, this->limit_init.inLine(0.5));
+        l.draw(renderer);
     }
 }
 

@@ -183,6 +183,12 @@ void Level::next_level(){
 // TO DO: create the other enemies classes and uncomment the code
 
 std::shared_ptr<Enemy> Level::new_enemy(){
+
+    std::random_device rd;  // Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> rand (0, 3);
+
+    int i = rand(gen);
     // affiche que des flippers et spikers
     // int i = rand() % 2;
     // if (i == 1) i++;
@@ -191,10 +197,10 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     // int i = 0;
     
     //force à afficher que des tankers
-    int i = 1;
+   // int i = 1;
 
     // force à afficher que des spikers
-    // int i = 2;
+    //i = 2;
 
     Color color = this->current_enemies.at(i);
     std::shared_ptr<Enemy> e;
@@ -222,6 +228,7 @@ std::shared_ptr<Enemy> Level::new_enemy(){
 
     // we don't have the other enemies for now, so we generate only flippers by default
     default:
+        Color color{"RED", RED};
         e = std::make_shared<Flippers>("flippers", std::move(color));
         break;
     }

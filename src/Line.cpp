@@ -44,6 +44,10 @@ std::array<double, 2> Line::get_parameters(){
     return {a, b};
 }
 
+double Line::get_slope(){
+    return this->a;
+}
+
 std::array<Point, 2> Line::get_points(){
     return points;
 }
@@ -79,6 +83,32 @@ void Line::set_p0(Point p){
 
 void Line::set_p1(Point p){
     this->points[1] = p;
+}
+
+bool Line::is_within(Point& p){
+        
+    double a = this->get_slope();
+
+    bool on = (p.get_y() - this->get_p0().get_y()) == a * (p.get_x() - this->get_p0().get_x());
+
+    double max_y = this->get_p1().get_y() > this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
+    double min_y = this->get_p1().get_y() < this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
+    double max_x = this->get_p1().get_x() > this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
+    double min_x = this->get_p1().get_x() < this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
+
+    bool between = ( min_y <= p.get_y() <= max_y && min_x <= p.get_x() <= max_x);
+
+    return (on && between); 
+}
+
+bool Line::beyond_scope(Point &p){
+    double max_y = this->get_p1().get_y() > this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
+    double min_y = this->get_p1().get_y() < this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
+    double max_x = this->get_p1().get_x() > this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
+    double min_x = this->get_p1().get_x() < this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
+    bool res= !( min_y <= p.get_y() &&  p.get_y() <= max_y && min_x <= p.get_x() && p.get_x() <= max_x);
+
+    return res;
 }
 
 void Line::redefine_parameters(){

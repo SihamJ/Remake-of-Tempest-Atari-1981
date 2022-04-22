@@ -62,8 +62,6 @@ void Flippers::set(Tunel&& h){
         x = centre_small_line.get_x() - ( static_cast<double>(width)/2.0);
         y = centre_small_line.get_y() - ( static_cast<double>(height)/2.0);
 
-        bool cond1 = false;
-
         double segment_a = centre_big_line.get_x() - centre_small_line.get_x();
         double segment_b = centre_big_line.get_y() - centre_small_line.get_y();
         double segment_c = sqrt(segment_a * segment_a + segment_b * segment_b);
@@ -102,7 +100,7 @@ void Flippers::clean(){
 
 bool Flippers::get_closer() {
 
-    double h0 = this->hall.get_small_line().length() / this->hall.get_big_line().length();
+    double h0 = this->speed * this->hall.get_small_line().length() / this->hall.get_big_line().length();
     double z = this->center.euclideanDistance(this->hall.get_big_line().inLine(0.5));
     double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->hall.get_big_line().inLine(0.5));
     double h = 1 - ((1-h0) / (d*d)) * (z*z);

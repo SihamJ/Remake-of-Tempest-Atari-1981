@@ -38,6 +38,11 @@
         return p;
     }
 
+    bool Point::operator==(Point&& other){
+        return (this->get_x() == other.get_x() && this->get_y() == other.get_y());
+    }
+
+    
 
     void Point::set_point (double x, double y) {
         this->p.x = x;

@@ -3,6 +3,7 @@
 
 #include "Point.hpp"
 #include <memory>
+#include <iostream>
 
 class Line {
 
@@ -26,6 +27,8 @@ public:
 
     std::array<double, 2> get_parameters();
 
+    double get_slope();
+
     std::array<Point, 2> get_points();
 
     void set_points(std::array<Point, 2> points);
@@ -41,6 +44,10 @@ public:
     void set_p1(Point p);
 
     void redefine_parameters();
+
+    bool is_within(Point& p);
+
+    bool beyond_scope(Point &p);
 
     std::array<double, 4> get_coord();
 

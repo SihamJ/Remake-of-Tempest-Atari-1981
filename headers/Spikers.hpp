@@ -2,6 +2,7 @@
 #define __SPIKERS_HPP__
 
 #include "Enemy.hpp"
+#include <random>
 
 class Spikers : public Enemy {
 
@@ -39,11 +40,14 @@ private:
     // entre 0.25 et 0.75, le point jusqu'au quel le spiker avance
     // 0.25 proche du centre, 0.75 proche de l'exterieur de la map
     float random_p;
-
+    float random_p_init;
+    Line limit_init;
+    Line current_limit;
     /*
     * 0 : vient d'apparaitre, avance vers un point random
     * 1 : à atteint le point, la ligne est tracé, il recule vers le centre
     * 2 : il avance vers le point, avec la ligne déjà tracé
+    * 3 : il recule vers le centre après avoir atteint le point random
     */
     int state = 0;
 

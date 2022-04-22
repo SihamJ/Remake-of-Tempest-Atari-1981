@@ -27,7 +27,7 @@ public:
 protected:
 
     // + la vitesse est haute + on se rapproche du centre avec get_closer
-    int speed = 10;
+    const float speed = 1;
 
     // centre de gravité. Servira comme position de départ (initialisé au centre de la map)
     Point center;

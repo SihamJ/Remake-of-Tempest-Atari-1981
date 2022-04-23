@@ -1,6 +1,8 @@
 #include "../headers/Spikers.hpp"
 #include <cmath>
 
+#define RATIO_RANDOM_P 0.75
+
 Spikers::Spikers(){}
 
 //constructeur
@@ -84,12 +86,11 @@ Line Spikers::get_limit(){
 
 void Spikers::set(Tunel&& h){
 
-        std::random_device rd;  // Will be used to obtain a seed for the random number engine
-        std::mt19937 gen(rd());
-        std::uniform_real_distribution<long double> rand (0.25, 0.75);
+        // std::random_device rd;  // Will be used to obtain a seed for the random number engine
+        // std::mt19937 gen(rd());
+        // std::uniform_real_distribution<long double> rand (0.25, 0.75);
 
-        this->random_p = rand(gen);
-        this->random_p_init = this->random_p;
+        this->random_p = RATIO_RANDOM_P; //rand(gen);
         this->hall = h;
         this->state = 0;
 
@@ -99,8 +100,8 @@ void Spikers::set(Tunel&& h){
         Point bp0 = this->hall.get_big_line().get_p0();
         Point bp1 = this->hall.get_big_line().get_p1();
 
-        long double segment1 = this->random_p_init * (sp0.euclideanDistance(bp0));
-        long double segment2 = this->random_p_init * (sp1.euclideanDistance(bp1));
+        long double segment1 = this->random_p * (sp0.euclideanDistance(bp0));
+        long double segment2 = this->random_p * (sp1.euclideanDistance(bp1));
         Line l1 = Line(sp0, bp0);
         Line l2 = Line(sp1, bp1);
 
@@ -135,9 +136,23 @@ void Spikers::set(Tunel&& h){
 bool Spikers::get_closer(long double h) {  
 
     Point c = hall.get_small_line().inLine(0.5);
+
+    if(this->state == 0 && this->center == this->limit_init.inLine(0.5))
+    {
+        this->state = 1;
+    }
+    else if(this->state == 1 && this->center == this->hall.get_small_line().inLine(0.5))
+    {
+        this->state = 2;
+    }
+    else if(this->state == 2 && this->center == this->limit_init.inLine(0.5))
+    {
+        this->state = -1;
+    }
     
     // Movement
     if (this->state == 0){
+        // if (random_p < RATIO_RANDOM_P) return true;
 
         this->center = Line(this->center, this->limit_init.inLine(0.5)).inLine(h*h*std::cbrtl(h));
         this->width = h * this->limit_init.length()/3.;
@@ -147,6 +162,7 @@ bool Spikers::get_closer(long double h) {
     }
 
     else if(this->state == 1){
+        // if (random_p < RATIO_RANDOM_P) return true;
 
         this->center = Line(this->center, this->hall.get_small_line().inLine(0.5)).inLine(h*std::cbrtl(h));
         this->width = (this->limit_init.length()/3.) * (1-h) ;
@@ -158,7 +174,7 @@ bool Spikers::get_closer(long double h) {
     // TO DO changer déplacement ennemi en envoie d'un missile ennemi
     else if(this->state == 2){
 
-        this->center = Line(this->center, this->current_limit.inLine(0.5)).inLine(h*h*std::cbrtl(h));
+        this->center = Line(this->center, this->limit_init.inLine(0.5)).inLine(h*h*std::cbrtl(h));
         this->width = h * (this->limit_init.length()/3.);
         this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
         this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
@@ -178,15 +194,17 @@ bool Spikers::get_closer(long double h) {
     else if(this->state == 1 && this->center == this->hall.get_small_line().inLine(0.5))
     {
         this->state = 2;
-        this->current_limit = this->limit_init;
+        //this->current_limit = this->limit_init;
         // this->start = this->dest;
         // this->dest = this->current_limit;
     }
 
-    else if(this->state == 2 && this->center == this->current_limit.inLine(0.5))
+    else if(this->state == 2 && this->center == this->limit_init.inLine(0.5))
     {
         this->state = -1;
     }
+
+    if (state == -1 && random_p == 0.) return true;
 
     return false;
     //return intersect(this->hall.get_big_line());
@@ -246,19 +264,20 @@ void Spikers::draw(std::shared_ptr<SDL_Renderer> renderer) {
         Line l(center_small_line, this->center);
         l.draw(renderer);
     }
-
     else {
         Line l(center_small_line, this->limit_init.inLine(0.5));
         l.draw(renderer);
     }
+
+    // limit_init.draw(renderer);
 }
 
-Line Spikers::get_line_current_limit() {
-    return this->current_limit;
+Line Spikers::get_line_limit() {
+    return this->limit_init;
 }
     
 void Spikers::decrease_random_p() {
-    this->random_p -= 0.5;
+    this->random_p -= 0.05;
     if (random_p < 0.) random_p = 0.;
 }
 
@@ -269,8 +288,8 @@ void Spikers::update_line_limit() {
     Point bp0 = this->hall.get_big_line().get_p0();
     Point bp1 = this->hall.get_big_line().get_p1();
 
-    long double segment1 = this->random_p_init * (sp0.euclideanDistance(bp0));
-    long double segment2 = this->random_p_init * (sp1.euclideanDistance(bp1));
+    long double segment1 = this->random_p * (sp0.euclideanDistance(bp0));
+    long double segment2 = this->random_p * (sp1.euclideanDistance(bp1));
     Line l1 = Line(sp0, bp0);
     Line l2 = Line(sp1, bp1);
 

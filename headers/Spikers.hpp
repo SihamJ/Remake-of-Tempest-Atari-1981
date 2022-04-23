@@ -30,7 +30,7 @@ public:
 
     bool get_closer(long double h) override;
 
-    Line get_line_current_limit();
+    Line get_line_limit();
 
     void decrease_random_p();
 
@@ -49,9 +49,8 @@ private:
     // entre 0.25 et 0.75, le point jusqu'au quel le spiker avance
     // 0.25 proche du centre, 0.75 proche de l'exterieur de la map
     float random_p;
-    float random_p_init;
     Line limit_init;
-    Line current_limit;
+    
     /*
     * 0 : vient d'apparaitre, avance vers un point random
     * 1 : à atteint le point, la ligne est tracé, il recule vers le centre

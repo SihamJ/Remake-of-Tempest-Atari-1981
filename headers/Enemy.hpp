@@ -25,12 +25,16 @@ public:
     virtual void set(Tunel&& h);
     virtual bool get_closer(long double h)= 0;
     virtual long double get_speed()=0;
+    Line get_dest();
+    Line get_start();
     SDL_Rect get_rect();
 
 protected:
 
     // + la vitesse est haute + on se rapproche du centre avec get_closer
      //0.000000000000001;//
+     Line start;
+     Line dest;
 
     // centre de gravité. Servira comme position de départ (initialisé au centre de la map)
     Point center;

@@ -53,7 +53,7 @@ void Flippers::set(Tunel&& h){
         this->hall = h;
 
         double dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
-        this->width = dist/3.;
+        this->width = dist;
         this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
 
         Point centre_small_line = hall.get_small_line().inLine(0.5);
@@ -65,7 +65,8 @@ void Flippers::set(Tunel&& h){
         y = centre_small_line.get_y() - ( static_cast<double>(height)/2.0);
 
         this->angle = this->hall.get_angle();
-        
+        this->start = this->hall.get_small_line();
+        this->dest = this->hall.get_big_line();
     }
 
 void Flippers::clean(){
@@ -76,11 +77,9 @@ void Flippers::clean(){
 bool Flippers::get_closer(long double h) {
 
 
-    this->center = Line(this->hall.get_small_line().inLine(0.5), this->hall.get_big_line().inLine(0.5)).inLine(h);
-
-    this->width = 0.8*h * this->hall.get_big_line().length();
+    this->center = Line(this->center, this->hall.get_big_line().inLine(0.5)).inLine(h*h*std::cbrtl(h));
+    this->width = 0.8 * h * this->hall.get_big_line().length();
     this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
-    // std::cout << z << std::endl;
     this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
     this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
 

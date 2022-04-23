@@ -110,10 +110,10 @@ void Game::update() {
     // Ajout de points au centre jusqu'aux extrémités de l'octogone
     // à des temps aléatoires < à 40000 millisecondes entre chacun
     // sur des couloirs aléatoires
-    if ( SDL_GetTicks() - clock_new_p > (rand()%100000)) {
+    if (  SDL_GetTicks() - clock_new_p > (rand()%100000)) {
         // maj horloge
         clock_new_p = SDL_GetTicks();
-
+        generated=true;
         std::shared_ptr<Enemy> enemy = this->level->new_enemy();
 
         // un couloir aléatoire parmis les couloirs de la map
@@ -194,9 +194,9 @@ void Game::update() {
         }
 
         for (int i = 0; i<enemies.size(); i++) {
-            long double h0 = enemies.at(i)->get_speed();
-            long double d = enemies.at(i)->get_hall().get_small_line().inLine(0.5).euclideanDistance(enemies.at(i)->get_hall().get_big_line().inLine(0.5));
-            long double z = enemies.at(i)->get_center().euclideanDistance(enemies.at(i)->get_hall().get_big_line().inLine(0.5));
+            long double h0 = enemies.at(i)->get_start().length() / enemies.at(i)->get_dest().length(); //enemies.at(i)->get_speed();//
+            long double d = enemies.at(i)->get_start().inLine(0.5).euclideanDistance(enemies.at(i)->get_dest().inLine(0.5));
+            long double z = enemies.at(i)->get_center().euclideanDistance(enemies.at(i)->get_dest().inLine(0.5));
             long double h = this->level->get_h(h0, d, z);
             if (enemies[i]->get_closer(h)) {
                 enemies.erase(enemies.begin()+i);

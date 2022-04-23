@@ -38,6 +38,11 @@
         return this->center;
     }
 
+    Line Enemy::get_dest(){ return this->dest; }
+
+
+    Line Enemy::get_start(){ return this->start; }
+
     bool Enemy::get_closer(long double h){ return false; }
     
     void Enemy::set(Tunel&& h){

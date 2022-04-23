@@ -16,12 +16,12 @@
 #include "Enemy.hpp"
 #include "Flippers.hpp"
 #include "Color.hpp"
-#include "utils.hpp"
+#include "Utils.hpp"
 #include "Level.hpp"
 #include "SDLWrapper.hpp"
-#include "missile.hpp"
+#include "Missile.hpp"
 #include "Collision.hpp"
-#include "text_renderer.hpp"
+#include "TextRenderer.hpp"
 
 class Game {
 

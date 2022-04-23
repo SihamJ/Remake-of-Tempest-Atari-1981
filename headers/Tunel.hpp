@@ -5,7 +5,7 @@
 #include <SDL.h>
 #include <array>
 #include "Line.hpp"
-#include "utils.hpp"
+#include "Utils.hpp"
 #include "Color.hpp"
 
 class Tunel {

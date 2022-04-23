@@ -64,6 +64,28 @@ Line::Line(int x1, int y1, int x2, int y2, int thickness){
     calculate_parameters();
 }
 
+// Line::Line(const Line& other){
+//     this->points = other.points;
+//     this->thickness = other.thickness;
+//     calculate_parameters();
+// }
+
+// Line::Line(Line &&other){
+//     this->points = other.points;
+//     this->thickness = other.thickness;
+//     calculate_parameters();
+// }
+
+// Line Line::operator=(const Line& other){
+//     return Line(other.points, other.thickness);
+// }
+
+// Line Line::operator=(Line other){
+//     return Line(other.points, other.thickness);
+// }
+
+
+
 Line::~Line(){}
 
 

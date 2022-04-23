@@ -194,10 +194,30 @@ void Game::update() {
         }
 
         for (int i = 0; i<enemies.size(); i++) {
-            long double h0 = enemies.at(i)->get_start().length() / enemies.at(i)->get_dest().length(); //enemies.at(i)->get_speed();//
-            long double d = enemies.at(i)->get_start().inLine(0.5).euclideanDistance(enemies.at(i)->get_dest().inLine(0.5));
-            long double z = enemies.at(i)->get_center().euclideanDistance(enemies.at(i)->get_dest().inLine(0.5));
-            long double h = this->level->get_h(h0, d, z);
+            long double h0, d, z, h;
+            bool backwards = false;
+
+            std::shared_ptr<Spikers> s = std::dynamic_pointer_cast<Spikers>(enemies.at(i));
+
+            if( s != NULL && s->get_state() == 1){
+                // h0 = s->get_dest().length() / s->get_start().length();
+                // d = s->get_start().inLine(0.5).euclideanDistance(s->get_dest().inLine(0.5));
+                // z = s->get_center().euclideanDistance(s->get_dest().inLine(0.5));
+
+                h0 = s->get_hall().get_small_line().length() / s->get_limit().length();
+                d = s->get_hall().get_small_line().inLine(0.5).euclideanDistance(s->get_limit().inLine(0.5));
+                z = s->get_center().euclideanDistance(s->get_hall().get_small_line().inLine(0.5));
+                backwards = true;
+            }
+            
+            else{
+                h0 = enemies.at(i)->get_start().length() / enemies.at(i)->get_dest().length(); 
+                d = enemies.at(i)->get_start().inLine(0.5).euclideanDistance(enemies.at(i)->get_dest().inLine(0.5));
+                z = enemies.at(i)->get_center().euclideanDistance(enemies.at(i)->get_dest().inLine(0.5));
+            }
+            
+            h = this->level->get_h(h0, d, z, backwards);
+
             if (enemies[i]->get_closer(h)) {
                 enemies.erase(enemies.begin()+i);
             }

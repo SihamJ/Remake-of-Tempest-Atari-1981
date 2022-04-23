@@ -24,6 +24,11 @@ public:
     Line(int x1, int y1, int x2, int y2);
     Line(int x1, int y1, int x2, int y2, int thickness);
 
+    // Line(const Line& other);
+    // Line(Line &&other);
+    // Line operator=(const Line& other);
+    // Line operator=(Line other);
+
     ~Line();
 
 
@@ -75,6 +80,7 @@ public:
     void draw_shadow(std::shared_ptr<SDL_Renderer> renderer);
 
     bool operator==(Line &&l);
+    
 
 private:
     std::array<Point, 2> points;

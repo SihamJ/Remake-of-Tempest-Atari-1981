@@ -22,13 +22,15 @@
     Enemy::Enemy(const Enemy& other)
         : Character(other)
     {
-        
+        this->dest = other.dest;
+        this->start = other.start;
     }
 
     Enemy::Enemy( Enemy&& other)
         : Character(std::move(other))
     {
-        
+        this->dest = other.dest;
+        this->start = other.start;
     }
     
     // ~Enemy(){}
@@ -48,7 +50,9 @@
     void Enemy::set(Tunel&& h){
 
         this->hall = h;
-
+        this->start = h.get_small_line();
+        this->dest = h.get_big_line();
+        
         int dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
         width = dist/3;
         height = dist/3;

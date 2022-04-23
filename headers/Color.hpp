@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <iterator>
-#include "utils.hpp"
+#include "Utils.hpp"
 
 class Color {
     public:

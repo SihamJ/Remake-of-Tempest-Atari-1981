@@ -11,7 +11,7 @@
 #include "Flippers.hpp"
 #include "Tankers.hpp"
 #include "Spikers.hpp"
-#include "utils.hpp"
+#include "Utils.hpp"
 #include "Color.hpp"
 
 
@@ -30,7 +30,7 @@ class Level {
         void next_level();
         std::shared_ptr<Enemy> new_enemy();
         void print();
-        long double get_h(long double h0, long double d, long double z);
+        long double get_h(long double h0, long double d, long double z, bool backwards);
 
     private:
         void set_map();

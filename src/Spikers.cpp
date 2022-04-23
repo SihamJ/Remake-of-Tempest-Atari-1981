@@ -71,6 +71,14 @@ long double Spikers::get_speed(){
     return this->speed;
 }
 
+const int Spikers::get_state(){
+    return this->state;
+}
+
+Line Spikers::get_limit(){
+    return this->limit_init;
+}
+
 // ################################################################################################ 
 // ################################################################################################ 
 
@@ -100,7 +108,7 @@ void Spikers::set(Tunel&& h){
         Point pp1 = l2.inLine(segment2 / l2.length());
 
         this->limit_init.set_points({pp0, pp1});
-        this->dest = limit_init;
+        this->dest = Line(limit_init);
         this->start = this->hall.get_small_line();
 
         // on calcule l'angle de rotation de l'image
@@ -140,15 +148,9 @@ bool Spikers::get_closer(long double h) {
 
     else if(this->state == 1){
 
-        long double h0 = this->speed;//(this->hall.get_small_line().length() / this->limit_init.length());
-        long double z = this->center.euclideanDistance(this->hall.get_small_line().inLine(0.5));
-        long double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->limit_init.inLine(0.5));
-        long double h = (1. - ((1.-h0) / (d*d)) * (z*z));
-
-        this->center = Line(this->limit_init.inLine(0.5), this->hall.get_small_line().inLine(0.5)).inLine(h);
-
+        this->center = Line(this->center, this->hall.get_small_line().inLine(0.5)).inLine(h*std::cbrtl(h));
         this->width = (this->limit_init.length()/3.) * (1-h) ;
-        this->height = this->width;//<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
+        this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
         this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
         this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
     }
@@ -156,87 +158,34 @@ bool Spikers::get_closer(long double h) {
     // TO DO changer déplacement ennemi en envoie d'un missile ennemi
     else if(this->state == 2){
 
-        long double h0 = this->speed;//(this->hall.get_small_line().length() / this->current_limit.length());
-        long double z = this->center.euclideanDistance(this->current_limit.inLine(0.5));
-        long double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->current_limit.inLine(0.5));
-        long double h = (1. - ((1.-h0) / (d*d)) * (z*z));
-
-        this->center = Line(this->hall.get_small_line().inLine(0.5), this->current_limit.inLine(0.5)).inLine(h);
-
-        this->width = h * (this->current_limit.length()/3.);
-        this->height = this->width;// * static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
+        this->center = Line(this->center, this->current_limit.inLine(0.5)).inLine(h*h*std::cbrtl(h));
+        this->width = h * (this->limit_init.length()/3.);
+        this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
         this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
         this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
 
     }
-    // Cet état sera supprimé
-    else if(this->state == 3){
-
-        long double h0 = this->speed;//(this->hall.get_small_line().length() / this->current_limit.length());
-        long double z = this->center.euclideanDistance(this->hall.get_small_line().inLine(0.5));
-        long double d = this->hall.get_small_line().inLine(0.5).euclideanDistance(this->current_limit.inLine(0.5));
-        long double h = (1. - ((1.-h0) / (d*d)) * (z*z));
-
-        this->center = Line(this->current_limit.inLine(0.5), this->hall.get_small_line().inLine(0.5)).inLine(h);
-
-        this->width = (this->hall.get_small_line().length()/3.) *(1-h);
-        this->height = this->width;//static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
-
-        this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
-        this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
-
-    }
-
 
     // Update state if necessary
     // I did an overload of the oprator == in class Point to do this operation:
     if(this->state == 0 && this->center == this->limit_init.inLine(0.5))
     {
         this->state = 1;
-        this->dest = this->start;
-        this->start = this->current_limit;
+        // this->dest = this->start;
+        // this->start = this->current_limit;
     }
 
     else if(this->state == 1 && this->center == this->hall.get_small_line().inLine(0.5))
     {
         this->state = 2;
         this->current_limit = this->limit_init;
-        this->start = this->dest;
-        this->dest = this->current_limit;
+        // this->start = this->dest;
+        // this->dest = this->current_limit;
     }
 
     else if(this->state == 2 && this->center == this->current_limit.inLine(0.5))
     {
         this->state = -1;
-
-    }
-
-    // cet état sera supprimé
-    else if(this->state == 3 && this->center == this->hall.get_small_line().inLine(0.5))
-    {
-        this->state = -1;
-        std::random_device rd;  // Will be used to obtain a seed for the random number engine
-        std::mt19937 gen(rd());
-        std::uniform_real_distribution<long double> rand (0.1, this->random_p_init);
-
-        this->random_p = rand(gen);
-
-        // On calcule la ligne limit de déplacement courant du spiker (parallèle à big line)
-        // Formule de THALES
-        Point sp0 = this->hall.get_small_line().get_p0();
-        Point sp1 = this->hall.get_small_line().get_p1();
-        Point bp0 = this->hall.get_big_line().get_p0();
-        Point bp1 = this->hall.get_big_line().get_p1();
-
-        long double segment1 = this->random_p * (sp0.euclideanDistance(bp0));
-        long double segment2 = this->random_p * (sp1.euclideanDistance(bp1));
-        Line l1 = Line(sp0, bp0);
-        Line l2 = Line(sp1, bp1);
-
-        Point pp0 = l1.inLine(segment1 / l1.length());
-        Point pp1 = l2.inLine(segment2 / l2.length());
-
-        this->current_limit.set_points({pp0, pp1});
     }
 
     return false;

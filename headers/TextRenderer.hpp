@@ -7,7 +7,7 @@
 #include <stdlib.h> 
 #include <vector>
 #include <memory>
-#include "utils.hpp"
+#include "Utils.hpp"
 #include "Color.hpp"
 
 class TextRenderer

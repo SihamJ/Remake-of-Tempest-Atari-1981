@@ -40,6 +40,9 @@ public:
 
     void update_line_limit();
 
+    const int get_state();
+    Line get_limit();
+
 private:
     const int scoring=50;
     const long double speed = 0.001;

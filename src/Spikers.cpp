@@ -86,10 +86,6 @@ Line Spikers::get_limit(){
 
 void Spikers::set(Tunel&& h){
 
-        // std::random_device rd;  // Will be used to obtain a seed for the random number engine
-        // std::mt19937 gen(rd());
-        // std::uniform_real_distribution<long double> rand (0.25, 0.75);
-
         this->random_p = RATIO_RANDOM_P; //rand(gen);
         this->hall = h;
         this->state = 0;
@@ -150,9 +146,20 @@ bool Spikers::get_closer(long double h) {
         this->state = -1;
     }
     
+    
     // Movement
     if (this->state == 0){
-        // if (random_p < RATIO_RANDOM_P) return true;
+
+        if (random_p < RATIO_RANDOM_P) {
+            double dist1 = static_cast<double>(hall.get_small_line().inLine(0.5).euclideanDistance(this->center));
+            double dist2 = static_cast<double>(hall.get_small_line().inLine(0.5).euclideanDistance(hall.get_big_line().inLine(0.5)));
+
+            random_p = dist1/dist2;
+            
+            update_line_limit();
+            state = -1;
+            return false;
+        }
 
         this->center = Line(this->center, this->limit_init.inLine(0.5)).inLine(h*h*std::cbrtl(h));
         this->width = h * this->limit_init.length()/3.;
@@ -161,9 +168,7 @@ bool Spikers::get_closer(long double h) {
         this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
     }
 
-    else if(this->state == 1){
-        // if (random_p < RATIO_RANDOM_P) return true;
-
+    else if(this->state == 1) {
         this->center = Line(this->center, this->hall.get_small_line().inLine(0.5)).inLine(h*std::cbrtl(h));
         this->width = (this->limit_init.length()/3.) * (1-h) ;
         this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
@@ -171,40 +176,19 @@ bool Spikers::get_closer(long double h) {
         this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
     }
 
-    // TO DO changer déplacement ennemi en envoie d'un missile ennemi
-    else if(this->state == 2){
-
-        this->center = Line(this->center, this->limit_init.inLine(0.5)).inLine(h*h*std::cbrtl(h));
-        this->width = h * (this->limit_init.length()/3.);
-        this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
-        this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
-        this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
-
-    }
-
     // Update state if necessary
     // I did an overload of the oprator == in class Point to do this operation:
     if(this->state == 0 && this->center == this->limit_init.inLine(0.5))
     {
         this->state = 1;
-        // this->dest = this->start;
-        // this->start = this->current_limit;
     }
 
     else if(this->state == 1 && this->center == this->hall.get_small_line().inLine(0.5))
     {
         this->state = 2;
-        //this->current_limit = this->limit_init;
-        // this->start = this->dest;
-        // this->dest = this->current_limit;
     }
 
-    else if(this->state == 2 && this->center == this->limit_init.inLine(0.5))
-    {
-        this->state = -1;
-    }
-
-    if (state == -1 && random_p == 0.) return true;
+    else if (state == -1 && random_p == 0.) return true;
 
     return false;
     //return intersect(this->hall.get_big_line());
@@ -217,8 +201,6 @@ bool Spikers::intersect(Line l) {
     int y1 = l.get_p0().get_y();
     int x2 = l.get_p1().get_x();
     int y2 = l.get_p1().get_y();
-
-    // printf("%d %d %d %d %d %d %d %d \n", this->x, this->y, this->width, this->height, x1, y1, x2, y2);
 
     return SDL_IntersectRectAndLine(&r, &x1, &y1, &x2, &y2);
 
@@ -258,8 +240,6 @@ void Spikers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     }
 
     Point center_small_line = hall.get_small_line().inLine(0.5);
-    // this->limit_init.draw(renderer);
-    // this->current_limit.draw(renderer);
 
     if (state == 0) {
         Line l(center_small_line, this->center);
@@ -269,17 +249,30 @@ void Spikers::draw(std::shared_ptr<SDL_Renderer> renderer) {
         Line l(center_small_line, this->limit_init.inLine(0.5));
         l.draw(renderer);
     }
-
-    // limit_init.draw(renderer);
 }
 
 Line Spikers::get_line_limit() {
     return this->limit_init;
 }
     
-void Spikers::decrease_random_p() {
+bool Spikers::decrease_random_p() {
+    if (this->state == 0) {
+        double dist1 = static_cast<double>(hall.get_small_line().inLine(0.5).euclideanDistance(this->center));
+        double dist2 = static_cast<double>(hall.get_small_line().inLine(0.5).euclideanDistance(hall.get_big_line().inLine(0.5)));
+
+        random_p = dist1/dist2;
+        
+        update_line_limit();
+
+        state = -1;
+
+        return true;
+    }
+    
     this->random_p -= 0.05;
     if (random_p < 0.) random_p = 0.;
+
+    return false;
 }
 
 void Spikers::update_line_limit() {
@@ -299,4 +292,12 @@ void Spikers::update_line_limit() {
 
     this->limit_init.set_points({pp0, pp1});
 
+}
+
+int Spikers::getState() {
+    return this->state;
+}
+
+void Spikers::setState(int state) {
+    this->state = state;
 }

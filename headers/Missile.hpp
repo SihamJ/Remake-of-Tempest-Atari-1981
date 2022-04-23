@@ -32,6 +32,10 @@ class Missile {
 
         void draw(std::shared_ptr<SDL_Renderer> renderer);
 
+        void setEnemy();
+
+        bool getEnemy();
+
     private:
 
         // couloir auquel appartient l'ennemi
@@ -49,6 +53,9 @@ class Missile {
         int width = 40;
         int height = 40;
         int angle = 0;
+
+        // vrai si c'est un missile ennemi
+        bool enemy = false;
 
 };
 

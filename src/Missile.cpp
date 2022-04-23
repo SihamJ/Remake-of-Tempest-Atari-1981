@@ -46,7 +46,7 @@
         return this->pos;
     }
 
-    bool Missile::get_closer(){
+    bool Missile::get_closer() {
 
         long  double h0 = this->hall.get_small_line().length() / this->hall.get_big_line().length();
         long  double z = this->pos.euclideanDistance(this->dest);
@@ -59,6 +59,9 @@
         this->width = (this->hall.get_big_line().length()/3.) * (1-h) / 3.;
         this->height = this->width;
 
+        if (this->enemy) 
+            return intersect(this->hall.get_big_line());
+
         return intersect(this->hall.get_small_line());
     }
 
@@ -70,8 +73,6 @@
         int y1 = l.get_p0().get_y();
         int x2 = l.get_p1().get_x();
         int y2 = l.get_p1().get_y();
-
-        // printf("%d %d %d %d %d %d %d %d \n", this->x, this->y, this->width, this->height, x1, y1, x2, y2);
 
         return SDL_IntersectRectAndLine(&r, &x1, &y1, &x2, &y2);
 
@@ -107,3 +108,14 @@
             return;
         }
     }
+
+    void Missile::setEnemy() {
+        this->start = hall.get_small_line().inLine(0.5);
+        this->dest = hall.get_big_line().inLine(0.5);
+        this->pos = this->start;
+        this->enemy = true;
+    }
+
+bool Missile::getEnemy() {
+    return this->enemy;
+}

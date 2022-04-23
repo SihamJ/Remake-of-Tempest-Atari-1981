@@ -150,6 +150,20 @@ void Game::update() {
     // Si on a dépassé les TICK millisecondes, on update
     if (timer->get_clock(clock_list::update) > TICK) {
 
+        for (auto e : enemies) {
+            if (e->get_name().compare("spikers") == 0) {
+                Spikers * enemy_spiker = dynamic_cast<Spikers*>(&(*e));
+                if (enemy_spiker == nullptr)
+                    return;
+                if (enemy_spiker->get_state() == 2) {
+                    std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(enemy_spiker->get_hall()));
+                    m->setEnemy();
+                    vm.push_back(m);
+                    enemy_spiker->setState(-1);
+                }
+            }
+        }
+
         // collisions.clear();
 
         timer->reset_clock(clock_list::update);
@@ -159,26 +173,23 @@ void Game::update() {
             if (vm[i]->get_closer()) {
                 vm.erase(vm.begin()+i);
             }
-            else {
+            else if (!vm[i]->getEnemy()) {
                 for (auto e : enemies) {
                     if (e->get_name().compare("spikers") == 0) {
                         if (e->get_hall() == vm[i]->get_hall()) {
                             Spikers * enemy_spiker = dynamic_cast<Spikers*>(&(*e));
-                            if (enemy_spiker == nullptr) {
-                                printf("null ??\n");
+                            if (enemy_spiker == nullptr)
                                 return;
-                            }
-                            // Line random_p = enemy_spiker->get_line_limit();
-                            // int x1 = static_cast<int>(random_p.get_p0().get_x());
-                            // int y1 = static_cast<int>(random_p.get_p0().get_y());
-                            // int x2 = static_cast<int>(random_p.get_p1().get_x());
-                            // int y2 = static_cast<int>(random_p.get_p1().get_y());
 
-                            // if (SDL_IntersectRectAndLine(&r, &x1, &y1, &x2, &y2) == SDL_TRUE) {
+                            // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
+                            double dist1 = vm[i]->get_pos().euclideanDistance(e->get_hall().get_big_line().inLine(0.5));
+                            double dist2 = e->get_hall().get_big_line().inLine(0.5).euclideanDistance(enemy_spiker->get_line_limit().inLine(0.5));
+
+                            if (dist1 > dist2) {
                                 vm.erase(vm.begin()+i);
                                 enemy_spiker->decrease_random_p();
                                 enemy_spiker->update_line_limit();
-                            // }
+                            }
                         }
                     }
                 }

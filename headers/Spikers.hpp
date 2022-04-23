@@ -32,7 +32,7 @@ public:
 
     Line get_line_limit();
 
-    void decrease_random_p();
+    bool decrease_random_p();
 
     bool intersect(Line l);
 
@@ -42,6 +42,8 @@ public:
 
     const int get_state();
     Line get_limit();
+    void setState(int state);
+    int getState();
 
 private:
     const int scoring=50;
@@ -54,8 +56,8 @@ private:
     /*
     * 0 : vient d'apparaitre, avance vers un point random
     * 1 : à atteint le point, la ligne est tracé, il recule vers le centre
-    * 2 : il avance vers le point, avec la ligne déjà tracé
-    * 3 : il recule vers le centre après avoir atteint le point random
+    * 2 : il est arrivé au centre, il lance un missile
+    * -1 : missile lancé, il reste que la ligne
     */
     int state = 0;
 

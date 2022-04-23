@@ -27,8 +27,9 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
         if (renderer) {
             std::cout << "Renderer created" << std::endl;
         }
-        // pr utiliser rand avec des valeurs randoms
-        srand (time(NULL));
+
+
+        
 
         this->textRenderer = TextRenderer();
 
@@ -110,14 +111,21 @@ void Game::update() {
     // Ajout de points au centre jusqu'aux extrémités de l'octogone
     // à des temps aléatoires < à 40000 millisecondes entre chacun
     // sur des couloirs aléatoires
-    if (  SDL_GetTicks() - clock_new_p > (rand()%100000)) {
+
+    std::random_device rd;  // Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> random (0, 100000);
+
+    int i = random(gen);
+
+    if (  SDL_GetTicks() - clock_new_p > i) {
         // maj horloge
         clock_new_p = SDL_GetTicks();
         generated=true;
         std::shared_ptr<Enemy> enemy = this->level->new_enemy();
 
         // un couloir aléatoire parmis les couloirs de la map
-        Tunel hDest = vh[rand() % vh.size()];
+        Tunel hDest = vh[random(gen) % vh.size()];
         
         //instead of copying values, we move them by rvalue reference. They won't be needed afterwards.
         enemy->set(std::move(hDest));
@@ -209,7 +217,7 @@ void Game::update() {
                 z = s->get_center().euclideanDistance(s->get_hall().get_small_line().inLine(0.5));
                 backwards = true;
             }
-            
+
             else{
                 h0 = enemies.at(i)->get_start().length() / enemies.at(i)->get_dest().length(); 
                 d = enemies.at(i)->get_start().inLine(0.5).euclideanDistance(enemies.at(i)->get_dest().inLine(0.5));

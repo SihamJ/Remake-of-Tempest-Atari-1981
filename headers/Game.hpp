@@ -4,7 +4,6 @@
 #include <string>
 #include <SDL.h>
 #include <iostream>
-#include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <memory>
 #include <vector>

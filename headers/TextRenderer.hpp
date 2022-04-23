@@ -66,7 +66,7 @@ class TextRenderer
 
                 dest_rect.w = 30;
                 dest_rect.h = 33;
-                dest_rect.x = x + (30*(k+1));
+                dest_rect.x = x + (30*(k));
 
                 if (SDL_RenderCopyEx(renderer.get(), monImage, NULL, &dest_rect, 0, NULL, SDL_FLIP_NONE) != 0) {
                     SDL_Log("Erreur > %s", SDL_GetError());

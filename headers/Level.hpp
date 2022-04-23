@@ -37,11 +37,11 @@ class Level {
         void set_enemies();
         void set_player_color();
         void set_current_level(int level);
-        int current_level = 0;
+        int current_level = 6;
         std::shared_ptr<Tube> map;
         std::map<int, Color> current_enemies;
         Color current_player_color;
-
+        int current_level_time = 15;
 
         // description des différents niveaux, leurs ennemies, map et couleurs.
         // Il n'y a qu'une seule instance de Level dans ce jeu, qui se met à jour au fur et à mesure que le joueur progresse,

@@ -4,6 +4,7 @@ Level::Level(){}
 
 Level::Level(int a){
     std::cout << "Level constructor" << std::endl;
+    this->current_level = a;
 }
 
 Level::~Level(){}
@@ -104,7 +105,7 @@ void Level::set_map(){
     //     this->map = std::make_shared<StylizedCross>();
     //     break;
     case maps_list::triangle:
-        this->map = std::make_shared<TriangleMap>(15, WIDTH, HEIGHT, c);
+        this->map = std::make_shared<TriangleMap>(12, WIDTH, HEIGHT, c);
         break;
     // case maps_list::clover:
     //     this->map = std::make_shared<Clover>();
@@ -137,7 +138,7 @@ void Level::set_map(){
     //     this->map = std::make_shared<InfinitySymbol>();
     //     break;
     default:
-        this->map = std::make_shared<TriangleMap>(9, WIDTH, HEIGHT, c);
+        this->map = std::make_shared<TriangleMap>(18, WIDTH, HEIGHT, c);
         break;
     }
 }
@@ -194,8 +195,8 @@ void Level::set_player_color(){
 
 // at this stage, we only have triangle map, so we will play at level 6 only
 void Level::next_level(){
-    //this->current_level++;    
-    this->set_current_level(6);
+    this->current_level++;    
+    //this->set_current_level(6);
     this->set_map();
     this->set_enemies();
     this->set_player_color();
@@ -222,7 +223,7 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     //i = 1;
 
     // force à afficher que des spikers
-    i = 2;
+    //i = 2;
 
     Color color = this->current_enemies.at(i);
     std::shared_ptr<Enemy> e;

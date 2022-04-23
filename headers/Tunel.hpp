@@ -80,11 +80,9 @@ public:
         long  double y2 = this->get_big_line().get_p0().get_y();
 
         if(y_project == 0){
-            //std::cout << " y project is 0, angle is " << angle <<std::endl;
             return;
 
         }
-        std::cout << hypotenus << std::endl;
         if(x_project == 0){
             this->angle = 90.;
             return;

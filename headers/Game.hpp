@@ -21,6 +21,7 @@
 #include "Missile.hpp"
 #include "Collision.hpp"
 #include "TextRenderer.hpp"
+#include "Timer.hpp"
 
 class Game {
 
@@ -35,6 +36,8 @@ public:
     void render();
     void clean();
 
+    void next_level();
+
     void render_color(Color&& c);
     void render_color(std::string color);
     void render_color(std::string color, int opacity);
@@ -42,8 +45,11 @@ public:
 
     // checks if the game is still running
     bool running();
+    bool transitioning();
 
 private:
+
+    std::unique_ptr<Timer> timer;
     // temps enregistré pr faire des updates toutes les x secondes
     Uint32 clock = 0;
     bool generated = false;
@@ -52,7 +58,7 @@ private:
 
     // savoir si le jeu doit continuer de fonctionner
     bool isRunning;
-
+    bool isTransitioning=false;
     // fenêtre
     std::shared_ptr<SDL_Window> window;
 

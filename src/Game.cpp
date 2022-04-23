@@ -28,28 +28,23 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
             std::cout << "Renderer created" << std::endl;
         }
 
-
+        this->timer = std::make_unique<Timer>();
         
+        // clock 1 game update
+        this->timer->add_clock();
+        // clock 2 pour enemies
+        this->timer->add_clock();
+        // clock 3 pour passer au niveau suivant
+        this->timer->add_clock();
 
         this->textRenderer = TextRenderer();
-
-        this->level = std::make_shared<Level>(1);
-
+        this->level = std::make_shared<Level>(5);
         this->level->next_level();
         this->map = level->get_map();
 
         // construction de la map
         map->build_map();
-
-        render_color(level->get_map_color());
-
-        map->draw(renderer);
-
-        render_color(level->get_player_color());
-
         this->player = Player(0, map->get_hall(0), this->level->get_player_color());
-        this->player.draw(renderer);
-
          // récupère le point central de la Map
         center.set_point(map->get_center().get_x(), map->get_center().get_y());
 
@@ -107,6 +102,15 @@ void Game::handle_events() {
  * 
  */
 void Game::update() {
+
+    // Passer au niveau suivant ?
+
+    if (this->timer->get_clock(clock_list::level) > LEVEL_TIME){
+        this->isTransitioning = true;
+        this->timer->reset_clock(clock_list::level);
+        this->next_level();
+        return;
+    }
     
     // Ajout de points au centre jusqu'aux extrémités de l'octogone
     // à des temps aléatoires < à 40000 millisecondes entre chacun
@@ -118,9 +122,9 @@ void Game::update() {
 
     int i = random(gen);
 
-    if (  SDL_GetTicks() - clock_new_p > i) {
+    if ( this->timer->get_clock(clock_list::enemies) > i) {
         // maj horloge
-        clock_new_p = SDL_GetTicks();
+        this->timer->reset_clock(clock_list::enemies);
         generated=true;
         std::shared_ptr<Enemy> enemy = this->level->new_enemy();
 
@@ -133,11 +137,11 @@ void Game::update() {
         enemies.push_back(enemy);
     }
     // Si on a dépassé les TICK millisecondes, on update
-    if (SDL_GetTicks() - clock > TICK) {
+    if (timer->get_clock(clock_list::update) > TICK) {
 
         // collisions.clear();
 
-        clock = SDL_GetTicks();
+        timer->reset_clock(clock_list::update);
         // Rapproche tous les missiles de leur destination
         // détruit le missile si il a atteint sa cible
         for (int i = 0; i<vm.size(); i++) {
@@ -159,9 +163,7 @@ void Game::update() {
 
                             SDL_Rect r = e->get_rect();
 
-                            printf("jsuis là\n");
                             if (SDL_IntersectRectAndLine(&r, &x1, &y1, &x2, &y2) == SDL_TRUE) {
-                                printf("non ?\n");
                                 vm.erase(vm.begin()+i);
                                 enemy_spiker->decrease_random_p();
                                 enemy_spiker->update_line_limit();
@@ -304,9 +306,10 @@ void Game::render() {
 
     render_color(YELLOW, 255);
     
-    this->textRenderer.draw(renderer, this->player.get_score(), WIDTH/3, 100, "YELLOW");
+    this->textRenderer.draw(renderer, this->player.get_score(), WIDTH/4, 30, "YELLOW");
 
-    this->textRenderer.draw(renderer, this->player.get_life_point(), 2*WIDTH/3, 100, "LIGHT_BLUE");
+    this->textRenderer.draw(renderer, this->player.get_life_point(), 3*WIDTH/4, 30, "LIGHT_BLUE");
+    this->textRenderer.draw(renderer, this->level->get_current_level(), WIDTH/2, 30, "LIGHT_BLUE");
     // màj du rendu
     SDL_RenderPresent(renderer.get());
 }
@@ -338,5 +341,25 @@ void Game::render_color(std::string color, const int opacity){
     SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), opacity);
 }
 
-bool Game::running() { return this->isRunning; }
 
+void Game::next_level(){
+    std::cout << "next level" << std::endl;
+    render_color(BLACK, 255);
+    if (SDL_RenderClear(renderer.get()) < 0) {
+        std::cerr<<"Pb render clear SDL"<< std::endl;
+        isRunning = false;
+    }
+    this->vm.clear();
+    this->vh.clear();
+    this->enemies.clear();
+    this->level->next_level();
+    this->map = level->get_map();
+    map->build_map();
+    center.set_point(map->get_center().get_x(), map->get_center().get_y());
+    vh = map->get_hall_list();
+    
+}
+
+
+bool Game::running() { return this->isRunning; }
+bool Game::transitioning() { return this->isTransitioning; }

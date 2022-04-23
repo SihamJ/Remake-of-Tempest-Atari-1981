@@ -10,6 +10,11 @@
 #define GREEN "000255000"
 #define PURPLE "220000220"
 
+// 12 second for each level
+#define LEVEL_TIME 12000
+// 2 seconds for transistion
+#define TRANSISTION_TIME 2000
+
 // TO DO: this enum is not used yet. To respect modern c++ conventions, it would be better to switch from #define to enum and writing a converter from hexa to rgb
 enum color  { red = 0XFF0000,  white = 0XFFFFFF, black = 0X000000, light_blue = 0X00FFFF, yellow = 0XFFFF00 };
 
@@ -27,6 +32,10 @@ enum enemies_list {
 enum maps_list {
     circle = 0, square = 1, plussymbol = 2, blowtie = 3, stylizedcross = 4, triangle = 5, clover = 6, v = 7, steps = 8, u = 9, 
     completelyflat= 10, heart = 11, star = 12, w = 13, fan = 14, infinitysymbol = 15
+};
+
+enum clock_list{
+    update = 0, enemies = 1, level = 2
 };
 
 #endif

@@ -83,7 +83,7 @@ bool Flippers::get_closer(long double h) {
     this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
     this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
 
-    return false;
+    //return false;
     return intersect(this->hall.get_big_line());
 }
 

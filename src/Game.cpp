@@ -162,7 +162,6 @@ void Game::update() {
         for (auto e : enemies) {
             if (e->get_name().compare("spikers") == 0) {
                 std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(e);
-
                 if (enemy_spiker == nullptr)
                     return;
                 if (enemy_spiker->get_state() == 2) {
@@ -187,7 +186,7 @@ void Game::update() {
                 for (auto e : enemies) {
                     if (e->get_name().compare("spikers") == 0) {
                         if (e->get_hall() == vm[i]->get_hall()) {
-                            Spikers * enemy_spiker = dynamic_cast<Spikers*>(&(*e));
+                            std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(e);
                             if (enemy_spiker == nullptr)
                                 return;
 

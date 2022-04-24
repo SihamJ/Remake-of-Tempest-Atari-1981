@@ -267,6 +267,8 @@ void Game::render() {
         isRunning = false;
     }
 
+    if (getPause()) { SDL_RenderPresent(renderer.get()); return;}
+
     render_color(YELLOW, 255);
    // this->score.draw(renderer, 120);
     // dessine tous ce qui doit être affiché

@@ -38,7 +38,7 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
         this->timer->add_clock();
 
         this->textRenderer = TextRenderer();
-        this->level = std::make_shared<Level>(5);
+        this->level = std::make_shared<Level>(0);
         this->level->next_level();
         this->map = level->get_map();
 
@@ -267,7 +267,16 @@ void Game::render() {
         isRunning = false;
     }
 
+    render_color(std::move(map->get_color()));
+    map->draw(renderer);
+
     render_color(YELLOW, 255);
+
+    player.get_hall().draw(renderer);
+
+    render_color(std::move(level->get_player_color()));    
+    player.draw(renderer);
+
    // this->score.draw(renderer, 120);
     // dessine tous ce qui doit être affiché
     for (auto i : vm)
@@ -280,15 +289,14 @@ void Game::render() {
         i->draw(renderer);
     }
 
-    render_color(std::move(map->get_color()));
-    map->draw(renderer);
+
 
     // for (auto i : collisions){
     //     i.draw(renderer);
     // }
 
-    render_color(std::move(level->get_player_color()));    
-    player.draw(renderer);
+
+
 
     render_color(YELLOW, 255);
     

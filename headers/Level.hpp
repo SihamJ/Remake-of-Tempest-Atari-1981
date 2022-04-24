@@ -8,6 +8,7 @@
 #include "Tube.hpp"
 #include "Enemy.hpp"
 #include "TriangleMap.hpp"
+#include "CircleMap.hpp"
 #include "Flippers.hpp"
 #include "Tankers.hpp"
 #include "Spikers.hpp"
@@ -37,7 +38,7 @@ class Level {
         void set_enemies();
         void set_player_color();
         void set_current_level(int level);
-        int current_level = 6;
+        int current_level = 0;
         std::shared_ptr<Tube> map;
         std::map<int, Color> current_enemies;
         Color current_player_color;

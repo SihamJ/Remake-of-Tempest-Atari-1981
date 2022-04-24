@@ -217,13 +217,13 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     // if (i == 1) i++;
 
     // force à afficher que des flippers
-    //i = 0;
+    i = 0;
     
     //force à afficher que des tankers
     //i = 1;
 
     // force à afficher que des spikers
-    i = 2;
+   // i = 2;
 
     Color color = this->current_enemies.at(i);
     std::shared_ptr<Enemy> e;

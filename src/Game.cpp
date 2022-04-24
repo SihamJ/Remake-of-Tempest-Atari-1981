@@ -272,7 +272,7 @@ void Game::render() {
 
     render_color(YELLOW, 255);
 
-    player.get_hall().draw(renderer);
+    map->get_hall(player.get_n_hall()).draw(renderer);
 
     render_color(std::move(level->get_player_color()));    
     player.draw(renderer);

@@ -75,12 +75,6 @@ void Game::handle_events() {
             break;
         }
         case SDL_KEYDOWN: {
-            if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_f) {
-                player.decr_n_hall(map->get_nb_hall(), map->get_hall((player.get_n_hall() -1 + map->get_nb_hall())%map->get_nb_hall()));
-            }
-            if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_j) {
-                player.incr_n_hall(map->get_nb_hall(), map->get_hall( (player.get_n_hall()+1) % map->get_nb_hall()));
-            }
             if (event.key.keysym.sym == SDLK_SPACE){
                 // le couloir où le player se trouve
                 Tunel h = vh[player.get_n_hall()];
@@ -91,6 +85,16 @@ void Game::handle_events() {
                 break;
             }
             break;
+        }
+        case SDL_MOUSEWHEEL: {
+            if(event.wheel.y > 0) // scroll up
+            {
+                player.decr_n_hall(map->get_nb_hall(), map->get_hall((player.get_n_hall() -1 + map->get_nb_hall())%map->get_nb_hall()));
+            }
+            else if(event.wheel.y < 0) // scroll down
+            {
+                player.incr_n_hall(map->get_nb_hall(), map->get_hall( (player.get_n_hall()+1) % map->get_nb_hall()));
+            }
         }
         default:
             break;

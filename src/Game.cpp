@@ -307,6 +307,7 @@ void Game::render() {
 
 /**
  * @brief Gère les évènements de l'utilisateur (click souris/tape au clavier)
+ * en mode pause
  * 
  */
 void Game::handle_events_pause_mode() {
@@ -330,6 +331,7 @@ void Game::handle_events_pause_mode() {
 
 /**
  * @brief On met à jour tous les éléments -> tous les TICK millisecondes
+ * en mode pause
  * 
  */
 void Game::update_pause_mode() {
@@ -338,6 +340,7 @@ void Game::update_pause_mode() {
 
 /**
  * @brief On clear + draw tous les éléments
+ * en mode pause
  * 
  */
 void Game::render_pause_mode() {

@@ -17,8 +17,6 @@ public:
     Player(const int& n_hall, const Tunel& hall, const Color& c);
     void operator=(Player other);
 
-    int get_n_hall();
-
     void incr_n_hall(int nbHall, const Tunel& h);
 
     void decr_n_hall(int nbHall, const Tunel&h);
@@ -37,8 +35,7 @@ public:
     void draw(std::shared_ptr<SDL_Renderer> renderer) override;
 
 protected:
-    // le numéro du hall dans lequel le joueur se trouve
-    int n_hall = 0;
+
     // point de vie
     int life_point = 20;
     int score = 0;

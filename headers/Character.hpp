@@ -35,11 +35,12 @@ public:
     virtual const std::string get_name() const  { return this->name; }
     Tunel get_hall() const { return this->hall; }
     Color get_color() const { return this->color; }
-
+    int get_n_hall(){ return this->n_hall; }
 
     void set_hall(const Tunel& hall){
         this->hall = hall;
     }
+    void set_n_hall(int index){ this->n_hall = index; }
 
 protected:
 
@@ -47,6 +48,7 @@ protected:
     std::string name;
     Color color;
     Tunel hall;
+    int n_hall;
 };
 
 #endif

@@ -37,9 +37,6 @@
         this->build();
     }
 
-    int Player::get_n_hall() {
-        return n_hall;
-    }
 
     
     void Player::incr_n_hall(int nbHall, const Tunel& h) {

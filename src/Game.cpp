@@ -348,9 +348,13 @@ void Game::next_level(){
     this->enemies.clear();
     this->level->next_level();
     this->map = level->get_map();
+    this->player.clean();
     map->build_map();
     center.set_point(map->get_center().get_x(), map->get_center().get_y());
     vh = map->get_hall_list();
+    this->player.set_hall(map->get_hall(0));
+    this->player.set_n_hall(0);
+    this->player.build();
     
 }
 

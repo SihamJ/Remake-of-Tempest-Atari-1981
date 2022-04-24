@@ -84,9 +84,13 @@ void Game::handle_events() {
                 vm.push_back(m);
                 break;
             }
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                setPause(getPause() ? false : true);
+            }
             break;
         }
         case SDL_MOUSEWHEEL: {
+            if (getPause()) break;
             if(event.wheel.y > 0) // scroll up
             {
                 player.decr_n_hall(map->get_nb_hall(), map->get_hall((player.get_n_hall() -1 + map->get_nb_hall())%map->get_nb_hall()));
@@ -106,6 +110,10 @@ void Game::handle_events() {
  * 
  */
 void Game::update() {
+
+    if (getPause()) {
+        return;
+    }
 
     // Passer au niveau suivant ?
 
@@ -341,3 +349,6 @@ void Game::next_level(){
 
 bool Game::running() { return this->isRunning; }
 bool Game::transitioning() { return this->isTransitioning; }
+
+bool Game::getPause() { return this->pause; }
+void Game::setPause(bool pause) { this->pause = pause; }

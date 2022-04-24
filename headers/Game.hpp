@@ -46,6 +46,8 @@ public:
     // checks if the game is still running
     bool running();
     bool transitioning();
+    void setPause(bool pause);
+    bool getPause();
 
 private:
 
@@ -92,6 +94,8 @@ private:
     std::vector<Collision> collisions;
 
     TextRenderer textRenderer;
+
+    bool pause = false;
     
 
 };

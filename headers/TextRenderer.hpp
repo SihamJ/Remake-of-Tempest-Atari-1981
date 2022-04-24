@@ -47,7 +47,7 @@ class TextRenderer
 
                 std::string path = root + std::to_string(*i) + static_cast<std::string>(".bmp");
                 
-                SDL_Surface* image = SDL_LoadBMP(path.c_str());
+                auto image = sdl_shared(SDL_LoadBMP(path.c_str()));
                 if(!image)
                 {
                     SDL_Log("Erreur > %s", SDL_GetError());
@@ -56,10 +56,9 @@ class TextRenderer
 
                 SDL_Rect dest_rect = {x, y, 48, 50};
                 
-                SDL_Texture* monImage = SDL_CreateTextureFromSurface(renderer.get(), image);  //La texture monImage contient maintenant l'image importée
-                SDL_FreeSurface(image); //Équivalent du destroyTexture pour les surface, permet de libérer la mémoire quand on n'a plus besoin d'une surface
+                auto monImage = sdl_shared(SDL_CreateTextureFromSurface(renderer.get(), image.get()));  //La texture monImage contient maintenant l'image importée
 
-                if (SDL_QueryTexture(monImage, NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
+                if (SDL_QueryTexture(monImage.get(), NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
                     SDL_Log("Erreur > %s", SDL_GetError());
                     return;
                 }
@@ -68,7 +67,7 @@ class TextRenderer
                 dest_rect.h = 33;
                 dest_rect.x = x + (30*(k));
 
-                if (SDL_RenderCopyEx(renderer.get(), monImage, NULL, &dest_rect, 0, NULL, SDL_FLIP_NONE) != 0) {
+                if (SDL_RenderCopyEx(renderer.get(), monImage.get(), NULL, &dest_rect, 0, NULL, SDL_FLIP_NONE) != 0) {
                     SDL_Log("Erreur > %s", SDL_GetError());
                     return;
                 }

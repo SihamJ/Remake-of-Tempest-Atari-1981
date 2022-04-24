@@ -79,30 +79,30 @@ public:
         long  double x2 = this->get_big_line().get_p0().get_x();
         long  double y2 = this->get_big_line().get_p0().get_y();
 
-        if(y_project == 0){
-            return;
+        // if(y_project == 0){
+        //     return;
 
-        }
-        if(x_project == 0){
-            this->angle = 90.;
-            return;
-        }
+        // }
+        // if(x_project == 0){
+        //     this->angle = 90.;
+        //     return;
+        // }
 
-        if(x1 >= x2 && y1 >= y2){
-            this->angle =  - acos(x_project / hypotenus);
-        }
-        else if(x1 >= x2 && y1 <= y2){
-            this->angle =  - acos(x_project / hypotenus);
-        }
-        else if(x1 <= x2 && y1 >= y2){
-            this->angle = acos(x_project / hypotenus);
-        }
-        else if(x1 <= x2 && y1 <= y2){
-            this->angle =  acos(x_project / hypotenus);
-        }
+        // if(x1 >= x2 && y1 >= y2){
+        //     this->angle =  - acos(x_project / hypotenus);
+        // }
+        // else if(x1 >= x2 && y1 <= y2){
+        //     this->angle =  - acos(x_project / hypotenus);
+        // }
+        // else if(x1 <= x2 && y1 >= y2){
+        //     this->angle = acos(x_project / hypotenus);
+        // }
+        // else if(x1 <= x2 && y1 <= y2){
+        //     this->angle =  acos(x_project / hypotenus);
+        // }
 
         
-        this->angle = this->angle * (180.0/3.141592653589793238463) + 180.;
+        // this->angle = this->angle * (180.0/3.141592653589793238463) + 180.;
         
     }
 

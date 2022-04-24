@@ -117,7 +117,6 @@ void Flippers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     SDL_Rect dest_rect = {static_cast<int>(x), static_cast<int>(y), init_width, init_height};
 
     auto monImage = sdl_shared(SDL_CreateTextureFromSurface(renderer.get(), image.get()));
-    //monImage.reset(SDL_CreateTextureFromSurface(renderer.get(), image.get()));  //La texture monImage contient maintenant l'image importée
    
     if (SDL_QueryTexture(monImage.get(), NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
         SDL_Log("Erreur > %s", SDL_GetError());

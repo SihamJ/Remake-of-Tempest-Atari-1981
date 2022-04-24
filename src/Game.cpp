@@ -85,13 +85,11 @@ void Game::handle_events() {
                 break;
             }
             if (event.key.keysym.sym == SDLK_ESCAPE) {
-                setPause(getPause() ? false : true);
-                //std::cout << "paused = " << getPause() << std::endl;
+                setPause(true);
             }
             break;
         }
         case SDL_MOUSEWHEEL: {
-            if (getPause()) break;
             if(event.wheel.y > 0) // scroll up
             {
                 //std::cout << "scroll up" << std::endl;
@@ -113,10 +111,6 @@ void Game::handle_events() {
  * 
  */
 void Game::update() {
-
-    if (getPause()) {
-        return;
-    }
 
     // Passer au niveau suivant ?
 
@@ -307,6 +301,53 @@ void Game::render() {
 
     this->textRenderer.draw_text(renderer, std::to_string(this->player.get_life_point()), 3*WIDTH/4, HEIGHT - 100);
     
+    // màj du rendu
+    SDL_RenderPresent(renderer.get());
+}
+
+/**
+ * @brief Gère les évènements de l'utilisateur (click souris/tape au clavier)
+ * 
+ */
+void Game::handle_events_pause_mode() {
+    SDL_Event event;
+    SDL_PollEvent(&event);
+    switch(event.type) {
+        case SDL_QUIT: {
+            isRunning = false;
+            break;
+        }
+        case SDL_KEYDOWN: {
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                setPause(false);
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+/**
+ * @brief On met à jour tous les éléments -> tous les TICK millisecondes
+ * 
+ */
+void Game::update_pause_mode() {
+    
+}
+
+/**
+ * @brief On clear + draw tous les éléments
+ * 
+ */
+void Game::render_pause_mode() {
+    // clear la fenêtre en noir
+    render_color(BLACK, 255);
+    if (SDL_RenderClear(renderer.get()) < 0) {
+        std::cerr<<"Pb render clear SDL"<< std::endl;
+        isRunning = false;
+    }
+
     // màj du rendu
     SDL_RenderPresent(renderer.get());
 }

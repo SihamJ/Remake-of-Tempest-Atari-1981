@@ -34,6 +34,9 @@ public:
     void handle_events();
     void update();
     void render();
+    void handle_events_pause_mode();
+    void update_pause_mode();
+    void render_pause_mode();
     void clean();
 
     void next_level();

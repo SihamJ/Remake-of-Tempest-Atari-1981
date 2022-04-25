@@ -181,6 +181,12 @@ void Game::update() {
         for (int i = 0; i<vm.size(); i++) {
             if (vm[i]->get_closer()) {
                 vm.erase(vm.begin()+i);
+                if (vm[i]->getEnemy()) {
+                    this->setGameOver(true);
+                    this->setStart(false);
+                    return;
+                }
+
             }
             else if (!vm[i]->getEnemy()) {
                 for (auto e : enemies) {
@@ -350,6 +356,11 @@ void Game::render_pause_mode() {
         isRunning = false;
     }
 
+    render_color(YELLOW, 255);
+
+    this->textRenderer.draw_text(renderer, "PAUSE", WIDTH/2 - 70, HEIGHT - 120);
+    this->textRenderer.draw_text(renderer, "Press escape to return to the game !", WIDTH/2 - 210, HEIGHT - 170);
+
     // màj du rendu
     SDL_RenderPresent(renderer.get());
 }
@@ -404,9 +415,88 @@ void Game::next_level(){
     
 }
 
+void Game::handle_events_main_menu() {
+    SDL_Event event;
+    SDL_PollEvent(&event);
+    switch(event.type) {
+        case SDL_QUIT: {
+            isRunning = false;
+            break;
+        }
+        case SDL_KEYDOWN: {
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                setStart(true);
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+void Game::update_main_menu() {}
+void Game::render_main_menu() {
+    // clear la fenêtre en noir
+    render_color(BLACK, 255);
+    if (SDL_RenderClear(renderer.get()) < 0) {
+        std::cerr<<"Pb render clear SDL"<< std::endl;
+        isRunning = false;
+    }
+
+    render_color(YELLOW, 255);
+    
+    this->textRenderer.draw_text(renderer, "MAIN MENU", WIDTH/2 - 70, HEIGHT - 120);
+    this->textRenderer.draw_text(renderer, "Press escape to start a game !", WIDTH/2 - 210, HEIGHT - 170);
+    
+    // màj du rendu
+    SDL_RenderPresent(renderer.get());
+}
+
+void Game::handle_events_game_over() {
+    SDL_Event event;
+    SDL_PollEvent(&event);
+    switch(event.type) {
+        case SDL_QUIT: {
+            isRunning = false;
+            break;
+        }
+        case SDL_KEYDOWN: {
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                setGameOver(false);
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+void Game::update_game_over() {}
+void Game::render_game_over() {
+    // clear la fenêtre en noir
+    render_color(BLACK, 255);
+    if (SDL_RenderClear(renderer.get()) < 0) {
+        std::cerr<<"Pb render clear SDL"<< std::endl;
+        isRunning = false;
+    }
+
+    render_color(YELLOW, 255);
+    
+    this->textRenderer.draw_text(renderer, "GAME OVER", WIDTH/2 - 70, HEIGHT - 120);
+    this->textRenderer.draw_text(renderer, "Press escape to go back to main menu !", WIDTH/2 - 230, HEIGHT - 170);
+    
+    // màj du rendu
+    SDL_RenderPresent(renderer.get());
+}
+
 
 bool Game::running() { return this->isRunning; }
 bool Game::transitioning() { return this->isTransitioning; }
 
 bool Game::getPause() { return this->pause; }
 void Game::setPause(bool pause) { this->pause = pause; }
+void Game::setGameOver(bool go) { this->game_over = go; }
+bool Game::getGameOver() { return this->game_over; }
+
+bool Game::getStart() { return this->start; }
+void Game::setStart(bool start) { this->start = start; }

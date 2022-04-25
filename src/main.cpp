@@ -16,22 +16,40 @@ int main(int argc, char** argv) {
 
     int i = 0;
     // boucle principal
+
     while (game->running()) {
-        
-        while(game->getPause() && game->running()) {
-            game->handle_events_pause_mode();
-            game->update_pause_mode();
-            game->render_pause_mode();
+
+        while(!game->getStart() && game->running()) {
+            game->handle_events_main_menu();
+            game->update_main_menu();
+            game->render_main_menu();
             i++;
         }
 
-        while (!game->getPause() && game->running()) {
-            game->handle_events();
-            game->update();
-            game->render();
-            i++;
+        while(!game->getGameOver() && game->getStart() && game->running()) {
+        
+            while(game->getPause() && !game->getGameOver() && game->getStart() && game->running()) {
+                game->handle_events_pause_mode();
+                game->update_pause_mode();
+                game->render_pause_mode();
+                i++;
+            }
+
+            while (!game->getPause() && !game->getGameOver() && game->getStart() && game->running()) {
+                game->handle_events();
+                game->update();
+                game->render();
+                i++;
+            }
+
         }
         
+        while (game->getGameOver() && !game->getStart() && game->running()) {
+            game->handle_events_game_over();
+            game->update_game_over();
+            game->render_game_over();
+            i++;
+        }
     }
 
     game->clean();

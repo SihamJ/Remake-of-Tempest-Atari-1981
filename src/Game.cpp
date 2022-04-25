@@ -37,7 +37,6 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
         // clock 3 pour passer au niveau suivant
         this->timer->add_clock();
 
-        this->textRenderer = TextRenderer();
         this->level = std::make_shared<Level>(0);
         this->level->next_level();
         this->map = level->get_map();
@@ -301,10 +300,13 @@ void Game::render() {
 
     render_color(YELLOW, 255);
     
-    this->textRenderer.draw(renderer, this->player.get_score(), WIDTH/4, 30, "YELLOW");
+    this->textRenderer.draw_text(renderer, "Score " + std::to_string(this->player.get_score()), 30, HEIGHT - 150);
+    this->textRenderer.draw_text(renderer, "Level " + std::to_string(this->level->get_current_level()), 30, HEIGHT - 100);
 
-    this->textRenderer.draw(renderer, this->player.get_life_point(), 3*WIDTH/4, 30, "LIGHT_BLUE");
-    this->textRenderer.draw(renderer, this->level->get_current_level(), WIDTH/2, 30, "LIGHT_BLUE");
+    render_color(LIGHT_BLUE, 255);
+
+    this->textRenderer.draw_text(renderer, std::to_string(this->player.get_life_point()), 3*WIDTH/4, HEIGHT - 100);
+    
     // màj du rendu
     SDL_RenderPresent(renderer.get());
 }

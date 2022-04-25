@@ -92,9 +92,9 @@ void Level::set_map(){
     case maps_list::circle:
         this->map = std::make_shared<CircleMap>(0.3, c);
         break;
-    // case maps_list::square:
-    //     this->map = std::make_shared<Square>();
-    //     break;
+    case maps_list::square:
+        this->map = std::make_shared<SquareMap>(0.3, c);
+        break;
     // case maps_list::plussymbol:
     //     this->map = std::make_shared<PlusSymbol>();
     //     break;
@@ -138,7 +138,7 @@ void Level::set_map(){
     //     this->map = std::make_shared<InfinitySymbol>();
     //     break;
     default:
-        this->map = std::make_shared<CircleMap>(0.3, c);
+        this->map = std::make_shared<SquareMap>(0.3, c);
         break;
     }
 }

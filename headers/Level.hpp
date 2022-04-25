@@ -8,6 +8,7 @@
 #include "Tube.hpp"
 #include "Enemy.hpp"
 #include "TriangleMap.hpp"
+#include "SquareMap.hpp"
 #include "CircleMap.hpp"
 #include "Flippers.hpp"
 #include "Tankers.hpp"

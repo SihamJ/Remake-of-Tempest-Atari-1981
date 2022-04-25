@@ -5,7 +5,6 @@
     CircleMap::CircleMap(const long double ratio, const Color& c)
         : Tube("Circle", c), ratio(ratio)
     {
-        this->center = center;
         this->width = 3 * WIDTH / 8;
         this->height = 4 * HEIGHT / 5;
         this->center = Point(WIDTH/2., HEIGHT * (1-ratio));

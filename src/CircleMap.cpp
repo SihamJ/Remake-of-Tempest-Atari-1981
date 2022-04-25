@@ -107,6 +107,7 @@
             Tunel h = Tunel(outer_circle.at(i), outer_circle.at((i+1)%outer_circle.size()), 
                                             inner_circle.at(i), inner_circle.at((i+1)%inner_circle.size()), 2);
             h.set_angle();
+            h.set_nb_hall(i);
             this->add_Hall(h);
         }
 

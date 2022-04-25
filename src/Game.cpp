@@ -77,6 +77,7 @@ void Game::handle_events() {
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_SPACE){
                 // le couloir où le player se trouve
+                //std::cout << "missile alliée" <<std::endl;
                 Tunel h = vh[player.get_n_hall()];
 
                 std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(h));
@@ -86,6 +87,7 @@ void Game::handle_events() {
             }
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 setPause(getPause() ? false : true);
+                //std::cout << "paused = " << getPause() << std::endl;
             }
             break;
         }
@@ -93,11 +95,13 @@ void Game::handle_events() {
             if (getPause()) break;
             if(event.wheel.y > 0) // scroll up
             {
-                player.decr_n_hall(map->get_nb_hall(), map->get_hall((player.get_n_hall() -1 + map->get_nb_hall())%map->get_nb_hall()));
+                //std::cout << "scroll up" << std::endl;
+                player.decr_n_hall ( map->get_hall ( player.get_n_hall () - 1 ) );
             }
             else if(event.wheel.y < 0) // scroll down
             {
-                player.incr_n_hall(map->get_nb_hall(), map->get_hall( (player.get_n_hall()+1) % map->get_nb_hall()));
+                //std::cout << "scroll down" << std::endl;
+                player.incr_n_hall ( map->get_hall ( player.get_n_hall () + 1 ) );
             }
         }
         default:
@@ -164,7 +168,8 @@ void Game::update() {
 
         for (auto e : enemies) {
             if (e->get_name().compare("spikers") == 0) {
-                Spikers * enemy_spiker = dynamic_cast<Spikers*>(&(*e));
+                std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(e);
+
                 if (enemy_spiker == nullptr)
                     return;
                 if (enemy_spiker->get_state() == 2) {
@@ -277,8 +282,8 @@ void Game::render() {
     render_color(std::move(level->get_player_color()));    
     player.draw(renderer);
 
-   // this->score.draw(renderer, 120);
-    // dessine tous ce qui doit être affiché
+
+//   Missiles 
     for (auto i : vm)
         i->draw(renderer);
 
@@ -289,13 +294,9 @@ void Game::render() {
         i->draw(renderer);
     }
 
-
-
     // for (auto i : collisions){
     //     i.draw(renderer);
     // }
-
-
 
 
     render_color(YELLOW, 255);
@@ -353,7 +354,7 @@ void Game::next_level(){
     center.set_point(map->get_center().get_x(), map->get_center().get_y());
     vh = map->get_hall_list();
     this->player.set_hall(map->get_hall(0));
-    this->player.set_n_hall(0);
+    //this->player.set_n_hall(0);
     this->player.build();
     
 }

@@ -17,9 +17,9 @@ public:
     Player(const int& n_hall, const Tunel& hall, const Color& c);
     void operator=(Player other);
 
-    void incr_n_hall(int nbHall, const Tunel& h);
+    void incr_n_hall(const Tunel& h);
 
-    void decr_n_hall(int nbHall, const Tunel&h);
+    void decr_n_hall(const Tunel&h);
 
 
     bool decr_life_point();

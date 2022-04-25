@@ -26,7 +26,7 @@ int Tube::get_nb_hall(){
 }
 
 Tunel Tube::get_hall(int index){
-    return this->hallList.at(index);
+    return this->hallList.at( (index + this->get_nb_hall()) % this->get_nb_hall() );
 }
 
 Point Tube::get_center(){

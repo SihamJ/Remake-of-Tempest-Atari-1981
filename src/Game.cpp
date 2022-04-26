@@ -273,6 +273,7 @@ void Game::render() {
         isRunning = false;
     }
 
+    if (getPause()) { SDL_RenderPresent(renderer.get()); return;}
     render_color(std::move(map->get_color()));
     map->draw(renderer);
 
@@ -348,7 +349,19 @@ void Game::handle_events_pause_mode() {
  */
 void Game::update_pause_mode() {
     
+    this->textRenderer.draw_text(renderer, "Score " + std::to_string(this->player.get_score()), 30, HEIGHT - 150);
+    this->textRenderer.draw_text(renderer, "Level " + std::to_string(this->level->get_current_level()), 30, HEIGHT - 100);
+
+    render_color(LIGHT_BLUE, 255);
+
+    this->textRenderer.draw_text(renderer, std::to_string(this->player.get_life_point()), 3*WIDTH/4, HEIGHT - 100);
+    
+    // màj du rendu
+    SDL_RenderPresent(renderer.get());
 }
+
+
+
 
 /**
  * @brief On clear + draw tous les éléments
@@ -365,8 +378,8 @@ void Game::render_pause_mode() {
 
     render_color(YELLOW, 255);
 
-    this->textRenderer.draw_text(renderer, "PAUSE", WIDTH/2 - 70, HEIGHT - 120);
-    this->textRenderer.draw_text(renderer, "Press escape to return to the game !", WIDTH/2 - 210, HEIGHT - 170);
+    this->textRenderer.draw_text(renderer, "PAUSE", WIDTH/2 - 70,  120);
+    this->textRenderer.draw_text(renderer, "Press escape to return to the game !", WIDTH/2 - 210, 170);
 
     // màj du rendu
     SDL_RenderPresent(renderer.get());

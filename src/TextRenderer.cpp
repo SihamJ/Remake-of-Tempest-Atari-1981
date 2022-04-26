@@ -24,16 +24,7 @@
     }
 
     void TextRenderer::draw_life(std::shared_ptr<SDL_Renderer> renderer, int value, int x, int y, std::string color){
-        // std::string root;
 
-        // if(color == "LIGHT_BLUE")
-        //     root = "images/lb";
-        // else 
-        //     root = "images/s";
-        
-        // std::vector<int> msg = this->parse_score(value);
-        // int k = 0;
-        
         
         for(auto i = 0; i < value; i++){
             
@@ -80,7 +71,7 @@
                 j++;
                 continue;
             }
-            Line l{ element.at(i)+x, y - element.at(i+1), element.at(i+2)+x, y - element.at(i+3), 2 };
+            Line l = Line(element.at(i)+x, y - element.at(i+1), element.at(i+2)+x, y - element.at(i+3), 2 );
             l.draw(renderer);
         }
     }

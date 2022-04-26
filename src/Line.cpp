@@ -147,7 +147,7 @@ const Line Line::get_x_projected() const {
 const Line Line::get_y_projected() const {
     const Point p0 = this->get_p0();
     const Point p1 = this->get_p1();
-    return Line { 0, static_cast<int>(p0.get_y()), 0, static_cast<int>(p0.get_y()) };
+    return Line { 0, static_cast<int>(p0.get_y()), 0, static_cast<int>(p1.get_y()) };
 }
 
 const  int Line::get_thickness() const {
@@ -310,5 +310,5 @@ void Line::draw_shadow(std::shared_ptr<SDL_Renderer> renderer){
 }
 
 const bool Line::operator==(const Line &&l) const {
-    return (this->get_p0() == std::move(l.get_p0()) && this->get_p0() == std::move(l.get_p1()));
+    return (this->get_p0() == std::move(l.get_p0()) && this->get_p1() == std::move(l.get_p1()));
 }

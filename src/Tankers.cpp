@@ -117,7 +117,6 @@ void Tankers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     // dessiner le spiker
     SDL_Rect dest_rect = {static_cast<int>(x), static_cast<int>(y), init_width, init_height};
     auto monImage = sdl_shared(SDL_CreateTextureFromSurface(renderer.get(), image.get()));  //La texture monImage contient maintenant l'image importée
-    SDL_FreeSurface(image.get()); //Équivalent du destroyTexture pour les surface, permet de libérer la mémoire quand on n'a plus besoin d'une surface
 
     if (SDL_QueryTexture(monImage.get(), NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
         SDL_Log("Erreur > %s", SDL_GetError());

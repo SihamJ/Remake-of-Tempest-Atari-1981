@@ -83,7 +83,9 @@
     }
 
     void Missile::draw(std::shared_ptr<SDL_Renderer> renderer) {
-        SDL_Surface* image = SDL_LoadBMP("images/missile.bmp");
+
+        auto image = sdl_shared(SDL_LoadBMP("images/missile.bmp"));
+
         if(!image)
         {
             SDL_Log("Erreur > %s", SDL_GetError());
@@ -92,10 +94,11 @@
 
         // dessiner le spiker
         SDL_Rect dest_rect = { static_cast<int>(this->pos.get_x()), static_cast<int>(this->pos.get_y()), init_width, init_height};
-        SDL_Texture* monImage = SDL_CreateTextureFromSurface(renderer.get(), image);  //La texture monImage contient maintenant l'image importée
-        SDL_FreeSurface(image); //Équivalent du destroyTexture pour les surface, permet de libérer la mémoire quand on n'a plus besoin d'une surface
+        
+        auto monImage = sdl_shared(SDL_CreateTextureFromSurface(renderer.get(), image.get()));
+        
 
-        if (SDL_QueryTexture(monImage, NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
+        if (SDL_QueryTexture(monImage.get(), NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
             SDL_Log("Erreur > %s", SDL_GetError());
             return;
         }
@@ -103,7 +106,7 @@
         dest_rect.w = width;
         dest_rect.h = height;
 
-        if (SDL_RenderCopyEx(renderer.get(), monImage, NULL, &dest_rect, this->angle, NULL, SDL_FLIP_NONE) != 0) {
+        if (SDL_RenderCopyEx(renderer.get(), monImage.get(), NULL, &dest_rect, this->angle, NULL, SDL_FLIP_NONE) != 0) {
             SDL_Log("Erreur > %s", SDL_GetError());
             return;
         }

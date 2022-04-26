@@ -8,7 +8,6 @@
     Player::Player(Player&& other)
         : Character(std::move(other))
     {
-        this->n_hall = std::move(other.n_hall);
         this->hall = std::move(other.hall);
         this->color = std::move(other.color);
         this->build();
@@ -17,40 +16,32 @@
     Player::Player(const Player& other)
         : Character(other)
     {
-        this->n_hall = other.n_hall;
         this->hall = other.hall;
         this->color = other.color;
         this->build();
     }
 
     Player::Player(const int& n_hall, const Tunel& hall, const Color& c){
-        this->n_hall = n_hall;
         this->hall = hall;
         this->color = c;
         this->build();
     }
 
     void Player::operator=(Player other){
-        this->n_hall = other.n_hall;
         this->hall = other.hall;
         this->color = other.color;
         this->build();
     }
 
-    int Player::get_n_hall() {
-        return n_hall;
-    }
 
     
-    void Player::incr_n_hall(int nbHall, const Tunel& h) {
-        n_hall = (n_hall + 1) % nbHall;
+    void Player::incr_n_hall(const Tunel& h) {
         this->hall = h;
         this->clean();
         this->build();
     }
 
-    void Player::decr_n_hall(int nbHall, const Tunel& h) {
-        n_hall = (n_hall - 1 + nbHall) % nbHall;
+    void Player::decr_n_hall(const Tunel& h) {
         this->hall = h;
         this->clean();
         this->build();

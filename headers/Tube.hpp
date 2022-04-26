@@ -12,6 +12,7 @@ class Tube {
 public:
 
     Tube();
+    Tube(const char* name, const Color c);
     Tube(const char* name, const int nbHall, const Color c);
     ~Tube();
 

@@ -89,12 +89,12 @@ void Level::set_map(){
 
     switch ( (this->current_level-1) % 16 )
     {
-    // case maps_list::circle:
-    //     this->map = std::make_shared<Circle>();
-    //     break;
-    // case maps_list::square:
-    //     this->map = std::make_shared<Square>();
-    //     break;
+    case maps_list::circle:
+        this->map = std::make_shared<CircleMap>(0.3, c);
+        break;
+    case maps_list::square:
+        this->map = std::make_shared<SquareMap>(0.3, c);
+        break;
     // case maps_list::plussymbol:
     //     this->map = std::make_shared<PlusSymbol>();
     //     break;
@@ -138,7 +138,7 @@ void Level::set_map(){
     //     this->map = std::make_shared<InfinitySymbol>();
     //     break;
     default:
-        this->map = std::make_shared<TriangleMap>(18, WIDTH, HEIGHT, c);
+        this->map = std::make_shared<SquareMap>(0.3, c);
         break;
     }
 }
@@ -217,13 +217,13 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     // if (i == 1) i++;
 
     // force à afficher que des flippers
-    //i = 0;
+   //i = 0;
     
     //force à afficher que des tankers
     //i = 1;
 
     // force à afficher que des spikers
-    i = 2;
+    //i = 2;
 
     Color color = this->current_enemies.at(i);
     std::shared_ptr<Enemy> e;

@@ -8,6 +8,7 @@
 #include <string>
 #include <memory>
 #include "SDLWrapper.hpp"
+#include "Utils.hpp"
 
 class Point {
 
@@ -24,9 +25,9 @@ public:
     ~Point();
 
     void set_point (long  double x, long  double y);
-    long  double get_x();
-    long  double get_y();
-    SDL_Point* get_point();
+    const long  double get_x() const;
+    const long  double get_y() const;
+    std::shared_ptr<SDL_Point> get_point();
 
     // void set_polar(long  double phi, long  double r);
     // void set_cartesian(int x, int y);
@@ -36,9 +37,11 @@ public:
 
     void draw(std::shared_ptr<SDL_Renderer> renderer);
     bool get_closer();
-    long  double euclideanDistance(Point p);
+    const long  double euclideanDistance(Point p) const ;
 
-    bool operator==(Point&& other);
+    const bool operator==(const Point&& other) const ;
+
+    const Point get_point_from_rotation(Point p1, double angle) const;
     
 
 private:

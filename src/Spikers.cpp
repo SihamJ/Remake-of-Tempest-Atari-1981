@@ -108,18 +108,17 @@ void Spikers::set(Tunel&& h){
         this->dest = Line(limit_init);
         this->start = this->hall.get_small_line();
 
-        // on calcule l'angle de rotation de l'image
         int dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
-        width = dist/3;
-        height = dist/3;
+        this->width = dist/3;
+        this->height = dist/3;
 
         Point centre_small_line = hall.get_small_line().inLine(0.5);
         this->center = centre_small_line;
 
         Point centre_big_line = hall.get_big_line().inLine(0.5);
 
-        x = centre_small_line.get_x() - ( static_cast<long double>(width)/2.0);
-        y = centre_small_line.get_y() - ( static_cast<long double>(height)/2.0);
+        this->x = centre_small_line.get_x() - ( static_cast<long double>(width)/2.0);
+        this->y = centre_small_line.get_y() - ( static_cast<long double>(height)/2.0);
 
         this->angle = this->hall.get_angle();
         

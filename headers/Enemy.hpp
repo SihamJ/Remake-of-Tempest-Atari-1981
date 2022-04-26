@@ -23,8 +23,9 @@ public:
     virtual const int get_scoring() const  =0;
 
     virtual void set(Tunel&& h);
-    virtual bool get_closer(long double h)= 0;
-    virtual long double get_speed()=0;
+
+    virtual bool get_closer(long double h);
+
     Line get_dest();
     Line get_start();
     SDL_Rect get_rect();

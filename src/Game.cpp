@@ -216,11 +216,14 @@ void Game::update() {
             bool backwards = false;
 
             std::shared_ptr<Spikers> s = std::dynamic_pointer_cast<Spikers>(enemies.at(i));
+            std::shared_ptr<Flippers> f = std::dynamic_pointer_cast<Flippers>(enemies.at(i));
+
+            if( f!= NULL && f->get_state() == 1 && !f->flipping()){
+                f->set_next_hall(this->map->get_hall(f->get_hall().get_n_hall() - 1));
+                f->set_current_angle(f->get_hall().get_angle(f->get_next_hall()));
+            }
 
             if( s != NULL && s->get_state() == 1){
-                // h0 = s->get_dest().length() / s->get_start().length();
-                // d = s->get_start().inLine(0.5).euclideanDistance(s->get_dest().inLine(0.5));
-                // z = s->get_center().euclideanDistance(s->get_dest().inLine(0.5));
 
                 h0 = s->get_hall().get_small_line().length() / s->get_limit().length();
                 d = s->get_hall().get_small_line().inLine(0.5).euclideanDistance(s->get_limit().inLine(0.5));
@@ -228,7 +231,7 @@ void Game::update() {
                 backwards = true;
             }
 
-            else{
+            else {
                 h0 = enemies.at(i)->get_start().length() / enemies.at(i)->get_dest().length(); 
                 d = enemies.at(i)->get_start().inLine(0.5).euclideanDistance(enemies.at(i)->get_dest().inLine(0.5));
                 z = enemies.at(i)->get_center().euclideanDistance(enemies.at(i)->get_dest().inLine(0.5));

@@ -37,24 +37,24 @@ public:
 
     void set_parameters(long double a, long double b);
 
-    std::array<long double, 2> get_parameters();
+    const std::array<long double, 2> get_parameters() const ;
 
-    long double get_slope();
+    const long double get_slope() const ;
 
-    std::array<Point, 2> get_points();
+    const std::array<Point, 2> get_points() const ;
 
     void set_points(std::array<Point, 2> points);
 
     void calculate_parameters();
 
-    Point get_p0();
+    const Point get_p0() const ;
 
-    Point get_p1();
+    const Point get_p1() const;
 
-    Line get_x_projected();
-    Line get_y_projected();
+    const Line get_x_projected() const;
+    const Line get_y_projected() const ;
 
-    int get_thickness();
+    const int get_thickness() const ;
 
     void set_p0(Point p);
 
@@ -64,22 +64,22 @@ public:
 
     void redefine_parameters();
 
-    bool is_within(Point& p);
+    const bool is_within(Point& p) const ;
 
-    bool beyond_scope(Point &p);
+    const bool beyond_scope(Point &p)const ;
 
-    std::array<long double, 4> get_coord();
+    const std::array<long double, 4> get_coord()const ;
 
-    Point intersect(Line l);
+    const Point intersect(Line l) const ;
 
-    long double length();
+    const long double length() const ;
 
-    Point inLine(long double ratio );
+    const Point inLine(long double ratio ) const ;
 
     void draw(std::shared_ptr<SDL_Renderer> renderer);
     void draw_shadow(std::shared_ptr<SDL_Renderer> renderer);
 
-    bool operator==(Line &&l);
+    const bool operator==(const Line &&l) const ;
     
 
 private:

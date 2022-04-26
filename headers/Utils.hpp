@@ -10,6 +10,9 @@
 #define GREEN "000255000"
 #define PURPLE "220000220"
 
+
+#define PI 3.141592653589793238463
+
 // 12 second for each level
 #define LEVEL_TIME 12000
 // 2 seconds for transistion

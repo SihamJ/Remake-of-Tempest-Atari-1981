@@ -33,13 +33,15 @@
 
     Point::~Point(){}
 
-    SDL_Point* Point::get_point(){
-        SDL_Point* p = new SDL_Point(this->p);
+    std::shared_ptr<SDL_Point> Point::get_point(){
+        std::shared_ptr<SDL_Point> p;
+        p.reset( new SDL_Point(this->p));
         return p;
     }
 
-    bool Point::operator==(Point&& other){
-        return (this->get_x() == other.get_x() && this->get_y() == other.get_y());
+    const bool Point::operator==(const Point&& other)const {
+        
+        return (this->x == other.get_x() && this->y == other.get_y());
     }
 
     
@@ -51,11 +53,11 @@
         this->y = y;
     }
 
-    long  double Point::get_x(){
+    const long  double Point::get_x()const {
         return this->x;
     }
 
-    long  double Point::get_y(){
+    const long  double Point::get_y()const {
         return this->y;
     }
 
@@ -104,8 +106,17 @@
     }
 
     // retourne la distance euclidienne à un autre point
-    long  double Point::euclideanDistance(Point p){
+    const long  double Point::euclideanDistance(Point p)const {
         long  double dx = this->get_x() - p.get_x();
         long  double dy = this->get_y() - p.get_y();
         return sqrt( dx*dx + dy*dy );
+    }
+
+    const Point Point::get_point_from_rotation(Point p1, double angle) const {
+
+        angle = angle * PI / 180.;
+        long double x1 = this->get_x() + (p1.get_x() - this->get_x()) * cos(angle) - (p1.get_y() - this->get_y()) * sin(angle);
+        long double y1 = this->get_y() + (p1.get_x() - this->get_x()) * sin(angle) + (p1.get_y() - this->get_y()) * cos(angle);
+
+        return Point(x1,y1);
     }

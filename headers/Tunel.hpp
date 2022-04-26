@@ -69,11 +69,12 @@ public:
     }
 
     void set_angle(){
+        Line s = this->get_small_line();
         int x1, x2, y1, y2;
-        x1 = this->get_small_line().get_p0().get_x();
-        y1 = this->get_small_line().get_p0().get_y();
-        x2 = this->get_small_line().get_p1().get_x();
-        y2 = this->get_small_line().get_p1().get_y();      
+        x1 = s.get_p0().get_x();
+        y1 = s.get_p0().get_y();
+        x2 = s.get_p1().get_x();
+        y2 = s.get_p1().get_y();      
 
         this->angle = atan2( y2 - y1, x2 - x1);
 
@@ -81,28 +82,50 @@ public:
         
     }
 
+    const long double get_angle(Tunel h) const {
+        Line s = this->get_small_line();
+
+        long double angle = 0.;
+        int x1, x2, y1, y2;
+        x1 = s.get_p0().get_x();
+        y1 = s.get_p0().get_y();
+        x2 = s.get_p1().get_x();
+        y2 = s.get_p1().get_y();  
+
+        double angle2 = h.get_angle();     
+
+        angle = atan2( y1 - y2, x1 - x2);
+
+        angle = angle * (180.0/ PI ) + angle2;
+
+        return angle;
+        
+    }
+
     void set_nb_hall(int index) { this->nb_hall = index;}
 
-    long  double get_angle(){
+    const long  double get_angle() const {
         return this->angle;
     }
 
-    Line get_big_line () {
+    const Line get_big_line () const {
         return lines.at(0);
     }
 
-    Line get_small_line () {
+    const Line get_small_line () const {
         return lines.at(1);
     }
 
-    std::array<Line, 2> get_lines(){
+    const std::array<Line, 2> get_lines() const {
         return lines;
     }
 
-    int get_n_hall(){ return this->nb_hall; }
+    const int get_n_hall() const { return this->nb_hall; }
 
-    long  double length(){
-        return this->get_small_line().inLine(0.5).euclideanDistance(this->get_big_line().inLine(0.5));
+    const long  double length() const {
+        Line s = this->lines.at(1);
+        Line b = this->lines.at(0);
+        return s.inLine(0.5).euclideanDistance(b.inLine(0.5));
     }
 
 
@@ -124,8 +147,8 @@ public:
         l2.draw_shadow(renderer);
     }
     
-    bool operator==(Tunel &&t) {
-        return (get_small_line() == t.get_small_line() && get_big_line() == t.get_big_line());
+    const bool operator==(Tunel &&t) const {
+        return (this->get_small_line() == std::move(t.get_small_line()) && this->get_big_line() == std::move(t.get_big_line()));
     }
 
 private:

@@ -101,15 +101,15 @@ void Line::set_parameters(long double a, long double b){
     this->b = b;
 }
 
-std::array<long double, 2> Line::get_parameters(){
+const std::array<long double, 2> Line::get_parameters() const {
     return {a, b};
 }
 
-long double Line::get_slope(){
+const long double Line::get_slope() const {
     return this->a;
 }
 
-std::array<Point, 2> Line::get_points(){
+const std::array<Point, 2> Line::get_points() const {
     return points;
 }
 
@@ -130,23 +130,27 @@ void Line::calculate_parameters(){
     }
 }
 
-Point Line::get_p0(){
+const  Point Line::get_p0() const {
     return points[0];
 }
 
-Point Line::get_p1(){
+const Point Line::get_p1() const {
     return points[1];
 }
 
-Line Line::get_x_projected(){
-    return Line { static_cast<int>(this->get_p0().get_x()), 0, static_cast<int>(this->get_p1().get_x()), 0 };
+const Line Line::get_x_projected() const {
+    const Point p0 = this->get_p0();
+    const Point p1 = this->get_p1();
+    return Line { static_cast<int>(p0.get_x()), 0, static_cast<int>(p1.get_x()), 0 };
 }
 
-Line Line::get_y_projected(){
-    return Line { 0, static_cast<int>(this->get_p0().get_y()), 0, static_cast<int>(this->get_p1().get_y()) };
+const Line Line::get_y_projected() const {
+    const Point p0 = this->get_p0();
+    const Point p1 = this->get_p1();
+    return Line { 0, static_cast<int>(p0.get_y()), 0, static_cast<int>(p0.get_y()) };
 }
 
-int Line::get_thickness(){
+const  int Line::get_thickness() const {
     return this->thickness;
 }
 
@@ -162,27 +166,34 @@ void Line::set_thickness(int thickness){
     this->thickness = thickness;
 }
 
-bool Line::is_within(Point& p){
+const bool Line::is_within(Point& p)const {
+
+    const Point p0 = this->get_p0();
+    const Point p1 = this->get_p1();
         
     long double a = this->get_slope();
 
-    bool on = (p.get_y() - this->get_p0().get_y()) == a * (p.get_x() - this->get_p0().get_x());
+    bool on = (p.get_y() - p0.get_y()) == a * (p.get_x() - p0.get_x());
 
-    long double max_y = this->get_p1().get_y() > this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
-    long double min_y = this->get_p1().get_y() < this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
-    long double max_x = this->get_p1().get_x() > this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
-    long double min_x = this->get_p1().get_x() < this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
+    long double max_y = p1.get_y() > p0.get_y() ? p1.get_y() : p0.get_y();
+    long double min_y = p1.get_y() < p0.get_y() ? p1.get_y() : p0.get_y();
+    long double max_x = p1.get_x() > p0.get_x() ? p1.get_x() : p0.get_x();
+    long double min_x = p1.get_x() < p0.get_x() ? p1.get_x() : p0.get_x();
 
     bool between = ( min_y <= p.get_y() <= max_y && min_x <= p.get_x() <= max_x);
 
     return (on && between); 
 }
 
-bool Line::beyond_scope(Point &p){
-    long double max_y = this->get_p1().get_y() > this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
-    long double min_y = this->get_p1().get_y() < this->get_p0().get_y() ? this->get_p1().get_y() : this->get_p0().get_y();
-    long double max_x = this->get_p1().get_x() > this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
-    long double min_x = this->get_p1().get_x() < this->get_p0().get_x() ? this->get_p1().get_x() : this->get_p0().get_x();
+const bool Line::beyond_scope(Point &p)const {
+
+    const Point p0 = this->get_p0();
+    const Point p1 = this->get_p1();
+
+    long double max_y = p1.get_y() > p0.get_y() ? p1.get_y() : p0.get_y();
+    long double min_y = p1.get_y() < p0.get_y() ? p1.get_y() : p0.get_y();
+    long double max_x = p1.get_x() > p0.get_x() ? p1.get_x() : p0.get_x();
+    long double min_x = p1.get_x() < p0.get_x() ? p1.get_x() : p0.get_x();
     bool res= !( min_y <= p.get_y() &&  p.get_y() <= max_y && min_x <= p.get_x() && p.get_x() <= max_x);
 
     return res;
@@ -201,7 +212,7 @@ void Line::redefine_parameters(){
     }
 }
 
-std::array<long double, 4> Line::get_coord(){
+const std::array<long double, 4> Line::get_coord()const {
     return {points[0].get_x(), points[0].get_y(), points[1].get_x(), points[1].get_y()};
 }
 
@@ -210,7 +221,7 @@ std::array<long double, 4> Line::get_coord(){
  * 
  * @return Point* 
  */
-Point Line::intersect(Line l){
+const Point Line::intersect(Line l)const {
     Point p;
 
     // To Do: que faire avec deux droites parallèles ? et pq ca arrive dans les flippers ?
@@ -224,7 +235,7 @@ Point Line::intersect(Line l){
 
 }
 
-long double Line::length(){
+const long double Line::length()const {
     return  this->get_p0().euclideanDistance(this->get_p1());
 }
 
@@ -233,7 +244,7 @@ long double Line::length(){
  * 
  * @return Point
  */
-Point Line::inLine(long double ratio ){
+const Point Line::inLine(long double ratio )const {
     long double x, y;
     long double coeff1 = points[0].get_x() <= points[1].get_x() ? 1. : -1.;
     long double coeff2 = points[0].get_y() <= points[1].get_y() ? 1. : -1.;
@@ -298,6 +309,6 @@ void Line::draw_shadow(std::shared_ptr<SDL_Renderer> renderer){
     SDL_SetRenderDrawColor(renderer.get(), r, g, b, a);
 }
 
-bool Line::operator==(Line &&l) {
-    return (this->get_p0() == l.get_p0() && this->get_p1() == l.get_p1());
+const bool Line::operator==(const Line &&l) const {
+    return (this->get_p0() == std::move(l.get_p0()) && this->get_p0() == std::move(l.get_p1()));
 }

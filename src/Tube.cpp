@@ -3,6 +3,12 @@
 // constructeur
 Tube::Tube(){}
 
+Tube::Tube(const char* name, const Color c)
+    : color(c)
+{
+    this->name = static_cast<std::string>(name);
+}
+
 Tube::Tube(const char* name, const int nbHall, const Color c)
     : nbHall(nbHall), color(c)
 {
@@ -20,7 +26,7 @@ int Tube::get_nb_hall(){
 }
 
 Tunel Tube::get_hall(int index){
-    return this->hallList.at(index);
+    return this->hallList.at( (index + this->get_nb_hall()) % this->get_nb_hall() );
 }
 
 Point Tube::get_center(){

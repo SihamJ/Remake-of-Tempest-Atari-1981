@@ -241,11 +241,11 @@ void Spikers::draw(std::shared_ptr<SDL_Renderer> renderer) {
 
     Point center_small_line = hall.get_small_line().inLine(0.5);
 
-    if (state == 0) {
+    if (state == 0 && center_small_line.euclideanDistance(this->center) > 0) {
         Line l(center_small_line, this->center);
         l.draw(renderer);
     }
-    else {
+    else if(state != 0) {
         Line l(center_small_line, this->limit_init.inLine(0.5));
         l.draw(renderer);
     }

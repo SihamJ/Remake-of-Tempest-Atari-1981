@@ -34,6 +34,19 @@ public:
     void handle_events();
     void update();
     void render();
+
+    void handle_events_pause_mode();
+    void update_pause_mode();
+    void render_pause_mode();
+
+    void handle_events_main_menu();
+    void update_main_menu();
+    void render_main_menu();
+
+    void handle_events_game_over();
+    void update_game_over();
+    void render_game_over();
+
     void clean();
 
     void next_level();
@@ -48,6 +61,10 @@ public:
     bool transitioning();
     void setPause(bool pause);
     bool getPause();
+    bool getGameOver();
+    void setGameOver(bool go);
+    bool getStart();
+    void setStart(bool start);
 
 private:
 
@@ -96,6 +113,10 @@ private:
     TextRenderer textRenderer;
 
     bool pause = false;
+
+    bool game_over = false;
+
+    bool start = false;
     
 
 };

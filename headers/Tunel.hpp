@@ -69,42 +69,19 @@ public:
     }
 
     void set_angle(){
-        this->angle = 0.;
-        long  double hypotenus = this->get_small_line().length();
-        long  double x_project = this->get_small_line().get_x_projected().length();
-        long  double y_project = this->get_small_line().get_y_projected().length();
+        int x1, x2, y1, y2;
+        x1 = this->get_small_line().get_p0().get_x();
+        y1 = this->get_small_line().get_p0().get_y();
+        x2 = this->get_small_line().get_p1().get_x();
+        y2 = this->get_small_line().get_p1().get_y();      
 
-        long  double x1 = this->get_small_line().get_p0().get_x();
-        long  double y1 = this->get_small_line().get_p0().get_y();
-        long  double x2 = this->get_big_line().get_p0().get_x();
-        long  double y2 = this->get_big_line().get_p0().get_y();
+        this->angle = atan2( y2 - y1, x2 - x1);
 
-        if(y_project == 0){
-            return;
-
-        }
-        if(x_project == 0){
-            this->angle = 90.;
-            return;
-        }
-
-        if(x1 >= x2 && y1 >= y2){
-            this->angle =  - acos(x_project / hypotenus);
-        }
-        else if(x1 >= x2 && y1 <= y2){
-            this->angle =  - acos(x_project / hypotenus);
-        }
-        else if(x1 <= x2 && y1 >= y2){
-            this->angle = acos(x_project / hypotenus);
-        }
-        else if(x1 <= x2 && y1 <= y2){
-            this->angle =  acos(x_project / hypotenus);
-        }
-
-        
-        this->angle = this->angle * (180.0/3.141592653589793238463) + 180.;
+        this->angle = this->angle * (180.0/3.141592653589793238463);
         
     }
+
+    void set_nb_hall(int index) { this->nb_hall = index;}
 
     long  double get_angle(){
         return this->angle;
@@ -114,7 +91,6 @@ public:
         return lines.at(0);
     }
 
-
     Line get_small_line () {
         return lines.at(1);
     }
@@ -122,6 +98,8 @@ public:
     std::array<Line, 2> get_lines(){
         return lines;
     }
+
+    int get_n_hall(){ return this->nb_hall; }
 
     long  double length(){
         return this->get_small_line().inLine(0.5).euclideanDistance(this->get_big_line().inLine(0.5));
@@ -153,6 +131,7 @@ public:
 private:
     // les deux lignes
     std::array<Line, 2> lines;
+    int nb_hall;
     long  double angle;
 };
 

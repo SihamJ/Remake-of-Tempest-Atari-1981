@@ -7,9 +7,9 @@ SquareMap::SquareMap(long double ratio, Color c)
     : Tube("Square", c)
 {
     this->ratio = ratio;
-    this->height = 4 * HEIGHT / 5;
+    this->height = 5 * HEIGHT / 7;
     this->width = 2 * WIDTH / 5;
-    this->center = Point(WIDTH/2, HEIGHT * (1-ratio));
+    this->center = Point(WIDTH/2, HEIGHT * (1-ratio) );
     this->nbHall = 16;
 }
 

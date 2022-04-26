@@ -26,6 +26,10 @@ public:
 
     void build();
 
+    const std::string get_name() const override;
+
+    void set_name(const std::string name);
+
     int get_life_point();
 
     int get_score();
@@ -37,7 +41,7 @@ public:
 protected:
 
     // point de vie
-    int life_point = 1;
+    int life_point = 5;
     int score = 0;
     const int thickness = 4;
 };

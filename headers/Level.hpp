@@ -28,6 +28,7 @@ class Level {
         std::map<int, Color> get_enemies();
         Color get_player_color();
         Color get_map_color();
+        Color get_score_color();
         const int get_nb_enemies();
         void next_level();
         std::shared_ptr<Enemy> new_enemy();
@@ -87,6 +88,13 @@ class Level {
         const Color level49_64_player_color { "BLUE", BLUE };
         const Color level65_80_player_color { "YELLOW", YELLOW };
         const Color level81_96_player_color { "RED",   RED };
+
+        const Color level1_16_score_color { "GREEN",  GREEN };
+        const Color level17_32_score_color { "LIGHTBLUE", LIGHT_BLUE };
+        const Color level33_48_score_color { "RED", RED };
+        const Color level49_64_score_color { "RED", RED };
+        const Color level65_80_score_color { "GREEN", GREEN };
+        const Color level81_96_score_color { "PURPLE", PURPLE };
 
         
 };

@@ -9,16 +9,16 @@ public:
 
     TriangleMap();
     
-    TriangleMap(const int nbHall, const int width, const int height, const Color c);
+    TriangleMap(const int nbHall, const Color c);
 
     //destructeur
     ~TriangleMap();
 
     // coordonnées du triangle extérieur
-    void set_big_triangle(const int width, const int height);
+    void set_big_triangle();
 
     // médianes du triangle
-    void set_medians(const int width);
+    void set_medians();
 
     // calcul des coordonnées du triangle intérieur
     void set_small_triangle(const long  double ratio);

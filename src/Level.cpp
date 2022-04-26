@@ -29,6 +29,31 @@ Color Level::get_map_color(){
     return this->map->get_color();
 }
 
+Color Level::get_score_color(){
+    Color c;
+
+    if(this->current_level > 0 && this->current_level < 17){
+        c = level1_16_score_color;
+    }
+    else if(this->current_level >= 17 && this->current_level < 33){
+        c = level17_32_score_color;
+    }
+    else if(this->current_level >= 33 && this->current_level < 49){
+        c = level33_48_score_color;
+    }
+    else if(this->current_level >= 49 && this->current_level < 65){
+        c = level49_64_score_color;
+    }
+    else if (this->current_level >= 65 && this->current_level < 81){
+        c = level65_80_score_color;
+    }
+    else if(this->current_level >= 81){
+        c = level81_96_score_color;
+    }
+
+    return c;
+}
+
 void Level::print(){
     std::cout << "This is level " << this->current_level << std::endl;
     std::cout << "The tube is " << this->map->get_name() << std::endl;
@@ -50,7 +75,6 @@ long double Level::get_h(long double h0, long double d, long double z, bool back
 
     if(this->current_level > 0 && this->current_level < 17){
           h= (1. - ((1.-h0) / std::cbrtl(std::cbrtl(std::cbrtl(d*d*d*d*d*d*d*d*d*d*d*d*d*d*d*d*d*d*d)))) * std::cbrtl(std::cbrtl(std::cbrtl(z*z*z*z*z*z*z*z*z*z*z*z*z*z*z*z*z*z*z))));
-       // std::cout << h << std::endl;
         return h;
     }
     else if(this->current_level >= 17 && this->current_level < 33){
@@ -105,7 +129,7 @@ void Level::set_map(){
     //     this->map = std::make_shared<StylizedCross>();
     //     break;
     case maps_list::triangle:
-        this->map = std::make_shared<TriangleMap>(12, WIDTH, HEIGHT, c);
+        this->map = std::make_shared<TriangleMap>(16, c);
         break;
     // case maps_list::clover:
     //     this->map = std::make_shared<Clover>();
@@ -138,7 +162,7 @@ void Level::set_map(){
     //     this->map = std::make_shared<InfinitySymbol>();
     //     break;
     default:
-        this->map = std::make_shared<SquareMap>(0.3, c);
+        this->map = std::make_shared<TriangleMap>(16, c);
         break;
     }
 }

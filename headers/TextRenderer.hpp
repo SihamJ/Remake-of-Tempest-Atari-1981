@@ -25,7 +25,7 @@ class TextRenderer
         void draw_caracter(std::shared_ptr<SDL_Renderer> renderer, char c, int x, int y);
         void draw_text(std::shared_ptr<SDL_Renderer> renderer, std::string text, int x, int y);
 
-        void draw(std::shared_ptr<SDL_Renderer> renderer, int value, int x, int y, std::string color);
+        void draw_life(std::shared_ptr<SDL_Renderer> renderer, int value, int x, int y, std::string color);
 
 
 

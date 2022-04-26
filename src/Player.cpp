@@ -10,7 +10,7 @@
     {
         this->hall = std::move(other.hall);
         this->color = std::move(other.color);
-        this->build();
+        this->name = std::string("Player 1");
     }
 
     Player::Player(const Player& other)
@@ -18,18 +18,21 @@
     {
         this->hall = other.hall;
         this->color = other.color;
+        this->name = std::string("Player 1");
         this->build();
     }
 
     Player::Player(const int& n_hall, const Tunel& hall, const Color& c){
         this->hall = hall;
         this->color = c;
+        this->name = std::string("Player 1");
         this->build();
     }
 
     void Player::operator=(Player other){
         this->hall = other.hall;
         this->color = other.color;
+        this->name = std::string("Player 1");
         this->build();
     }
 
@@ -61,6 +64,14 @@
     int Player::get_score(){
         return this->score;
     }
+
+    const std::string Player::get_name() const {
+        return this->name;
+    }
+
+     void Player::set_name(const std::string name){
+         this->name = std::string(name);
+     }
 
     void Player::incr_score(int points){
         this->score += points;

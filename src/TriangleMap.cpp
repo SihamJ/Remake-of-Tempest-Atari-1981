@@ -3,16 +3,16 @@
 
 TriangleMap::TriangleMap(){}
 
-TriangleMap::TriangleMap(const int nbHall, const int width, const int height, const Color c)
+TriangleMap::TriangleMap(const int nbHall, const Color c)
     : Tube("Triangle", nbHall, c)
 {
-        this->width = 2*width/3;
-        this->height = 4*height/5;
+        this->width = 2*WIDTH/5;
+        this->height = 5*HEIGHT/7;
 
-        set_big_triangle(width, height);
+        set_big_triangle();
 
         // On calcule de 2 -lignes- médianes du triangles
-        set_medians(width);
+        set_medians();
 
         // On determine le barycentre (intersection de deux médianes)
         // il servira par la suite comme point central pour les missiles ennemis
@@ -26,20 +26,20 @@ TriangleMap::TriangleMap(const int nbHall, const int width, const int height, co
 TriangleMap::~TriangleMap(){}
 
 // coordonnées du triangle extérieur
-void TriangleMap::set_big_triangle(const int width, const int height){
+void TriangleMap::set_big_triangle(){
     // Base du triangle
-    bigTriangle[0].set_point(width/2 - this->width/2, height/2 + this->height/2);
-    bigTriangle[1].set_point(width/2 + this->width/2, height/2 + this->height/2);
+    bigTriangle[0].set_point(WIDTH/2 - this->width/2, HEIGHT/2 + this->height/2);
+    bigTriangle[1].set_point(WIDTH/2 + this->width/2, HEIGHT/2 + this->height/2);
 
     // Point supérieur
-    bigTriangle[2].set_point(width/2, height/2 - this->height/2);
+    bigTriangle[2].set_point(WIDTH/2, HEIGHT/2 - this->height/2);
 }
 
 // médianes du triangle
-void TriangleMap::set_medians(const int width){
-    Point mid_1 = Point( width/2 - abs(bigTriangle[2].get_x() - bigTriangle[0].get_x()) / 2, bigTriangle[2].get_y() + abs( bigTriangle[0].get_y() - bigTriangle[2].get_y()) / 2);
-    Point mid_2 = Point( width/2 + abs(bigTriangle[2].get_x() - bigTriangle[1].get_x() ) / 2, bigTriangle[2].get_y() + abs( bigTriangle[1].get_y() - bigTriangle[2].get_y() ) / 2);
-    Point mid_3 = Point(width/2, bigTriangle[0].get_y());
+void TriangleMap::set_medians(){
+    Point mid_1 = Point( WIDTH/2 - abs(bigTriangle[2].get_x() - bigTriangle[0].get_x()) / 2, bigTriangle[2].get_y() + abs( bigTriangle[0].get_y() - bigTriangle[2].get_y()) / 2);
+    Point mid_2 = Point( WIDTH/2 + abs(bigTriangle[2].get_x() - bigTriangle[1].get_x() ) / 2, bigTriangle[2].get_y() + abs( bigTriangle[1].get_y() - bigTriangle[2].get_y() ) / 2);
+    Point mid_3 = Point( WIDTH/2, bigTriangle[0].get_y());
 
     medians[0].set_line(bigTriangle[0], mid_2);
     medians[1].set_line(bigTriangle[1], mid_1);

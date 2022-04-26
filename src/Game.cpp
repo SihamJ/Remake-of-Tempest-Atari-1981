@@ -296,15 +296,19 @@ void Game::render() {
     //     i.draw(renderer);
     // }
 
+    render_color(std::move(this->level->get_score_color()));
+    this->textRenderer.draw_text(renderer,  std::to_string(this->player.get_score()), 1*WIDTH/4, 50);
 
-    render_color(YELLOW, 255);
+    // Player Name
+    this->textRenderer.draw_text(renderer,  this->player.get_name(), WIDTH/2-60 , 50);
+
+    this->textRenderer.draw_life(renderer, this->player.get_life_point(), 1*WIDTH/4, 70, this->player.get_color().get_name());
+
+
+    render_color(this->map->get_color());
+    this->textRenderer.draw_text(renderer, std::to_string(this->level->get_current_level()), WIDTH/2-10, 90);
+
     
-    this->textRenderer.draw_text(renderer, "Score " + std::to_string(this->player.get_score()), 30, HEIGHT - 150);
-    this->textRenderer.draw_text(renderer, "Level " + std::to_string(this->level->get_current_level()), 30, HEIGHT - 100);
-
-    render_color(LIGHT_BLUE, 255);
-
-    this->textRenderer.draw_text(renderer, std::to_string(this->player.get_life_point()), 3*WIDTH/4, HEIGHT - 100);
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());
@@ -445,8 +449,8 @@ void Game::render_main_menu() {
 
     render_color(YELLOW, 255);
     
-    this->textRenderer.draw_text(renderer, "MAIN MENU", WIDTH/2 - 70, HEIGHT - 120);
-    this->textRenderer.draw_text(renderer, "Press escape to start a game !", WIDTH/2 - 210, HEIGHT - 170);
+    this->textRenderer.draw_text(renderer, "MAIN MENU", WIDTH/2 - 70, 120);
+    this->textRenderer.draw_text(renderer, "Press escape to start a game !", WIDTH/2 - 210, 170);
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());
@@ -482,8 +486,8 @@ void Game::render_game_over() {
 
     render_color(YELLOW, 255);
     
-    this->textRenderer.draw_text(renderer, "GAME OVER", WIDTH/2 - 70, HEIGHT - 120);
-    this->textRenderer.draw_text(renderer, "Press escape to go back to main menu !", WIDTH/2 - 230, HEIGHT - 170);
+    this->textRenderer.draw_text(renderer, "GAME OVER", WIDTH/2 - 70, 120);
+    this->textRenderer.draw_text(renderer, "Press escape to go back to main menu !", WIDTH/2 - 230, 170);
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());

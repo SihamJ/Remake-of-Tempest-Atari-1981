@@ -44,7 +44,9 @@
         return (this->x == other.get_x() && this->y == other.get_y());
     }
 
-    
+    Point Point::operator-(const Point &other)  {
+        return Point(this->x - other.x, this->y - other.y);
+    }
 
     void Point::set_point (long  double x, long  double y) {
         this->p.x = x;
@@ -71,30 +73,28 @@
     //     this->y = y;
     // }
     
-    // std::array<long  double, 2> Point::cartesian_to_polar(int x, int y){
-    //     long  double phi, r;
-    //     long  double xx = static_cast<long  double>(x);
-    //     long  double yy = static_cast<long  double>(y);
+    std::array<long  double, 2> Point::cartesian_to_polar(){
+        long  double phi, r;
 
-    //     if(x == 0){
-    //         if(y == 0)
-    //             return {0, 0};
-    //         // assumption: x and y coordinates are always positive
-    //         phi = 1.5708;
-    //     }
-    //     else
-    //         phi = atan(yy/xx);
+        if(this->x == 0){
+            if(this->y == 0)
+                return {0, 0};
+            // assumption: x and y coordinates are always positive
+            phi = 1.5708;
+        }
+        else
+            phi = atan(this->y/this->x);
 
-    //     r = sqrt(xx*xx + yy*yy);
-    //     return { phi, r};
-    // }
+        r = sqrt(this->x*this->x + this->y*this->y);
+        return { phi, r};
+    }
 
-    // std::array<int, 2> Point::polar_to_cartesian(long  double phi, long  double r){
-    //     int x, y;
-    //     x = static_cast<int>( r * cos(phi));
-    //     y = static_cast<int>( r * sin(phi));
-    //     return {x, y};
-    // }
+    std::array<long  double, 2> Point::polar_to_cartesian(long  double phi, long  double r){
+        long  double x, y;
+        x = static_cast<int>( r * cos(phi));
+        y = static_cast<int>( r * sin(phi));
+        return {x, y};
+    }
 
 
     void Point::draw( std::shared_ptr<SDL_Renderer> renderer) {
@@ -112,11 +112,38 @@
         return sqrt( dx*dx + dy*dy );
     }
 
-    const Point Point::get_point_from_rotation(Point center, double angle) const {
+    const Point Point::get_point_from_rotation(Point center, double angle) {
 
-        angle = angle * PI / 180.;
-        long double x1 = this->get_x() + (center.get_x() - this->get_x()) * cos(angle) - (center.get_y() - this->get_y()) * sin(angle);
-        long double y1 = this->get_y() + (center.get_x() - this->get_x()) * sin(angle) + (center.get_y() - this->get_y()) * cos(angle);
+        Point p = Point(*this);
 
-        return Point(x1,y1);
+
+        std::array<long double, 2> polar_center = center.cartesian_to_polar();
+        std::array<long double, 2> polar_p = p.cartesian_to_polar();
+
+        float phi = polar_p.at(1) + angle;
+
+        std::array<long double, 2> new_p = polar_to_cartesian(phi, polar_p.at(1));
+
+        return Point(new_p.at(0), new_p.at(1));
     }
+
+    void Point::rotate(const Point Pivot, const long double  Angle)
+    {
+        if (Angle == 0)
+            return;
+
+        long double s = sin(Angle);
+        long double  c = cos(Angle);
+
+        this->x -= Pivot.get_x();
+        this->y -= Pivot.get_y();
+
+        long double  nx = (this->x * c) - (this->y * s);
+        long double  ny = (this->x * s) + (this->y * c);
+
+        this->x = nx + Pivot.get_x();
+        this->y = ny + Pivot.get_y();
+        
+    }
+
+    

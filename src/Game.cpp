@@ -147,7 +147,7 @@ void Game::update() {
         bool enemy_valid = true;
 
         for (auto e : enemies) {
-            if (e->get_name().compare("spikers") == 0 && e->get_hall() == enemy->get_hall()) {
+            if ((e->get_name().compare("spikers") == 0 || e->get_name().compare("flippers") == 0) && e->get_hall() == enemy->get_hall()) {
                 enemy_valid = false;
                 break;
             }
@@ -178,37 +178,52 @@ void Game::update() {
         timer->reset_clock(clock_list::update);
         // Rapproche tous les missiles de leur destination
         // détruit le missile si il a atteint sa cible
-        for (int i = 0; i<vm.size(); i++) {
-            if (vm[i]->get_closer()) {
-                vm.erase(vm.begin()+i);
-                if (vm[i]->getEnemy()) {
-                    this->setGameOver(true);
-                    this->setStart(false);
-                    return;
-                }
+        
+        for (auto it = vm.begin(); it != vm.end(); it++) {
 
+            bool cond = false;
+            if ((*it)->get_closer()) {
+                if ((*it)->getEnemy()) {
+                    if(this->player.decr_life_point()){
+                        std::cout << "decr lfie point " << std::endl;
+                        this->setGameOver(true);
+                        this->setStart(false);
+                        return;
+                    }
+                }
+                vm.erase(it--);
+                continue;
             }
-            else if (!vm[i]->getEnemy()) {
+
+            else if (!(*it)->getEnemy()) {
                 for (auto e : enemies) {
-                    if (e->get_name().compare("spikers") == 0) {
-                        if (e->get_hall() == vm[i]->get_hall()) {
-                            std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(e);
-                            if (enemy_spiker == nullptr)
-                                return;
+
+                    if(e->collides_with(*(*it))) {
+                        this->player.incr_score(e->get_scoring());
+                        enemies.erase(enemies.begin());
+                        break;
+                    }
+
+                    std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(e);
+
+                    if (enemy_spiker != nullptr) {
+                        if (e->get_hall() == (*it)->get_hall()) {
 
                             // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
-                            double dist1 = vm[i]->get_pos().euclideanDistance(e->get_hall().get_big_line().inLine(0.5));
+                            double dist1 = (*it)->get_pos().euclideanDistance(e->get_hall().get_big_line().inLine(0.5));
                             double dist2 = e->get_hall().get_big_line().inLine(0.5).euclideanDistance(enemy_spiker->get_line_limit().inLine(0.5));
 
                             if (dist1 > dist2) {
-                                vm.erase(vm.begin()+i);
+                                vm.erase(it--);
                                 enemy_spiker->decrease_random_p();
                                 enemy_spiker->update_line_limit();
+                                break;
                             }
                         }
                     }
                 }
             }
+
         }
 
         for (int i = 0; i<enemies.size(); i++) {
@@ -219,9 +234,11 @@ void Game::update() {
             std::shared_ptr<Flippers> f = std::dynamic_pointer_cast<Flippers>(enemies.at(i));
 
             if( f!= NULL && f->get_state() == 1 && !f->flipping()){
-                f->set_next_hall(this->map->get_hall(f->get_hall().get_n_hall() - 1));
+                f->set_next_hall(this->map->get_hall(f->get_hall().get_n_hall() + 1));
                 f->set_next_angle(f->get_hall().get_angle(f->get_next_hall()));
             }
+
+
 
             if( s != NULL && s->get_state() == 1){
 

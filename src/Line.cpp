@@ -121,12 +121,12 @@ void Line::calculate_parameters(){
     // (D): x = b (droite verticale, a devrait être à l'infini)
     if(points[0].get_x() == points[1].get_x()){
         a = 99999999.0;
-        b = (long double) points[0].get_y();
+        b = points[0].get_y();
     }
     // cas normal
     else {
-        a = (long double)( points[1].get_y() - points[0].get_y()) / (long double)(points[1].get_x() - points[0].get_x());
-        b = points[0].get_y() - (long double) (a * points[0].get_x());
+        a = ( points[1].get_y() - points[0].get_y()) / (points[1].get_x() - points[0].get_x());
+        b = points[0].get_y() - (a * points[0].get_x());
     }
 }
 

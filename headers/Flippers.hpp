@@ -58,6 +58,8 @@ private:
     Tunel next_hall;
     Point flip_center;
     bool first = true;
+    long double xflip;
+    long double yflip;
 };
 
 

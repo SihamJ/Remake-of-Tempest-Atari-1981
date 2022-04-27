@@ -93,3 +93,19 @@
 SDL_Rect Enemy::get_rect() {
     return SDL_Rect{static_cast<int>(x), static_cast<int>(y), width, height};
 }
+
+const bool Enemy::collides_with(Missile m) const {
+    SDL_Rect r_enemy, r_missile, result;
+    r_enemy.x = this->x;
+    r_enemy.y = this->y;
+    r_enemy.h = this->height;
+    r_enemy.w = this->width;
+    r_missile.x = m.get_x();
+    r_missile.y = m.get_y();
+    r_missile.h = m.get_height();
+    r_missile.w = m.get_width();
+
+    bool res = SDL_IntersectRect(&r_enemy, &r_missile, &result);
+    if(res) std::cout << "collision ennemi missile" << std::endl;
+    return res;
+}

@@ -4,7 +4,9 @@
 #include "Character.hpp"
 #include "Line.hpp"
 #include "Tunel.hpp"
+#include "Missile.hpp"
 #include <cmath>
+#include <random>
 
 class Enemy : public Character {
 
@@ -29,6 +31,8 @@ public:
     Line get_dest();
     Line get_start();
     SDL_Rect get_rect();
+
+    const bool collides_with(Missile m) const;
 
 protected:
 

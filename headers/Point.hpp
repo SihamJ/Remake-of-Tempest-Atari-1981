@@ -32,8 +32,8 @@ public:
     // void set_polar(long  double phi, long  double r);
     // void set_cartesian(int x, int y);
     
-    // std::array<long  double, 2> cartesian_to_polar(int x, int y);
-    // std::array<int, 2> polar_to_cartesian(long  double phi, long  double r);
+    std::array<long  double, 2> cartesian_to_polar();
+    std::array<long  double, 2> polar_to_cartesian(long  double phi, long  double r);
 
     void draw(std::shared_ptr<SDL_Renderer> renderer);
     bool get_closer();
@@ -41,6 +41,7 @@ public:
 
     const bool operator==(const Point&& other) const ;
 
+    Point operator-(const Point &other) ;
 
     /**
      * @brief Get the point from rotation object
@@ -49,7 +50,9 @@ public:
      * @param angle angle of rotation
      * @return new point from rotation 
      */
-    const Point get_point_from_rotation(Point center, double angle) const;
+    const Point get_point_from_rotation(Point center, double angle);
+
+    void rotate(const Point Pivot, const long double Angle);
     
 
 private:

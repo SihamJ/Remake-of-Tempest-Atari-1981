@@ -71,7 +71,7 @@ public:
     void set_angle(){
 
         Line s = this->get_small_line();
-        int x1, x2, y1, y2;
+        long double x1, x2, y1, y2;
         x1 = s.get_p0().get_x();
         y1 = s.get_p0().get_y();
         x2 = s.get_p1().get_x();
@@ -80,28 +80,53 @@ public:
         this->angle = atan2( y2 - y1, x2 - x1);
 
         this->angle = this->angle * (180.0/3.141592653589793238463);
+
+        if(this->get_small_line().get_x_projected().length() == 0 || this->get_small_line().get_y_projected().length() == 0)
+            this->angle = 180. + this->angle;
         
+         if (this->angle < 0) this->angle += 360.;
     }
     
     const long double get_angle(Tunel h) const {
-        Line s = this->get_small_line();
 
-        long double angle = 0.;
-        int x1, x2, y1, y2;
-        x1 = s.get_p0().get_x();
-        y1 = s.get_p0().get_y();
-        x2 = s.get_p1().get_x();
-        y2 = s.get_p1().get_y();  
+        if(this->parallel(h)){
+            return 180.;
+        }
 
-        double angle2 = h.get_angle();     
+        Point ab { h.get_small_line().get_p1().get_x() - h.get_small_line().get_p0().get_x(), 
+                    h.get_small_line().get_p1().get_y() - h.get_small_line().get_p0().get_y()};
+        Point cb { h.get_small_line().get_p1().get_x() - this->get_small_line().get_p1().get_x(), 
+                    h.get_small_line().get_p1().get_y() - this->get_small_line().get_p1().get_y()};
 
-        angle = atan2( y1 - y2, x1 - x2);
+        float dot = ab.get_x() * cb.get_x() + ab.get_y()*cb.get_y();
+        float cross = ab.get_x()*cb.get_y() - ab.get_y()*cb.get_x();
 
-        angle = angle * (180.0/ PI ) + angle2;
+        float angle = atan2(cross, dot) * (180. / PI);
+        if (angle < 0) angle += 360.;
 
         return angle;
         
     }
+
+    const bool parallel(Tunel h) const {
+        // same slope
+        return this->get_small_line().get_parameters().at(0) == h.get_small_line().get_parameters().at(0);
+    }
+
+    /*
+    int CGlEngineFunctions::GetAngleABC( POINTFLOAT a, POINTFLOAT b, POINTFLOAT c )
+{
+    POINTFLOAT ab = { b.x - a.x, b.y - a.y };
+    POINTFLOAT cb = { b.x - c.x, b.y - c.y };
+
+    float dot = (ab.x * cb.x + ab.y * cb.y); // dot product
+    float cross = (ab.x * cb.y - ab.y * cb.x); // cross product
+
+    float alpha = atan2(cross, dot);
+
+    return (int) floor(alpha * 180. / pi + 0.5);
+}
+    */
 
     const long  double get_angle() const {
         return this->angle;
@@ -151,6 +176,7 @@ public:
     const bool operator==(Tunel &&t) const {
         return (this->get_small_line() == std::move(t.get_small_line()) && this->get_big_line() == std::move(t.get_big_line()));
     }
+
 
 private:
     // les deux lignes

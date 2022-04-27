@@ -40,6 +40,9 @@ public:
     void set_hall(const Tunel& hall){
         this->hall = hall;
     }
+
+
+    
     
 
 protected:

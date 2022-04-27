@@ -55,6 +55,10 @@ void Flippers::set_current_angle(double angle){
     this->current_angle = angle;
 }
 
+void Flippers::set_next_angle(double angle){
+    this->next_angle = angle;
+}
+
 void Flippers::set_flipping(bool flipping){
     this->isFlipping = flipping;
 }
@@ -89,6 +93,7 @@ void Flippers::set(Tunel&& h){
 
         Point centre_small_line = hall.get_small_line().inLine(0.5);
         this->center = centre_small_line;
+        this->flip_center = Point(this->width/2, this->height/2);
 
         Point centre_big_line = hall.get_big_line().inLine(0.5);
 
@@ -96,6 +101,7 @@ void Flippers::set(Tunel&& h){
         y = centre_small_line.get_y() - ( static_cast<double>(height)/2.0);
 
         this->angle = this->hall.get_angle();
+        this->current_angle = this->angle;
         this->start = this->hall.get_small_line();
 
         this->random_p = RATIO_RANDOM_P; //rand(gen);
@@ -132,20 +138,28 @@ bool Flippers::get_closer(long double h) {
         this->state = 1;
         this->isFlipping = false;
         this->current_angle = this->angle;
+        this->flip_center = Point(0,0);
+        this->current_angle = this->hall.get_angle();
     }
 
-    else if(this->state == 1 && !this->isFlipping){
+    else if(this->state == 1 && !this->isFlipping && first){
+        first = false;
         this->isFlipping = true;
+        this->flip_center = Point(0,0);
+        this->next_angle = this->hall.get_angle(this->next_hall) + this->angle;
+        this->current_angle += (this->next_angle / this->flip_steps);;
     }
 
     else if(this->state == 1 && this->isFlipping){
         if(this->current_angle >= this->next_angle){
             this->isFlipping = false;
             this->hall = Tunel(this->next_hall);
-            this->state = 0;
+            this->angle = this->hall.get_angle();
+            this->flip_center = Point(this->width/2, this->height/2);
+            this->current_angle = this->angle;
         }
         else
-            this->current_angle += this->next_angle / this->flip_steps;
+            this->current_angle += (this->next_angle / this->flip_steps);
     }
 
     if(this->state == 0) {
@@ -156,9 +170,12 @@ bool Flippers::get_closer(long double h) {
         this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
     }
 
-    else if(this->state == 1 && this->isFlipping){
-        this->center = Point(this->x, this->y).get_point_from_rotation(this->center, this->current_angle);
-    }
+    // else if(!this->isFlipping){
+    //     this->center = this->center.get_point_from_rotation(Point(this->x, this->y), this->next_angle);
+    //     this->angle = this->hall.get_angle();
+    //     this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
+    //     this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
+    // }
 
     return false;
     //return intersect(this->hall.get_big_line());
@@ -200,25 +217,11 @@ void Flippers::draw(std::shared_ptr<SDL_Renderer> renderer) {
         return;
     }
 
-    Point center;
-
-    if(this->state == 0){
-        angle = this->angle;
-        center.set_point(width/2., height/2.);
-    }
-    else if(this->state == 1 && this->isFlipping){
-        angle = this->current_angle;
-        center.set_point(this->x, this->y);
-    }
-    else if(this->state == 1 && !this->isFlipping){
-        angle = this->angle;
-        center.set_point(width/2., height/2.);
-    }
 
     dest_rect.w = width;
     dest_rect.h = height;
 
-    if (SDL_RenderCopyEx(renderer.get(), monImage.get(), NULL, &dest_rect, angle, center.get_point().get(), SDL_FLIP_NONE) != 0) {
+    if (SDL_RenderCopyEx(renderer.get(), monImage.get(), NULL, &dest_rect, this->current_angle, this->flip_center.get_point().get(), SDL_FLIP_NONE) != 0) {
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
     }

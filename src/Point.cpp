@@ -112,11 +112,11 @@
         return sqrt( dx*dx + dy*dy );
     }
 
-    const Point Point::get_point_from_rotation(Point p1, double angle) const {
+    const Point Point::get_point_from_rotation(Point center, double angle) const {
 
         angle = angle * PI / 180.;
-        long double x1 = this->get_x() + (p1.get_x() - this->get_x()) * cos(angle) - (p1.get_y() - this->get_y()) * sin(angle);
-        long double y1 = this->get_y() + (p1.get_x() - this->get_x()) * sin(angle) + (p1.get_y() - this->get_y()) * cos(angle);
+        long double x1 = this->get_x() + (center.get_x() - this->get_x()) * cos(angle) - (center.get_y() - this->get_y()) * sin(angle);
+        long double y1 = this->get_y() + (center.get_x() - this->get_x()) * sin(angle) + (center.get_y() - this->get_y()) * cos(angle);
 
         return Point(x1,y1);
     }

@@ -220,7 +220,7 @@ void Game::update() {
 
             if( f!= NULL && f->get_state() == 1 && !f->flipping()){
                 f->set_next_hall(this->map->get_hall(f->get_hall().get_n_hall() - 1));
-                f->set_current_angle(f->get_hall().get_angle(f->get_next_hall()));
+                f->set_next_angle(f->get_hall().get_angle(f->get_next_hall()));
             }
 
             if( s != NULL && s->get_state() == 1){

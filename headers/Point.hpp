@@ -41,7 +41,15 @@ public:
 
     const bool operator==(const Point&& other) const ;
 
-    const Point get_point_from_rotation(Point p1, double angle) const;
+
+    /**
+     * @brief Get the point from rotation object
+     * 
+     * @param center center of rotation
+     * @param angle angle of rotation
+     * @return new point from rotation 
+     */
+    const Point get_point_from_rotation(Point center, double angle) const;
     
 
 private:

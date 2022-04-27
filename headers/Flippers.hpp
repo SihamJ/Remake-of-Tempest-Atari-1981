@@ -53,9 +53,11 @@ private:
     float next_angle = 0;
     float current_angle = 0;
     float r;
-    const int flip_steps = 10;
+    const int flip_steps = 5;
     bool isFlipping = false;
     Tunel next_hall;
+    Point flip_center;
+    bool first = true;
 };
 
 

@@ -69,6 +69,7 @@ public:
     }
 
     void set_angle(){
+
         Line s = this->get_small_line();
         int x1, x2, y1, y2;
         x1 = s.get_p0().get_x();
@@ -81,7 +82,7 @@ public:
         this->angle = this->angle * (180.0/3.141592653589793238463);
         
     }
-
+    
     const long double get_angle(Tunel h) const {
         Line s = this->get_small_line();
 
@@ -102,11 +103,11 @@ public:
         
     }
 
-    void set_nb_hall(int index) { this->nb_hall = index;}
-
     const long  double get_angle() const {
         return this->angle;
     }
+
+    void set_nb_hall(int index) { this->nb_hall = index;}
 
     const Line get_big_line () const {
         return lines.at(0);

@@ -38,7 +38,7 @@ protected:
     int nbHall;
     Point center;
     Color color;
-    const int thickness = 4;
+    const int thickness = 2;
 
     
 };

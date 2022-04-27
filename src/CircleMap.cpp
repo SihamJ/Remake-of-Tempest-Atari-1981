@@ -99,8 +99,8 @@
     }
 
     void CircleMap::build_map(){
-        set_inner_circle();
-        set_outer_circle();
+        this->set_inner_circle();
+        this->set_outer_circle();
 
         for(int i = 0; i <= 16; i++){
             Tunel h = Tunel(outer_circle.at(i), outer_circle.at((i+1)%outer_circle.size()), 

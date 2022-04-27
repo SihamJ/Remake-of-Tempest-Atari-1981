@@ -153,7 +153,7 @@ bool Flippers::get_closer(long double h) {
     else if(this->state == 1 && this->isFlipping){
         if(this->current_angle >= this->next_angle){
             this->isFlipping = false;
-            this->hall = Tunel(this->next_hall);
+            //this->hall = Tunel(this->next_hall);
             this->angle = this->hall.get_angle();
             this->flip_center = Point(this->width/2, this->height/2);
             this->current_angle = this->angle;
@@ -221,7 +221,7 @@ void Flippers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     dest_rect.w = width;
     dest_rect.h = height;
 
-    if (SDL_RenderCopyEx(renderer.get(), monImage.get(), NULL, &dest_rect, this->current_angle, this->flip_center.get_point().get(), SDL_FLIP_NONE) != 0) {
+    if (SDL_RenderCopyEx(renderer.get(), monImage.get(), NULL, &dest_rect, this->current_angle, NULL, SDL_FLIP_NONE) != 0) {
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
     }

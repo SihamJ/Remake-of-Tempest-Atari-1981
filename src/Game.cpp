@@ -88,6 +88,8 @@ void Game::handle_events() {
             }
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 setPause(true);
+                this->timer->pause_clock(clock_list::level);
+                this->timer->pause_clock(clock_list::current_transition);
             }
             if(event.key.keysym.sym == SDLK_RIGHT)
                 player.decr_n_hall ( map->get_hall ( player.get_n_hall () - 1 ) );
@@ -259,8 +261,6 @@ void Game::update() {
                 f->set_next_angle(f->get_hall().get_angle(f->get_next_hall()));
             }
 
-
-
             if( s != NULL && s->get_state() == 1){
 
                 h0 = s->get_hall().get_small_line().length() / s->get_limit().length();
@@ -281,21 +281,6 @@ void Game::update() {
                 enemies.erase(enemies.begin()+i);
             }
         }
-
-        // collision entre missile et player
-        // Line  l1_player{ player.get_lines().at(0)};
-        // Line l2_player{ player.get_lines().at(3)};
-
-        // int x1, x2, x3, x4, y1, y2, y3, y4;
-        // x1 = static_cast<int>(l1_player.get_p0().get_x());
-        // y1 = static_cast<int>(l1_player.get_p0().get_y());
-        // x2 = static_cast<int>(l1_player.get_p1().get_x());
-        // y2 = static_cast<int>(l1_player.get_p1().get_y());
-
-        // x3 = static_cast<int>(l2_player.get_p0().get_x());
-        // y3 = static_cast<int>(l2_player.get_p0().get_y());
-        // x4 = static_cast<int>(l2_player.get_p1().get_x());
-        // y4 = static_cast<int>(l2_player.get_p1().get_y());
     }
 }
 
@@ -356,8 +341,6 @@ void Game::render() {
 
     render_color(this->map->get_color());
     this->textRenderer.draw_text(renderer, std::to_string(this->level->get_current_level()), WIDTH/2-10, 110, 0.8, 2);
-
-
     
     if(this->superzapping){
         render_color(LIGHT_BLUE, 255);
@@ -384,6 +367,8 @@ void Game::handle_events_pause_mode() {
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 setPause(false);
+                this->timer->unpause_clock(clock_list::level);
+                this->timer->unpause_clock(clock_list::current_transition);
             }
             break;
         }
@@ -397,18 +382,8 @@ void Game::handle_events_pause_mode() {
  * en mode pause
  * 
  */
-void Game::update_pause_mode() {
+void Game::update_pause_mode() { }
     
-    this->textRenderer.draw_text(renderer, "Score " + std::to_string(this->player.get_score()), 30, HEIGHT - 150, 1, 2);
-    this->textRenderer.draw_text(renderer, "Level " + std::to_string(this->level->get_current_level()), 30, HEIGHT - 100, 1, 2);
-
-    render_color(LIGHT_BLUE, 255);
-
-    this->textRenderer.draw_text(renderer, std::to_string(this->player.get_life_point()), 3*WIDTH/4, HEIGHT - 100, 1, 2);
-    
-    // màj du rendu
-    SDL_RenderPresent(renderer.get());
-}
 
 
 
@@ -428,8 +403,20 @@ void Game::render_pause_mode() {
 
     render_color(YELLOW, 255);
 
-    this->textRenderer.draw_text(renderer, "PAUSE", WIDTH/2 - 140,  120, 2, 2);
-    this->textRenderer.draw_text(renderer, "Press escape to return to the game !", WIDTH/2 - 420, 170, 2, 2);
+    this->textRenderer.draw_text(renderer, "PAUSE", WIDTH/2 - 70,  150, 1, 2);
+    this->textRenderer.draw_text(renderer, "Press escape to return to the game", WIDTH/2 - 110, 200, 0.6, 2);
+
+    // score
+    render_color(std::move(this->level->get_score_color()));
+    this->textRenderer.draw_text(renderer,  "Score: " + std::to_string(this->player.get_score()), 30, 50, 0.6, 2);
+
+    // Player Name
+    this->textRenderer.draw_text(renderer, this->player.get_name(), 30 , 100, 0.6, 2);
+    this->textRenderer.draw_life(renderer, this->player.get_life_point(), 30, 150, this->player.get_color().get_name());
+
+    // niveau
+    render_color(this->map->get_color());
+    this->textRenderer.draw_text(renderer, "Level " + std::to_string(this->level->get_current_level()), 30, 200, 0.6, 2);
 
     // màj du rendu
     SDL_RenderPresent(renderer.get());
@@ -514,8 +501,8 @@ void Game::render_main_menu() {
 
     render_color(YELLOW, 255);
     
-    this->textRenderer.draw_text(renderer, "MAIN MENU", WIDTH/2 - 140, 120, 2, 2);
-    this->textRenderer.draw_text(renderer, "Press escape to start a game !", WIDTH/2 - 460, 170, 2, 2);
+    this->textRenderer.draw_text(renderer, "MAIN MENU", WIDTH/2 - 70, 120, 1, 2);
+    this->textRenderer.draw_text(renderer, "Press escape to start a game !", WIDTH/2 - 330, 170, 1, 2);
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());
@@ -551,8 +538,8 @@ void Game::render_game_over() {
 
     render_color(YELLOW, 255);
     
-    this->textRenderer.draw_text(renderer, "GAME OVER", WIDTH/2 - 140, 120, 2, 2);
-    this->textRenderer.draw_text(renderer, "Press escape to go back to main menu !", WIDTH/2 - 460, 170, 2, 2);
+    this->textRenderer.draw_text(renderer, "GAME OVER", WIDTH/2 - 70, 120, 1, 2);
+    this->textRenderer.draw_text(renderer, "Press escape to go back to main menu !", WIDTH/2 - 230, 170, 1, 2);
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());

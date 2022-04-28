@@ -80,6 +80,7 @@ public:
     void draw_shadow(std::shared_ptr<SDL_Renderer> renderer);
 
     const bool operator==(const Line &&l) const ;
+    const bool operator!=(const Line &&l) const ;
     
 
 private:

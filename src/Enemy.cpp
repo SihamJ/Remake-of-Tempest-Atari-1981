@@ -105,6 +105,10 @@ const bool Enemy::collides_with(Missile m) const {
     r_missile.h = m.get_height();
     r_missile.w = m.get_width();
 
+    std::cout << "enemy: x: " << r_enemy.x << " y:" << r_enemy.y << std::endl;
+
+    std::cout << "missile: x:" << r_missile.x << " y:" << r_missile.y << std::endl;
+
     bool res = SDL_IntersectRect(&r_enemy, &r_missile, &result);
     if(res) std::cout << "collision ennemi missile" << std::endl;
     return res;

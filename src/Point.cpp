@@ -48,6 +48,10 @@
         return Point(this->x - other.x, this->y - other.y);
     }
 
+    const bool Point::operator!=(const Point &other) const {
+        return (this->x != other.get_x() || this->y != other.get_y());
+    }
+
     void Point::set_point (long  double x, long  double y) {
         this->p.x = x;
         this->p.y = y;

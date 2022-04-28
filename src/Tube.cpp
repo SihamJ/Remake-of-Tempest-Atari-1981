@@ -46,7 +46,10 @@ void Tube::set_nb_hall(const int n){
 }
 
 
-void Tube::add_Hall (const Tunel h) {
+void Tube::add_Hall (const Tunel& h) {
+    hallList.push_back(h);
+}
+void Tube::add_Hall (Tunel&& h) {
     hallList.push_back(h);
 }
 

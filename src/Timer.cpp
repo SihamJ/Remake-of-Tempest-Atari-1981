@@ -15,3 +15,7 @@ Uint32 Timer::get_clock(int index){
 void Timer::reset_clock(int index){
     this->clocks.at(index) = SDL_GetTicks64();
 }
+
+void Timer::pop_clock(){
+    this->clocks.erase(this->clocks.end()-1);
+}

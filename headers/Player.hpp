@@ -30,11 +30,15 @@ public:
 
     void set_name(const std::string name);
 
+    void set_superzapper(int val);
+
+    const bool dec_superzapper();
+
     int get_life_point();
 
     int get_score();
     void incr_score(int points);
-
+    const int get_superzapper() const;
 
     void draw(std::shared_ptr<SDL_Renderer> renderer) override;
 
@@ -44,6 +48,7 @@ protected:
     int life_point = 5;
     int score = 0;
     const int thickness = 4;
+    int superzapper = 2;
 };
 
 #endif

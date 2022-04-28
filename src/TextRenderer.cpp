@@ -59,7 +59,7 @@
     }
 
 
-    void TextRenderer::draw_caracter(std::shared_ptr<SDL_Renderer> renderer, char c, int x, int y){
+    void TextRenderer::draw_caracter(std::shared_ptr<SDL_Renderer> renderer, char c, int x, int y, float size, int thickness){
         int index = c - 32;
         std::array<int, 112> element = this->coord.at(index);
         int nb_vertices = element.at(0);
@@ -71,16 +71,16 @@
                 j++;
                 continue;
             }
-            Line l = Line(element.at(i)+x, y - element.at(i+1), element.at(i+2)+x, y - element.at(i+3), 2 );
+            Line l = Line(element.at(i)*size+x, (y - element.at(i+1))*size, element.at(i+2)*size+x, (y - element.at(i+3))*size, thickness );
             l.draw(renderer);
         }
     }
     
-    void TextRenderer::draw_text(std::shared_ptr<SDL_Renderer> renderer, std::string text, int x, int y){
+    void TextRenderer::draw_text(std::shared_ptr<SDL_Renderer> renderer, std::string text, int x, int y, float size, int thickness){
         int space = 0;
 
         for(auto i : text){
-            this->draw_caracter(renderer, i, x + space, y);
-            space += (this->coord.at(i - 32)).at(1);
+            this->draw_caracter(renderer, i, (x + space), y, size, thickness);
+            space += (this->coord.at(i - 32)).at(1)*size;
         }
     }

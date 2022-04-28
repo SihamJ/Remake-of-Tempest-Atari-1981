@@ -17,6 +17,9 @@
 #define LEVEL_TIME 12000
 // 2 seconds for transistion
 #define TRANSISTION_TIME 2000
+// superzapper time = 1s
+#define SUPERZAPPER_TIME 3000
+
 
 // TO DO: this enum is not used yet. To respect modern c++ conventions, it would be better to switch from #define to enum and writing a converter from hexa to rgb
 enum color  { red = 0XFF0000,  white = 0XFFFFFF, black = 0X000000, light_blue = 0X00FFFF, yellow = 0XFFFF00 };
@@ -38,7 +41,7 @@ enum maps_list {
 };
 
 enum clock_list{
-    update = 0, enemies = 1, level = 2
+    update = 0, enemies = 1, level = 2, current_transition = 3
 };
 
 #endif

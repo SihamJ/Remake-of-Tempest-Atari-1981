@@ -66,6 +66,8 @@ public:
     bool getStart();
     void setStart(bool start);
 
+    void superzapper(bool all_enemies);
+
 private:
 
     std::unique_ptr<Timer> timer;
@@ -117,7 +119,7 @@ private:
     bool game_over = false;
 
     bool start = false;
-    
+    bool superzapping = false;
 
 };
 

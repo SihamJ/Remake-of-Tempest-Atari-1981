@@ -57,6 +57,18 @@
         return false;
     }
 
+    const int Player::get_superzapper() const{
+        return this->superzapper;
+    }
+
+    void Player::set_superzapper(int val){
+        this->superzapper = val;
+    }
+
+    const bool Player::dec_superzapper(){
+        return(--this->superzapper>=0);
+    }
+
     int Player::get_life_point() {
         return life_point;
     }

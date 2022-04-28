@@ -87,6 +87,16 @@ void Game::handle_events() {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 setPause(true);
             }
+            if(event.key.keysym.sym == SDLK_RIGHT)
+                player.decr_n_hall ( map->get_hall ( player.get_n_hall () - 1 ) );
+            if(event.key.keysym.sym == SDLK_LEFT)
+                player.incr_n_hall ( map->get_hall ( player.get_n_hall () + 1 ) );
+            // TO DO:
+            if(event.key.keysym.sym == SDLK_z){
+                if( player.dec_superzapper()){
+                    this->superzapper(player.get_superzapper()==0 ? false : true);
+                }
+            }
             break;
         }
         case SDL_MOUSEWHEEL: {
@@ -120,10 +130,14 @@ void Game::update() {
         this->next_level();
         return;
     }
+
+    if(this->superzapping){
+        if( this->timer->get_clock(clock_list::current_transition) > SUPERZAPPER_TIME){
+            this->superzapping = false;
+            this->timer->pop_clock();
+        }
+    }
     
-    // Ajout de points au centre jusqu'aux extrémités de l'octogone
-    // à des temps aléatoires < à 40000 millisecondes entre chacun
-    // sur des couloirs aléatoires
 
     std::random_device rd;  // Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd());
@@ -318,18 +332,22 @@ void Game::render() {
     // }
 
     render_color(std::move(this->level->get_score_color()));
-    this->textRenderer.draw_text(renderer,  std::to_string(this->player.get_score()), 1*WIDTH/4, 50);
+    this->textRenderer.draw_text(renderer,  std::to_string(this->player.get_score()), 1*WIDTH/4, 50, 1, 2);
 
     // Player Name
-    this->textRenderer.draw_text(renderer,  this->player.get_name(), WIDTH/2-60 , 50);
+    this->textRenderer.draw_text(renderer,  this->player.get_name(), WIDTH/2-60 , 50, 1, 2);
 
     this->textRenderer.draw_life(renderer, this->player.get_life_point(), 1*WIDTH/4, 70, this->player.get_color().get_name());
 
 
     render_color(this->map->get_color());
-    this->textRenderer.draw_text(renderer, std::to_string(this->level->get_current_level()), WIDTH/2-10, 90);
+    this->textRenderer.draw_text(renderer, std::to_string(this->level->get_current_level()), WIDTH/2-10, 110, 0.8, 2);
 
-    
+
+    render_color(LIGHT_BLUE, 255);
+    if(this->superzapping){
+        this->textRenderer.draw_text(renderer, "SUPERZAPPER!", WIDTH/3, HEIGHT/3, 2, 4);
+    }
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());
@@ -366,12 +384,12 @@ void Game::handle_events_pause_mode() {
  */
 void Game::update_pause_mode() {
     
-    this->textRenderer.draw_text(renderer, "Score " + std::to_string(this->player.get_score()), 30, HEIGHT - 150);
-    this->textRenderer.draw_text(renderer, "Level " + std::to_string(this->level->get_current_level()), 30, HEIGHT - 100);
+    this->textRenderer.draw_text(renderer, "Score " + std::to_string(this->player.get_score()), 30, HEIGHT - 150, 1, 2);
+    this->textRenderer.draw_text(renderer, "Level " + std::to_string(this->level->get_current_level()), 30, HEIGHT - 100, 1, 2);
 
     render_color(LIGHT_BLUE, 255);
 
-    this->textRenderer.draw_text(renderer, std::to_string(this->player.get_life_point()), 3*WIDTH/4, HEIGHT - 100);
+    this->textRenderer.draw_text(renderer, std::to_string(this->player.get_life_point()), 3*WIDTH/4, HEIGHT - 100, 1, 2);
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());
@@ -395,8 +413,8 @@ void Game::render_pause_mode() {
 
     render_color(YELLOW, 255);
 
-    this->textRenderer.draw_text(renderer, "PAUSE", WIDTH/2 - 70,  120);
-    this->textRenderer.draw_text(renderer, "Press escape to return to the game !", WIDTH/2 - 210, 170);
+    this->textRenderer.draw_text(renderer, "PAUSE", WIDTH/2 - 140,  120, 2, 2);
+    this->textRenderer.draw_text(renderer, "Press escape to return to the game !", WIDTH/2 - 420, 170, 2, 2);
 
     // màj du rendu
     SDL_RenderPresent(renderer.get());
@@ -447,9 +465,8 @@ void Game::next_level(){
     center.set_point(map->get_center().get_x(), map->get_center().get_y());
     vh = map->get_hall_list();
     this->player.set_hall(map->get_hall(0));
-    //this->player.set_n_hall(0);
     this->player.build();
-    
+    this->player.set_superzapper(2);
 }
 
 void Game::handle_events_main_menu() {
@@ -482,8 +499,8 @@ void Game::render_main_menu() {
 
     render_color(YELLOW, 255);
     
-    this->textRenderer.draw_text(renderer, "MAIN MENU", WIDTH/2 - 70, 120);
-    this->textRenderer.draw_text(renderer, "Press escape to start a game !", WIDTH/2 - 210, 170);
+    this->textRenderer.draw_text(renderer, "MAIN MENU", WIDTH/2 - 140, 120, 2, 2);
+    this->textRenderer.draw_text(renderer, "Press escape to start a game !", WIDTH/2 - 460, 170, 2, 2);
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());
@@ -519,8 +536,8 @@ void Game::render_game_over() {
 
     render_color(YELLOW, 255);
     
-    this->textRenderer.draw_text(renderer, "GAME OVER", WIDTH/2 - 70, 120);
-    this->textRenderer.draw_text(renderer, "Press escape to go back to main menu !", WIDTH/2 - 230, 170);
+    this->textRenderer.draw_text(renderer, "GAME OVER", WIDTH/2 - 140, 120, 2, 2);
+    this->textRenderer.draw_text(renderer, "Press escape to go back to main menu !", WIDTH/2 - 460, 170, 2, 2);
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());
@@ -537,3 +554,20 @@ bool Game::getGameOver() { return this->game_over; }
 
 bool Game::getStart() { return this->start; }
 void Game::setStart(bool start) { this->start = start; }
+
+
+void Game::superzapper(bool all_enemies){
+    std::cout<<"superzapper"<<std::endl;
+    this->superzapping = true;
+    // superzapper animation clock, is deleted after completion
+    this->timer->add_clock();
+    if(all_enemies)
+        this->enemies.clear();
+    else {
+        std::random_device rd;  // Will be used to obtain a seed for the random number engine
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> random (0, this->enemies.size());
+        int i = random(gen);
+        this->enemies.erase(this->enemies.begin()+i);
+    }
+}

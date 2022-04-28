@@ -12,6 +12,8 @@ class Timer {
         void add_clock();
         Uint32 get_clock(int index);
         void reset_clock(int index);
+        void pop_clock();
+        
 
     private:
         Uint32 start;

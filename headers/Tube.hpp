@@ -22,7 +22,8 @@ public:
     Color get_color();
     void set_center(const Point c);
     void set_nb_hall(const int n);
-    void add_Hall (const Tunel h);
+    void add_Hall (const Tunel& h);
+    void add_Hall (Tunel&& h);
     void delete_hall();
     virtual void build_map();
     void draw(std::shared_ptr<SDL_Renderer> renderer);

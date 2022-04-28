@@ -45,7 +45,7 @@ public:
 protected:
 
     // point de vie
-    int life_point = 5;
+    int life_point = 1;
     int score = 0;
     const int thickness = 4;
     int superzapper = 2;

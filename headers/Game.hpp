@@ -114,6 +114,8 @@ private:
 
     TextRenderer textRenderer;
 
+    std::string game_over_msg;
+
     bool pause = false;
 
     bool game_over = false;

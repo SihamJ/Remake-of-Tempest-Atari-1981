@@ -208,9 +208,10 @@ void Game::update() {
             if ((*it)->get_closer()) {
                 if ((*it)->getEnemy() && this->player.get_hall() == (*it)->get_hall()) {
                     if(this->player.decr_life_point()){
-                        std::cout << "decr lfie point " << std::endl;
+                        std::cout << "decr life point " << std::endl;
                         this->setGameOver(true);
                         this->setStart(false);
+                        this->game_over_msg = "You Lost All Your Life Points";
                         return;
                     }
                 }
@@ -295,14 +296,15 @@ void Game::update() {
             h = this->level->get_h(h0, d, z, backwards);
 
             if ((*i)->get_closer(h)) {
-                // si flipper, et couloir player, game over
-                // if( f!=NULL && f->get_n_hall() == player.get_n_hall()){
-                //     this->setGameOver(true);
-                //     this->setStart(false);
-                //     return;
-                // }
-                // // si pas flipper, disparition de l'ennemi
-                // else if(f == NULL)
+                //si flipper, et couloir player, game over
+                if( f!=NULL && f->get_n_hall() == player.get_n_hall()){
+                    this->setGameOver(true);
+                    this->setStart(false);
+                    game_over_msg = "Killed by the Flipper";
+                    return;
+                }
+                // si pas flipper, disparition de l'ennemi
+                else if(f == NULL)
                     enemies.erase(i--);
             }
         }
@@ -583,10 +585,29 @@ void Game::render_game_over() {
         isRunning = false;
     }
 
-    render_color(YELLOW, 255);
-    
-    this->textRenderer.draw_text(renderer, "GAME OVER", WIDTH/2 - 70, 120, 1, 2);
-    this->textRenderer.draw_text(renderer, "Press escape to go back to main menu !", WIDTH/2 - 230, 170, 1, 2);
+    auto image = sdl_shared(SDL_LoadBMP("./images/gameover.bmp"));
+    auto surface = sdl_shared(SDL_CreateTextureFromSurface(renderer.get(), image.get()));
+
+    SDL_Rect dest_rect = {0, 0, 347, 63};
+
+    if (SDL_QueryTexture(surface.get(), NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
+        SDL_Log("Erreur > %s", SDL_GetError());
+        return;
+    }
+
+    dest_rect.w = 347;
+    dest_rect.h = 63;
+    dest_rect.x = WIDTH/2 - 173;
+    dest_rect.y = HEIGHT/3;
+
+    if (SDL_RenderCopyEx(renderer.get(), surface.get(), NULL, &dest_rect, 0, NULL, SDL_FLIP_NONE) != 0) {
+        SDL_Log("Erreur > %s", SDL_GetError());
+        return;
+    }
+
+    render_color("255230230", 255);
+    this->textRenderer.draw_text(renderer, this->game_over_msg, WIDTH/2 - 140, 2*HEIGHT/3 + 100, 1, 2);
+    this->textRenderer.draw_text(renderer, "PRESS ESCAPE TO GO BACK TO MAIN MENU", WIDTH/2 - 330, HEIGHT/3 + 170, 1, 2);
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());

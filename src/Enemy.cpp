@@ -100,10 +100,10 @@ const bool Enemy::collides_with(Missile m) const {
     r_enemy.y = this->y;
     r_enemy.h = this->height;
     r_enemy.w = this->width;
-    r_missile.x = m.get_x();
-    r_missile.y = m.get_y();
-    r_missile.h = m.get_height();
-    r_missile.w = m.get_width();
+    r_missile.x = m.get_x()-m.get_width()/2;
+    r_missile.y = m.get_y()+m.get_height()/2;
+    r_missile.h = m.get_height()*2;
+    r_missile.w = m.get_width()*2;
 
     std::cout << "enemy: x: " << r_enemy.x << " y:" << r_enemy.y << std::endl;
 

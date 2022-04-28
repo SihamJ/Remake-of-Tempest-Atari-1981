@@ -233,7 +233,7 @@ std::shared_ptr<Enemy> Level::new_enemy(){
 
     std::random_device rd;  // Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> rand (0, 3);
+    std::uniform_int_distribution<int> rand (1, 7);
 
     int i = rand(gen);
     // affiche que des flippers et spikers
@@ -247,7 +247,7 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     //i = 1;
 
     // force à afficher que des spikers
-    i = 2;
+    // i = 2;
 
     Color color = this->current_enemies.at(i);
     std::shared_ptr<Enemy> e;
@@ -257,21 +257,24 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     case enemies_list::flippers:
         e = std::make_shared<Flippers>("flippers", std::move(color));
         break;
-    case enemies_list::spikers:
-        e = std::make_shared<Spikers>("spikers", std::move(color));
-        break;
     case enemies_list::tankers:
         e = std::make_shared<Tankers>("tankers", std::move(color));
         break;
-    // case enemies_list::superzapper:
-    //     e = std::make_shared<SuperZapper>("superzapper", std::move(color));
-    //     break;
-    // case enemies_list::pulsars:
-    //     e = std::make_shared<Pulsars>("pulsars", std::move(color));
-    //     break;
-    // case enemies_list::fuseballs:
-    //     e = std::make_shared<Fuseballs>("fuseballs", std::move(color));
-    //     break;
+    case enemies_list::spikers:
+        e = std::make_shared<Spikers>("spikers", std::move(color));
+        break;
+    case enemies_list::pulsars:
+        e = std::make_shared<Pulsars>("pulsars", std::move(color));
+        break;
+    case enemies_list::fuseballs:
+        e = std::make_shared<Fuseballs>("fuseballs", std::move(color));
+        break;
+    case enemies_list::fuseballTankers:
+        e = std::make_shared<FuseballTankers>("fuseballTankers", std::move(color));
+        break;
+    case enemies_list::pulsarTankers:
+        e = std::make_shared<PulsarTankers>("pulsarTankers", std::move(color));
+        break;
 
     // we don't have the other enemies for now, so we generate only flippers by default
     default:

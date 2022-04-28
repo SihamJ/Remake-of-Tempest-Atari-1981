@@ -32,7 +32,7 @@ enum color  { red = 0XFF0000,  white = 0XFFFFFF, black = 0X000000, light_blue = 
 
 
 enum enemies_list {
-    flippers = 0, tankers = 1, spikers = 2, superzapper = 3, pulsars = 4, fuseballs = 5
+    flippers = 0, tankers = 1, spikers = 2, superzapper = 3, pulsars = 4, fuseballs = 5, pulsarTankers = 6, fuseballTankers = 7
 };
 
 enum maps_list {

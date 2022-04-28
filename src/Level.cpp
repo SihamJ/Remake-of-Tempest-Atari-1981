@@ -9,27 +9,27 @@ Level::Level(int a){
 
 Level::~Level(){}
 
-std::shared_ptr<Tube> Level::get_map(){
+std::shared_ptr<Tube> Level::get_map() const{
     return this->map;
 }
 
-std::map<int, Color> Level::get_enemies(){
+std::map<int, Color> Level::get_enemies() const{
     return this->current_enemies;
 }
 
-const int Level::get_nb_enemies(){
+const int Level::get_nb_enemies() const{
     return this->current_enemies.size();
 }
 
-Color Level::get_player_color(){
+Color Level::get_player_color() const{
     return this->current_player_color;
 }
 
-Color Level::get_map_color(){
+Color Level::get_map_color() const{
     return this->map->get_color();
 }
 
-Color Level::get_score_color(){
+Color Level::get_score_color() const{
     Color c;
 
     if(this->current_level > 0 && this->current_level < 17){
@@ -54,7 +54,7 @@ Color Level::get_score_color(){
     return c;
 }
 
-void Level::print(){
+void Level::print() const{
     std::cout << "This is level " << this->current_level << std::endl;
     std::cout << "The tube is " << this->map->get_name() << std::endl;
 }
@@ -62,11 +62,11 @@ void Level::print(){
 void Level::set_current_level(int level){
     this->current_level = level;
 }
-int Level::get_current_level(){
+int Level::get_current_level() const{
     return this->current_level;
 }
 
-long double Level::get_h(long double h0, long double d, long double z, bool backwards){
+long double Level::get_h(long double h0, long double d, long double z, bool backwards) const{
     long double h;
 
     if(backwards){
@@ -114,10 +114,10 @@ void Level::set_map(){
     switch ( (this->current_level-1) % 16 )
     {
     case maps_list::circle:
-        this->map = std::make_shared<CircleMap>(0.3, c);
+        this->map = std::make_shared<CircleMap>(0.3, std::move(c));
         break;
     case maps_list::square:
-        this->map = std::make_shared<SquareMap>(0.3, c);
+        this->map = std::make_shared<SquareMap>(0.3, std::move(c));
         break;
     // case maps_list::plussymbol:
     //     this->map = std::make_shared<PlusSymbol>();
@@ -129,7 +129,7 @@ void Level::set_map(){
     //     this->map = std::make_shared<StylizedCross>();
     //     break;
     case maps_list::triangle:
-        this->map = std::make_shared<TriangleMap>(16, c);
+        this->map = std::make_shared<TriangleMap>(16, std::move(c));
         break;
     // case maps_list::clover:
     //     this->map = std::make_shared<Clover>();
@@ -162,7 +162,7 @@ void Level::set_map(){
     //     this->map = std::make_shared<InfinitySymbol>();
     //     break;
     default:
-        this->map = std::make_shared<SquareMap>(0.3, c);
+        this->map = std::make_shared<SquareMap>(0.3, std::move(c));
         break;
     }
 }

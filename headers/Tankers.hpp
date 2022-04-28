@@ -26,12 +26,11 @@ public:
     void set_center(const Point& center);
     void set(Tunel&& h);
     
-    std::string get_name(){ return "Tankers";}
+    const std::string get_name() const { return "Tankers";}
     const int get_scoring() const { return this->scoring;}
     bool get_closer(long double h) override;
-    long double get_speed();
     void draw(std::shared_ptr<SDL_Renderer> renderer) override;
-    bool intersect(Line l);    
+    bool intersect(const Line&& l);    
 
 private:
     const int scoring=150;
@@ -39,7 +38,6 @@ private:
     const int init_height = 49;
     int width;
     int height;
-    const long double speed = 0.01;
 };
 
 

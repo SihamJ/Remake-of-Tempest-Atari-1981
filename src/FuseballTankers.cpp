@@ -45,10 +45,6 @@ void FuseballTankers::set_tunnel(const Tunel& h) { this->hall = h; }
 
 void FuseballTankers::set_center(const Point& center) { this->center = center; }
 
-long double FuseballTankers::get_speed(){
-    return this->speed;
-}
-
 void FuseballTankers::set(Tunel&& h){
 
         this->hall = h;

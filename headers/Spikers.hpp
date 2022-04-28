@@ -18,32 +18,24 @@ public:
     ~Spikers();
 
     const int get_scoring() const  override;
+    const int get_state() const;
+    Line get_line_limit() const ;
+    const std::string get_name() const{ return this->name;}
+    Line get_limit() const ;
 
     void set_dest (const Point& destination);
     void set_tunnel(const Tunel& h);
     void set_rect(const std::array<Point, 4> rect);
     void set_center(const Point& center);
-
+    void set_state(int state);
     void set(Tunel&& h);
-    long double get_speed();
-    const std::string get_name(){ return this->name;}
 
     bool get_closer(long double h) override;
-
-    Line get_line_limit();
-
     bool decrease_random_p();
-
-    bool intersect(Line l);
-
-    void draw(std::shared_ptr<SDL_Renderer> renderer) override;
-
+    bool intersect(Line l) const;
     void update_line_limit();
 
-    const int get_state();
-    Line get_limit();
-    void setState(int state);
-    int getState();
+    void draw(std::shared_ptr<SDL_Renderer> renderer) override;
 
 private:
     const int scoring=50;

@@ -40,10 +40,9 @@
         return this->center;
     }
 
-    Line Enemy::get_dest(){ return this->dest; }
+    Line Enemy::get_dest() const { return this->dest; }
 
-
-    Line Enemy::get_start(){ return this->start; }
+    Line Enemy::get_start() const { return this->start; }
 
     bool Enemy::get_closer(long double h){ return false; }
     
@@ -57,8 +56,8 @@
         width = dist/3;
         height = dist/3;
 
-        Point centre_small_line = hall.get_small_line().inLine(0.5);
-        Point centre_big_line = hall.get_big_line().inLine(0.5);
+        Point centre_small_line { std::move(hall.get_small_line().inLine(0.5))};
+        Point centre_big_line { std::move(hall.get_big_line().inLine(0.5))};
 
         x = centre_small_line.get_x() - (width/2);
         y = centre_small_line.get_y() - (height/2);
@@ -90,7 +89,7 @@
         }        
     }
 
-SDL_Rect Enemy::get_rect() {
+SDL_Rect Enemy::get_rect() const {
     return SDL_Rect{static_cast<int>(x), static_cast<int>(y), width, height};
 }
 

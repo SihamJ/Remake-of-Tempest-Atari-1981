@@ -26,12 +26,12 @@ public:
     void set_center(const Point& center);
     void set(Tunel&& h);
     
-    std::string get_name(){ return "Pulsars";}
+    const std::string get_name() const { return "Pulsars";}
     const int get_scoring() const { return this->scoring;}
     bool get_closer(long double h) override;
-    long double get_speed();
+
     void draw(std::shared_ptr<SDL_Renderer> renderer) override;
-    bool intersect(Line l);    
+    const bool intersect(Line l) const ;    
 
 private:
     const int scoring=150;

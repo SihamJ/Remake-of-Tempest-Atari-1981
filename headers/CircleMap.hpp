@@ -12,7 +12,7 @@ class CircleMap : public Tube {
     public:
         
         CircleMap();
-        CircleMap(const long double ratio, const Color& c);
+        CircleMap(const long double ratio, Color&& c);
         ~CircleMap();
 
         void build_map() override;

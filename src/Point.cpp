@@ -33,7 +33,7 @@
 
     Point::~Point(){}
 
-    std::shared_ptr<SDL_Point> Point::get_point(){
+    std::shared_ptr<SDL_Point> Point::get_point() const {
         std::shared_ptr<SDL_Point> p;
         p.reset( new SDL_Point(this->p));
         return p;

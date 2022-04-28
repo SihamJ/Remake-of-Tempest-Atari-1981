@@ -42,10 +42,10 @@ Flippers::Flippers(Flippers &&other)
 Flippers::~Flippers(){}
 
 
-void Flippers::set_tunnel(const Tunel& h) { this->hall = h; }
+void Flippers::set_tunnel( Tunel&& h) { this->hall = h; }
 
 
-void Flippers::set_center(const Point& center) { this->center = center; }
+void Flippers::set_center( Point&& center) { this->center = center; }
 
 void Flippers::set_next_hall(Tunel &&h){
     this->next_hall = h;
@@ -61,10 +61,6 @@ void Flippers::set_next_angle(double angle){
 
 void Flippers::set_flipping(bool flipping){
     this->isFlipping = flipping;
-}
-
-const long double Flippers::get_speed() const {
-    return this->speed;
 }
 
 const Tunel Flippers::get_next_hall() const {
@@ -97,11 +93,11 @@ void Flippers::set(Tunel&& h){
         this->width = dist;
         this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
 
-        Point centre_small_line = hall.get_small_line().inLine(0.5);
+        Point centre_small_line { std::move( hall.get_small_line().inLine(0.5))};
         this->center = centre_small_line;
         this->flip_center = Point(this->width/2, this->height/2);
 
-        Point centre_big_line = hall.get_big_line().inLine(0.5);
+        Point centre_big_line { std::move( hall.get_big_line().inLine(0.5))};
 
         x = centre_small_line.get_x() - ( static_cast<double>(width)/2.0);
         y = centre_small_line.get_y() - ( static_cast<double>(height)/2.0);
@@ -114,18 +110,18 @@ void Flippers::set(Tunel&& h){
         this->state = 0;
 
         // On calcule la ligne limit de déplacement du spiker (parallèle à big line)
-        Point sp0 = this->hall.get_small_line().get_p0();
-        Point sp1 = this->hall.get_small_line().get_p1();
-        Point bp0 = this->hall.get_big_line().get_p0();
-        Point bp1 = this->hall.get_big_line().get_p1();
+        Point sp0 { std::move( this->hall.get_small_line().get_p0())};
+        Point sp1 { std::move( this->hall.get_small_line().get_p1())};
+        Point bp0 { std::move( this->hall.get_big_line().get_p0())};
+        Point bp1 { std::move( this->hall.get_big_line().get_p1())};
 
         long double segment1 = this->random_p * (sp0.euclideanDistance(bp0));
         long double segment2 = this->random_p * (sp1.euclideanDistance(bp1));
-        Line l1 = Line(sp0, bp0);
-        Line l2 = Line(sp1, bp1);
+        Line l1 { std::move( Line(sp0, bp0))};
+        Line l2 { std::move( Line(sp1, bp1))};
 
-        Point pp0 = l1.inLine(segment1 / l1.length());
-        Point pp1 = l2.inLine(segment2 / l2.length());
+        Point pp0 { std::move( l1.inLine(segment1 / l1.length()))};
+        Point pp1 { std::move( l2.inLine(segment2 / l2.length()))};
 
         this->limit_init.set_points({pp0, pp1});
         this->dest = Line(limit_init);
@@ -173,7 +169,7 @@ bool Flippers::get_closer(long double h) {
 
             //this->center.rotate( Point(this->xflip, this->yflip), this->next_angle/2.);
             this->hall = Tunel(this->next_hall);
-            this->center = Line(this->hall.get_small_line().inLine(0.5), this->hall.get_big_line().inLine(0.5)).inLine(this->random_p);
+            this->center = Line( std::move(this->hall.get_small_line().inLine(0.5)), std::move(this->hall.get_big_line().inLine(0.5))).inLine(this->random_p);
             this->angle = this->hall.get_angle();
             this->flip_center = Point(this->width/2, this->height/2);
             this->current_angle = this->angle;

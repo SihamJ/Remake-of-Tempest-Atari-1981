@@ -65,19 +65,19 @@ void Spikers::set_center(const Point& center){
     this->center = center;
 }
 
+void Spikers::set_state(int state) {
+    this->state = state;
+}
+
 const int Spikers::get_scoring() const {
     return this->scoring;
 }
 
-long double Spikers::get_speed(){
-    return this->speed;
-}
-
-const int Spikers::get_state(){
+const int Spikers::get_state() const {
     return this->state;
 }
 
-Line Spikers::get_limit(){
+Line Spikers::get_limit()const {
     return this->limit_init;
 }
 
@@ -193,7 +193,7 @@ bool Spikers::get_closer(long double h) {
     //return intersect(this->hall.get_big_line());
 }
 
-bool Spikers::intersect(Line l) {
+bool Spikers::intersect(Line l) const {
     SDL_Rect r = {static_cast<int>(this->x), static_cast<int>(this->y), this->width, this->height};
 
     int x1 = l.get_p0().get_x();
@@ -250,7 +250,7 @@ void Spikers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     }
 }
 
-Line Spikers::get_line_limit() {
+Line Spikers::get_line_limit() const {
     return this->limit_init;
 }
     
@@ -293,10 +293,3 @@ void Spikers::update_line_limit() {
 
 }
 
-int Spikers::getState() {
-    return this->state;
-}
-
-void Spikers::setState(int state) {
-    this->state = state;
-}

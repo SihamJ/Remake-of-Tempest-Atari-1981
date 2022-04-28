@@ -45,10 +45,6 @@ void Tankers::set_tunnel(const Tunel& h) { this->hall = h; }
 
 void Tankers::set_center(const Point& center) { this->center = center; }
 
-long double Tankers::get_speed(){
-    return this->speed;
-}
-
 void Tankers::set(Tunel&& h){
 
         this->hall = h;
@@ -86,10 +82,10 @@ bool Tankers::get_closer(long double h) {
     this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
 
     //return false;
-    return intersect(this->hall.get_big_line());
+    return intersect(std::move(this->hall.get_big_line()));
 }
 
-bool Tankers::intersect(Line l) {
+bool Tankers::intersect(const Line&& l) {
     SDL_Rect r = {static_cast<int>(this->x), static_cast<int>(this->y), this->width, this->height};
 
     int x1 = l.get_p0().get_x();

@@ -7,45 +7,37 @@
 class Player : public Character {
 
 public:
-    // Constructeur
+
     Player();
     Player(Player&& other);
     Player(const Player& other);
-    // Destructeur
+    Player(const int& n_hall, const Tunel& hall, const Color& c);
+    Player(const int& n_hall, Tunel&& hall, Color&& c);
+
     ~Player();
 
-    Player(const int& n_hall, const Tunel& hall, const Color& c);
-    void operator=(Player other);
-
-    void incr_n_hall(const Tunel& h);
-
-    void decr_n_hall(const Tunel&h);
-
-
-    bool decr_life_point();
-
-    void build();
-
+    const int get_life_point()const ;
+    const int get_score()const ;
     const std::string get_name() const override;
-
-    void set_name(const std::string name);
-
-    void set_superzapper(int val);
-
-    const bool dec_superzapper();
-
-    int get_life_point();
-
-    int get_score();
-    void incr_score(int points);
     const int get_superzapper() const;
 
+    void set_name(std::string&& name);
+    void set_superzapper(int val);
+
+    void incr_n_hall( Tunel&& h);
+    void decr_n_hall( Tunel&& h);
+    bool decr_life_point();
+    void incr_score(int points);
+    const bool dec_superzapper();
+
+    void build();
     void draw(std::shared_ptr<SDL_Renderer> renderer) override;
+
+    void operator=(Player other);
 
 protected:
 
-    // point de vie
-    int life_point = 1;
+    int life_point = INIT_VIE;
     int score = 0;
     const int thickness = 4;
     int superzapper = 2;

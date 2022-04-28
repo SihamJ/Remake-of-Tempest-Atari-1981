@@ -9,7 +9,7 @@
 class SquareMap : public Tube {
     public:
         SquareMap();
-        SquareMap(long double ratio, Color c);
+        SquareMap(long double ratio, Color&& c);
         ~SquareMap();
 
         void set_inner_square();

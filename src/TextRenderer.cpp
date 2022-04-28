@@ -23,7 +23,7 @@
         return res;
     }
 
-    void TextRenderer::draw_life(std::shared_ptr<SDL_Renderer> renderer, int value, int x, int y, std::string color){
+    void TextRenderer::draw_life(std::shared_ptr<SDL_Renderer> renderer, int value, int x, int y, const std::string&& color){
 
         
         for(auto i = 0; i < value; i++){

@@ -3,8 +3,8 @@
 
 TriangleMap::TriangleMap(){}
 
-TriangleMap::TriangleMap(const int nbHall, const Color c)
-    : Tube("Triangle", nbHall, c)
+TriangleMap::TriangleMap(const int nbHall, Color&& c)
+    : Tube("Triangle", nbHall, std::move(c))
 {
         this->width = 2*WIDTH/5;
         this->height = 5*HEIGHT/7;
@@ -103,10 +103,10 @@ void TriangleMap::build_map(){
 
     // linking
     for(int i = 0; i < nbHall; i++){
-        Tunel h = Tunel(bigLines.at(i), bigLines.at((i+1) % bigLines.size()), smallLines.at(i), smallLines.at((i+1) % smallLines.size()), this->thickness);
+        Tunel h = Tunel(std::move(bigLines.at(i)), std::move(bigLines.at((i+1) % bigLines.size())), std::move(smallLines.at(i)), std::move(smallLines.at((i+1) % smallLines.size())), this->thickness);
         h.set_angle();
         h.set_nb_hall(i);
-        this->add_Hall(h);
+        this->add_Hall(std::move(h));
     }
 
 }

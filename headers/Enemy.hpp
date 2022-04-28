@@ -22,15 +22,13 @@ public:
 
     Point get_center() const;
    
-    virtual const int get_scoring() const  =0;
+    virtual const int get_scoring() const  = 0;
+    virtual bool get_closer(long double h);
+    Line get_dest() const;
+    Line get_start() const;
+    SDL_Rect get_rect() const;
 
     virtual void set(Tunel&& h);
-
-    virtual bool get_closer(long double h);
-
-    Line get_dest();
-    Line get_start();
-    SDL_Rect get_rect();
 
     const bool collides_with(Missile m) const;
 

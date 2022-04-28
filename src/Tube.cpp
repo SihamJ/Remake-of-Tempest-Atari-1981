@@ -3,16 +3,16 @@
 // constructeur
 Tube::Tube(){}
 
-Tube::Tube(const char* name, const Color c)
+Tube::Tube(std::string name, Color c)
     : color(c)
 {
-    this->name = static_cast<std::string>(name);
+    this->name = name;
 }
 
-Tube::Tube(const char* name, const int nbHall, const Color c)
+Tube::Tube(std::string&& name, int nbHall, Color&& c)
     : nbHall(nbHall), color(c)
 {
-    this->name = static_cast<std::string>(name);
+    this->name = std::move(name);
 }
 // destructeur
 Tube::~Tube(){}
@@ -37,18 +37,16 @@ Color Tube::get_color(){
     return this->color;
 }
 
-void Tube::set_center(const Point c){
+void Tube::set_center(Point&& c){
     this->center = c;
 }
 
-void Tube::set_nb_hall(const int n){
+void Tube::set_nb_hall(int n){
     this->nbHall = n;
 }
 
 
-void Tube::add_Hall (const Tunel& h) {
-    hallList.push_back(h);
-}
+
 void Tube::add_Hall (Tunel&& h) {
     hallList.push_back(h);
 }

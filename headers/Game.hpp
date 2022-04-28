@@ -52,8 +52,8 @@ public:
     void next_level();
 
     void render_color(Color&& c);
-    void render_color(std::string color);
-    void render_color(std::string color, int opacity);
+    void render_color(std::string&& color);
+    void render_color(std::string&& color, int opacity);
 
 
     // checks if the game is still running
@@ -122,6 +122,8 @@ private:
 
     bool start = false;
     bool superzapping = false;
+
+    std::random_device rd;  
 
 };
 

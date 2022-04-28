@@ -45,10 +45,6 @@ void Pulsars::set_tunnel(const Tunel& h) { this->hall = h; }
 
 void Pulsars::set_center(const Point& center) { this->center = center; }
 
-long double Pulsars::get_speed(){
-    return this->speed;
-}
-
 void Pulsars::set(Tunel&& h){
 
         this->hall = h;
@@ -89,7 +85,7 @@ bool Pulsars::get_closer(long double h) {
     return intersect(this->hall.get_big_line());
 }
 
-bool Pulsars::intersect(Line l) {
+const bool Pulsars::intersect(Line l) const {
     SDL_Rect r = {static_cast<int>(this->x), static_cast<int>(this->y), this->width, this->height};
 
     int x1 = l.get_p0().get_x();

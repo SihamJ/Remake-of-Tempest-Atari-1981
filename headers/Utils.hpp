@@ -19,7 +19,8 @@
 #define TRANSISTION_TIME 2000
 // superzapper time = 1s
 #define SUPERZAPPER_TIME 1000
-
+// points de vie au début du jeu
+#define INIT_VIE 5
 
 // TO DO: this enum is not used yet. To respect modern c++ conventions, it would be better to switch from #define to enum and writing a converter from hexa to rgb
 enum color  { red = 0XFF0000,  white = 0XFFFFFF, black = 0X000000, light_blue = 0X00FFFF, yellow = 0XFFFF00 };

@@ -12,17 +12,16 @@ class Tube {
 public:
 
     Tube();
-    Tube(const char* name, const Color c);
-    Tube(const char* name, const int nbHall, const Color c);
+    Tube(std::string name, Color c);
+    Tube(std::string&& name, int nbHall, Color&& c);
     ~Tube();
 
     std::vector<Tunel> get_hall_list();
     int get_nb_hall();
     Point get_center();
     Color get_color();
-    void set_center(const Point c);
-    void set_nb_hall(const int n);
-    void add_Hall (const Tunel& h);
+    void set_center(Point&& c);
+    void set_nb_hall(int n);
     void add_Hall (Tunel&& h);
     void delete_hall();
     virtual void build_map();

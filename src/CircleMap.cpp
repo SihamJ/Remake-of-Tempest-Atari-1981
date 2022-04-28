@@ -2,8 +2,8 @@
 
     CircleMap::CircleMap(){}
 
-    CircleMap::CircleMap(const long double ratio, const Color& c)
-        : Tube("Circle", c), ratio(ratio)
+    CircleMap::CircleMap(const long double ratio, Color&& c)
+        : Tube("Circle", std::move(c)), ratio(ratio)
     {
         this->width = 3 * WIDTH / 8;
         this->height = 4 * HEIGHT / 5;

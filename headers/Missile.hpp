@@ -14,27 +14,24 @@ class Missile {
         Missile(const Tunel& h);
         Missile(const Tunel&& h);
 
-        int get_width();
-
-        int get_height();
-
-        int get_x();
-
-        int get_y();
-
-        Point get_pos();
-
+        int get_width() const;
+        int get_height() const;
+        int get_x() const;
+        int get_y() const;
+        Point get_pos() const;
         bool get_closer();
+        Tunel get_hall() const;
+        bool get_enemy() const;
 
-        bool intersect(Line l);
+        void set_enemy();
 
-        Tunel get_hall();
+        bool intersect(Line l) const;
 
         void draw(std::shared_ptr<SDL_Renderer> renderer);
 
-        void setEnemy();
+        
 
-        bool getEnemy();
+        
 
     private:
 

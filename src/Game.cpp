@@ -45,16 +45,12 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
 
         // construction de la map
         map->build_map();
-        this->player = Player(0, map->get_hall(0), this->level->get_player_color());
-         // récupère le point central de la Map
-        center.set_point(map->get_center().get_x(), map->get_center().get_y());
+        this->player = Player(0, std::move(map->get_hall(0)), std::move(this->level->get_player_color()));
+        // récupère le point central de la Map
+        center.set_point( map->get_center().get_x(), map->get_center().get_y());
 
         vh = map->get_hall_list();
         isRunning = true;
-
-        std::cout << "done" << std::endl;
-
-
     }
     else {
         // si problème, le jeu doit s'arrêter
@@ -78,24 +74,25 @@ void Game::handle_events() {
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_SPACE){
                 // le couloir où le player se trouve
-                //std::cout << "missile alliée" <<std::endl;
-                Tunel h = vh[player.get_n_hall()];
+                Tunel h = vh.at(player.get_n_hall());
 
                 std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(h));
                 // ajoute le point au vecteur qui répertorie tous les missiles
-                vm.push_back(m);
+                vm.push_back(std::move(m));
                 break;
             }
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 setPause(true);
+                // On met en pause les timer de passage au niveau suivant et de transition courante s'il y en une
                 this->timer->pause_clock(clock_list::level);
                 this->timer->pause_clock(clock_list::current_transition);
             }
             if(event.key.keysym.sym == SDLK_RIGHT)
-                player.decr_n_hall ( map->get_hall ( player.get_n_hall () - 1 ) );
+                player.decr_n_hall ( std::move (map->get_hall (player.get_n_hall () - 1)) );
+
             if(event.key.keysym.sym == SDLK_LEFT)
-                player.incr_n_hall ( map->get_hall ( player.get_n_hall () + 1 ) );
-            // TO DO:
+                player.incr_n_hall ( std::move (map->get_hall (player.get_n_hall () + 1)) );
+
             if(event.key.keysym.sym == SDLK_z){
                 if( !this->superzapping && player.dec_superzapper()){
                     this->superzapper(player.get_superzapper()==0 ? false : true);
@@ -107,12 +104,12 @@ void Game::handle_events() {
             if(event.wheel.y > 0) // scroll up
             {
                 //std::cout << "scroll up" << std::endl;
-                player.decr_n_hall ( map->get_hall ( player.get_n_hall () - 1 ) );
+                player.decr_n_hall ( std::move(map->get_hall ( player.get_n_hall () - 1)));
             }
             else if(event.wheel.y < 0) // scroll down
             {
                 //std::cout << "scroll down" << std::endl;
-                player.incr_n_hall ( map->get_hall ( player.get_n_hall () + 1 ) );
+                player.incr_n_hall ( std::move( map->get_hall ( player.get_n_hall () + 1)));
             }
         }
         default:
@@ -148,28 +145,29 @@ void Game::update() {
     }
     
 
-    std::random_device rd;  // Will be used to obtain a seed for the random number engine
-    std::mt19937 gen(rd());
+    
+    std::mt19937 gen(this->rd());
     std::uniform_int_distribution<int> random (0, 100000);
 
     int i = random(gen);
 
     if ( this->timer->get_clock(clock_list::enemies) > i) {
-        // maj horloge
+
         this->timer->reset_clock(clock_list::enemies);
-        generated=true;
-        std::shared_ptr<Enemy> enemy = this->level->new_enemy();
+
+        std::shared_ptr<Enemy> enemy = std::move(this->level->new_enemy());
 
         // un couloir aléatoire parmis les couloirs de la map
-        Tunel hDest = vh[random(gen) % vh.size()];
+        Tunel hDest = vh.at(random(gen) % vh.size());
         
-        //instead of copying values, we move them by rvalue reference. They won't be needed afterwards.
+        //we set the enemy in its corresponding Hall and calculate other geometric parameters
         enemy->set(std::move(hDest));
 
         // faux si y a déjà un spiker sur le couloir
         bool enemy_valid = true;
 
         for (auto e : enemies) {
+            // pour éviter d'avoir deux spikers dans le même couloir. On utilise l'overload de l'opérateur == sur Tunel, Line et Point.
             if (e->get_name().compare("spikers") == 0 && e->get_hall() == enemy->get_hall()) {
                 enemy_valid = false;
                 break;
@@ -177,21 +175,23 @@ void Game::update() {
         }
 
         if (enemy_valid)
-            enemies.push_back(enemy);
+            enemies.push_back(std::move(enemy));
     }
     // Si on a dépassé les TICK millisecondes, on update
     if (timer->get_clock(clock_list::update) > TICK) {
 
         for (auto e : enemies) {
             if (e->get_name().compare("spikers") == 0) {
+
                 std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(e);
                 if (enemy_spiker == nullptr)
                     return;
                 if (enemy_spiker->get_state() == 2) {
+
                     std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(enemy_spiker->get_hall()));
-                    m->setEnemy();
-                    vm.push_back(m);
-                    enemy_spiker->setState(-1);
+                    m->set_enemy();
+                    vm.push_back(std::move(m));
+                    enemy_spiker->set_state(-1);
                 }
             }
         }
@@ -203,12 +203,12 @@ void Game::update() {
         // détruit le missile si il a atteint sa cible
         
         for (auto it = vm.begin(); it != vm.end(); it++) {
-            std::cout << "missile" << std::endl;
+
             bool cond = false;
             if ((*it)->get_closer()) {
-                if ((*it)->getEnemy() && this->player.get_hall() == (*it)->get_hall()) {
+                if ((*it)->get_enemy() && this->player.get_hall() == (*it)->get_hall()) {
                     if(this->player.decr_life_point()){
-                        std::cout << "decr life point " << std::endl;
+
                         this->setGameOver(true);
                         this->setStart(false);
                         this->game_over_msg = "You Lost All Your Life Points";
@@ -219,7 +219,7 @@ void Game::update() {
                 continue;
             }
 
-            else if (!(*it)->getEnemy()) {
+            else if (!(*it)->get_enemy()) {
 
                 for (auto e = enemies.begin(); e!= enemies.end(); e++) {
 
@@ -274,8 +274,8 @@ void Game::update() {
                 // std::mt19937 gen(rd());
                 // std::uniform_int_distribution<int> random (-1, 0);
 
-                f->set_next_hall(this->map->get_hall(f->get_hall().get_n_hall() + 1));
-                f->set_next_angle(f->get_hall().get_angle(f->get_next_hall()));
+                f->set_next_hall(std::move(this->map->get_hall(f->get_hall().get_n_hall() + 1)));
+                f->set_next_angle(std::move(f->get_hall().get_angle(f->get_next_hall())));
             }
 
             if( s != NULL && s->get_state() == 1){
@@ -342,7 +342,7 @@ void Game::render() {
     player.draw(renderer);
 
 
-//   Missiles 
+    // Missiles 
     for (auto i : vm)
         i->draw(renderer);
 
@@ -366,11 +366,11 @@ void Game::render() {
     this->textRenderer.draw_life(renderer, this->player.get_life_point(), 1*WIDTH/4, 70, this->player.get_color().get_name());
 
 
-    render_color(this->map->get_color());
+    render_color(std::move(this->map->get_color()));
     this->textRenderer.draw_text(renderer, std::to_string(this->level->get_current_level()), WIDTH/2-10, 110, 0.8, 2);
     
     if(this->superzapping){
-        render_color(LIGHT_BLUE, 255);
+        render_color(std::move(LIGHT_BLUE), 255);
         this->textRenderer.draw_text(renderer, "SUPERZAPPER!", WIDTH/3, HEIGHT/3, 2, 4);
     }
     
@@ -430,20 +430,20 @@ void Game::render_pause_mode() {
 
     render_color(YELLOW, 255);
 
-    this->textRenderer.draw_text(renderer, "PAUSE", WIDTH/2 - 70,  150, 1, 2);
-    this->textRenderer.draw_text(renderer, "Press escape to return to the game", WIDTH/2 - 110, 200, 0.6, 2);
+    this->textRenderer.draw_text(renderer, std::move("PAUSE"), WIDTH/2 - 70,  150, 1, 2);
+    this->textRenderer.draw_text(renderer, std::move("Press escape to return to the game"), WIDTH/2 - 110, 200, 0.6, 2);
 
     // score
     render_color(std::move(this->level->get_score_color()));
-    this->textRenderer.draw_text(renderer,  "Score: " + std::to_string(this->player.get_score()), 30, 50, 0.6, 2);
+    this->textRenderer.draw_text(renderer,  std::move("Score: " + std::to_string(this->player.get_score())), 30, 50, 0.6, 2);
 
     // Player Name
-    this->textRenderer.draw_text(renderer, this->player.get_name(), 30 , 100, 0.6, 2);
-    this->textRenderer.draw_life(renderer, this->player.get_life_point(), 30, 150, this->player.get_color().get_name());
+    this->textRenderer.draw_text(renderer, std::move(this->player.get_name()), 30 , 100, 0.6, 2);
+    this->textRenderer.draw_life(renderer, this->player.get_life_point(), 30, 150, std::move(this->player.get_color().get_name()));
 
     // niveau
     render_color(this->map->get_color());
-    this->textRenderer.draw_text(renderer, "Level " + std::to_string(this->level->get_current_level()), 30, 200, 0.6, 2);
+    this->textRenderer.draw_text(renderer, std::move("Level " + std::to_string(this->level->get_current_level())), 30, 200, 0.6, 2);
 
     // màj du rendu
     SDL_RenderPresent(renderer.get());
@@ -466,34 +466,35 @@ void Game::render_color(Color&& c){
 }
 
 
-void Game::render_color(std::string color){
+void Game::render_color(std::string&& color){
     Color c { "", std::move(color) };
     SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), 255);
 }
 
-void Game::render_color(std::string color, const int opacity){
+void Game::render_color(std::string&& color, const int opacity){
     Color c { "", std::move(color), opacity };
     SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), opacity);
 }
 
 
 void Game::next_level(){
-    std::cout << "next level" << std::endl;
+
     this->timer->reset_clock(clock_list::current_transition);
     this->isTransitioning = true;
     this->vm.clear();
     this->vh.clear();
     this->enemies.clear();
     this->level->next_level();
-    this->map = level->get_map();
+    this->map = std::move(level->get_map());
     this->player.clean();
     map->build_map();
     center.set_point(map->get_center().get_x(), map->get_center().get_y());
     vh = map->get_hall_list();
-    this->player.set_hall(map->get_hall(0));
+    this->player.set_hall(std::move(map->get_hall(0)));
     this->player.build();
     this->player.set_superzapper(2);
     this->superzapping = false;
+    
 }
 
 void Game::handle_events_main_menu() {
@@ -606,8 +607,8 @@ void Game::render_game_over() {
     }
 
     render_color("255230230", 255);
-    this->textRenderer.draw_text(renderer, this->game_over_msg, WIDTH/2 - 140, 2*HEIGHT/3 + 100, 1, 2);
-    this->textRenderer.draw_text(renderer, "PRESS ESCAPE TO GO BACK TO MAIN MENU", WIDTH/2 - 330, HEIGHT/3 + 170, 1, 2);
+    this->textRenderer.draw_text(renderer, std::move(this->game_over_msg), WIDTH/2 - 140, 2*HEIGHT/3 + 100, 1, 2);
+    this->textRenderer.draw_text(renderer, std::move("PRESS ESCAPE TO GO BACK TO MAIN MENU"), WIDTH/2 - 330, HEIGHT/3 + 170, 1, 2);
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());
@@ -627,7 +628,7 @@ void Game::setStart(bool start) { this->start = start; }
 
 
 void Game::superzapper(bool all_enemies){
-    std::cout<<"superzapper"<<std::endl;
+
     this->superzapping = true;
 
     // superzapper animation, clock is popped after completion

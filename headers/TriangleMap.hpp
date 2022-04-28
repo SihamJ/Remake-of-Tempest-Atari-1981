@@ -9,7 +9,7 @@ public:
 
     TriangleMap();
     
-    TriangleMap(const int nbHall, const Color c);
+    TriangleMap(const int nbHall, Color&& c);
 
     //destructeur
     ~TriangleMap();

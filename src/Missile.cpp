@@ -26,23 +26,23 @@
         this->angle = this->hall.get_angle();
     }
 
-    int Missile::get_width(){
+    int Missile::get_width() const{
         return this->width;
     }
 
-    int Missile::get_height(){
+    int Missile::get_height() const{
         return this->height;
     }
 
-    int Missile::get_x(){
+    int Missile::get_x() const{
         return this->pos.get_x();
     }
 
-    int Missile::get_y(){
+    int Missile::get_y() const{
         return this->pos.get_y();
     }
 
-    Point Missile::get_pos(){
+    Point Missile::get_pos() const{
         return this->pos;
     }
 
@@ -72,7 +72,7 @@
         return intersect(this->hall.get_small_line());
     }
 
-    bool Missile::intersect(Line l) {
+    bool Missile::intersect(Line l)  const{
 
         SDL_Rect r = {static_cast<int>(this->pos.get_x()), static_cast<int>(this->pos.get_y()), this->width, this->height};
 
@@ -85,7 +85,7 @@
 
     }
 
-    Tunel Missile::get_hall() {
+    Tunel Missile::get_hall() const {
         return this->hall;
     }
 
@@ -119,13 +119,13 @@
         }
     }
 
-    void Missile::setEnemy() {
+    void Missile::set_enemy() {
         this->start = hall.get_small_line().inLine(0.5);
         this->dest = hall.get_big_line().inLine(0.5);
         this->pos = this->start;
         this->enemy = true;
     }
 
-bool Missile::getEnemy() {
+bool Missile::get_enemy()  const{
     return this->enemy;
 }

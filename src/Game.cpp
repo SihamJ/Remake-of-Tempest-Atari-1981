@@ -36,6 +36,8 @@ void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flag
         this->timer->add_clock();
         // clock 3 pour passer au niveau suivant
         this->timer->add_clock();
+        // clock 4 pour animation courante
+        this->timer->add_clock();
 
         this->level = std::make_shared<Level>(0);
         this->level->next_level();
@@ -93,7 +95,7 @@ void Game::handle_events() {
                 player.incr_n_hall ( map->get_hall ( player.get_n_hall () + 1 ) );
             // TO DO:
             if(event.key.keysym.sym == SDLK_z){
-                if( player.dec_superzapper()){
+                if( !this->superzapping && player.dec_superzapper()){
                     this->superzapper(player.get_superzapper()==0 ? false : true);
                 }
             }
@@ -131,11 +133,8 @@ void Game::update() {
         return;
     }
 
-    if(this->superzapping){
-        if( this->timer->get_clock(clock_list::current_transition) > SUPERZAPPER_TIME){
+    if(this->superzapping && this->timer->get_clock(clock_list::current_transition) > SUPERZAPPER_TIME){
             this->superzapping = false;
-            this->timer->pop_clock();
-        }
     }
     
 
@@ -344,8 +343,9 @@ void Game::render() {
     this->textRenderer.draw_text(renderer, std::to_string(this->level->get_current_level()), WIDTH/2-10, 110, 0.8, 2);
 
 
-    render_color(LIGHT_BLUE, 255);
+    
     if(this->superzapping){
+        render_color(LIGHT_BLUE, 255);
         this->textRenderer.draw_text(renderer, "SUPERZAPPER!", WIDTH/3, HEIGHT/3, 2, 4);
     }
     
@@ -450,11 +450,7 @@ void Game::render_color(std::string color, const int opacity){
 
 void Game::next_level(){
     std::cout << "next level" << std::endl;
-    render_color(BLACK, 255);
-    if (SDL_RenderClear(renderer.get()) < 0) {
-        std::cerr<<"Pb render clear SDL"<< std::endl;
-        isRunning = false;
-    }
+
     this->vm.clear();
     this->vh.clear();
     this->enemies.clear();
@@ -559,10 +555,14 @@ void Game::setStart(bool start) { this->start = start; }
 void Game::superzapper(bool all_enemies){
     std::cout<<"superzapper"<<std::endl;
     this->superzapping = true;
-    // superzapper animation clock, is deleted after completion
-    this->timer->add_clock();
+
+    // superzapper animation, clock is popped after completion
+    this->timer->reset_clock(clock_list::current_transition);
+    
+    // 1er superzapper détruit tous les ennemies
     if(all_enemies)
         this->enemies.clear();
+    // 2eme superzapper détruit un seul ennemi aléatoirement
     else {
         std::random_device rd;  // Will be used to obtain a seed for the random number engine
         std::mt19937 gen(rd());

@@ -18,7 +18,7 @@
 // 2 seconds for transistion
 #define TRANSISTION_TIME 2000
 // superzapper time = 1s
-#define SUPERZAPPER_TIME 3000
+#define SUPERZAPPER_TIME 1000
 
 
 // TO DO: this enum is not used yet. To respect modern c++ conventions, it would be better to switch from #define to enum and writing a converter from hexa to rgb

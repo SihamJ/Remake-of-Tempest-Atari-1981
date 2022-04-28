@@ -177,6 +177,10 @@ public:
         return (this->get_small_line() == std::move(t.get_small_line()) && this->get_big_line() == std::move(t.get_big_line()));
     }
 
+    const bool operator!=(Tunel &&t) const {
+        return (this->get_small_line() != std::move(t.get_small_line()) || this->get_big_line() != std::move(t.get_big_line()));
+    }
+
 
 private:
     // les deux lignes

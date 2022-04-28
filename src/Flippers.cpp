@@ -139,7 +139,6 @@ bool Flippers::get_closer(long double h) {
 
     if(this->state == 0 && this->center == this->limit_init.inLine(0.5))
     {
-        std::cout << "from 0 to 1 " <<std::endl;
         this->state = 1;
         this->isFlipping = false;
         this->current_angle = this->angle;
@@ -159,7 +158,7 @@ bool Flippers::get_closer(long double h) {
         }
         else {
             this->next_angle = this->next_hall.get_angle(this->hall) + this->angle;
-            this->xflip = this->x +width;
+            this->xflip = this->x + width;
             this->yflip = this->y - height/2;
             this->flip_center = Point(width,height/2.);
         }
@@ -204,13 +203,13 @@ bool Flippers::get_closer(long double h) {
     //     this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
     // }
 
-    return false;
+    //return false;
     return intersect(this->hall.get_big_line());
 }
 
 bool Flippers::intersect(Line l) {
 
-    SDL_Rect r = {static_cast<int>(this->x), static_cast<int>(this->y + height/2.), static_cast<int>(this->x + this->width), static_cast<int>(this->y + this->height/2.)};
+    SDL_Rect r = {static_cast<int>(this->x), static_cast<int>(this->y), static_cast<int>(this->width), static_cast<int>(this->height)};
 
     int x1 = l.get_p0().get_x();
     int y1 = l.get_p0().get_y();

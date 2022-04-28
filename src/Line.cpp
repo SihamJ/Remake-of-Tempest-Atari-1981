@@ -312,3 +312,7 @@ void Line::draw_shadow(std::shared_ptr<SDL_Renderer> renderer){
 const bool Line::operator==(const Line &&l) const {
     return (this->get_p0() == std::move(l.get_p0()) && this->get_p1() == std::move(l.get_p1()));
 }
+
+const bool Line::operator!=(const Line &&l) const {
+    return (this->get_p0() != std::move(l.get_p0()) || this->get_p1() != std::move(l.get_p1()));
+}

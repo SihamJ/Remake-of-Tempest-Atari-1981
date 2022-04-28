@@ -170,7 +170,7 @@ void Game::update() {
         bool enemy_valid = true;
 
         for (auto e : enemies) {
-            if ((e->get_name().compare("spikers") == 0 || e->get_name().compare("flippers") == 0) && e->get_hall() == enemy->get_hall()) {
+            if (e->get_name().compare("spikers") == 0 && e->get_hall() == enemy->get_hall()) {
                 enemy_valid = false;
                 break;
             }
@@ -203,7 +203,7 @@ void Game::update() {
         // détruit le missile si il a atteint sa cible
         
         for (auto it = vm.begin(); it != vm.end(); it++) {
-
+            std::cout << "missile" << std::endl;
             bool cond = false;
             if ((*it)->get_closer()) {
                 if ((*it)->getEnemy() && this->player.get_hall() == (*it)->get_hall()) {
@@ -219,29 +219,35 @@ void Game::update() {
             }
 
             else if (!(*it)->getEnemy()) {
-                for (auto e : enemies) {
 
-                    if(e->collides_with(*(*it))) {
-                        this->player.incr_score(e->get_scoring());
-                        enemies.erase(enemies.begin());
+                for (auto e = enemies.begin(); e!= enemies.end(); e++) {
+
+                    // si missile et ennemi pas dans le meme hall on continue à l'ennemi suivant
+                    if( (*it)->get_hall() != (*e)->get_hall())
+                        continue;
+
+                    std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(*e);
+
+                    // si le missile tue un ennemi, on sort de la boucle ennemies car le missile est détruit, on passe au missile qui suit
+                    if( (enemy_spiker == nullptr || (enemy_spiker->get_state() != -1)) && (*e)->collides_with(*(*it))) {
+                        this->player.incr_score((*e)->get_scoring());
+                        vm.erase(it--);
+                        enemies.erase(e--);
                         break;
                     }
 
-                    std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(e);
+                    // si on tire sur la ligne d'un spiker, on diminue la ligne
+                    
+                    if (enemy_spiker != nullptr && enemy_spiker->get_state() == -1) {
+                        // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
+                        double dist1 = (*it)->get_pos().euclideanDistance((*e)->get_hall().get_big_line().inLine(0.5));
+                        double dist2 = (*e)->get_hall().get_big_line().inLine(0.5).euclideanDistance(enemy_spiker->get_line_limit().inLine(0.5));
 
-                    if (enemy_spiker != nullptr) {
-                        if (e->get_hall() == (*it)->get_hall()) {
-
-                            // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
-                            double dist1 = (*it)->get_pos().euclideanDistance(e->get_hall().get_big_line().inLine(0.5));
-                            double dist2 = e->get_hall().get_big_line().inLine(0.5).euclideanDistance(enemy_spiker->get_line_limit().inLine(0.5));
-
-                            if (dist1 > dist2) {
-                                vm.erase(it--);
-                                enemy_spiker->decrease_random_p();
-                                enemy_spiker->update_line_limit();
-                                break;
-                            }
+                        if (dist1 > dist2) {
+                            vm.erase(it--);
+                            enemy_spiker->decrease_random_p();
+                            enemy_spiker->update_line_limit();
+                            break;
                         }
                     }
                 }
@@ -249,14 +255,24 @@ void Game::update() {
 
         }
 
-        for (int i = 0; i<enemies.size(); i++) {
+
+        // déplacements ennemies
+        for (auto i = enemies.begin(); i != enemies.end(); i++) {
             long double h0, d, z, h;
             bool backwards = false;
 
-            std::shared_ptr<Spikers> s = std::dynamic_pointer_cast<Spikers>(enemies.at(i));
-            std::shared_ptr<Flippers> f = std::dynamic_pointer_cast<Flippers>(enemies.at(i));
+            std::shared_ptr<Spikers> s = std::dynamic_pointer_cast<Spikers>(*i);
+            std::shared_ptr<Flippers> f = std::dynamic_pointer_cast<Flippers>(*i);
+
+            // Test collision
+            
 
             if( f!= NULL && f->get_state() == 1 && !f->flipping()){
+
+                // std::random_device rd;  
+                // std::mt19937 gen(rd());
+                // std::uniform_int_distribution<int> random (-1, 0);
+
                 f->set_next_hall(this->map->get_hall(f->get_hall().get_n_hall() + 1));
                 f->set_next_angle(f->get_hall().get_angle(f->get_next_hall()));
             }
@@ -270,15 +286,24 @@ void Game::update() {
             }
 
             else {
-                h0 = enemies.at(i)->get_start().length() / enemies.at(i)->get_dest().length(); 
-                d = enemies.at(i)->get_start().inLine(0.5).euclideanDistance(enemies.at(i)->get_dest().inLine(0.5));
-                z = enemies.at(i)->get_center().euclideanDistance(enemies.at(i)->get_dest().inLine(0.5));
+
+                h0 = (*i)->get_start().length() / (*i)->get_dest().length(); 
+                d = (*i)->get_start().inLine(0.5).euclideanDistance((*i)->get_dest().inLine(0.5));
+                z = (*i)->get_center().euclideanDistance((*i)->get_dest().inLine(0.5));
             }
             
             h = this->level->get_h(h0, d, z, backwards);
 
-            if (enemies[i]->get_closer(h)) {
-                enemies.erase(enemies.begin()+i);
+            if ((*i)->get_closer(h)) {
+                // si flipper, et couloir player, game over
+                // if( f!=NULL && f->get_n_hall() == player.get_n_hall()){
+                //     this->setGameOver(true);
+                //     this->setStart(false);
+                //     return;
+                // }
+                // // si pas flipper, disparition de l'ennemi
+                // else if(f == NULL)
+                    enemies.erase(i--);
             }
         }
     }

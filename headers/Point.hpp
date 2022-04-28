@@ -43,6 +43,8 @@ public:
 
     Point operator-(const Point &other) ;
 
+    const bool operator!=(const Point &other) const;
+
     /**
      * @brief Get the point from rotation object
      * 

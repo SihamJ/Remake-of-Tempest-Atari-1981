@@ -501,8 +501,30 @@ void Game::render_main_menu() {
 
     render_color(YELLOW, 255);
     
-    this->textRenderer.draw_text(renderer, "MAIN MENU", WIDTH/2 - 70, 120, 1, 2);
-    this->textRenderer.draw_text(renderer, "Press escape to start a game !", WIDTH/2 - 330, 170, 1, 2);
+    //this->textRenderer.draw_text(renderer, "MAIN MENU", WIDTH/2 - 70, 120, 1, 2);
+
+    auto image = sdl_shared(SDL_LoadBMP("./images/logo.bmp"));
+    auto surface = sdl_shared(SDL_CreateTextureFromSurface(renderer.get(), image.get()));
+
+    SDL_Rect dest_rect = {0, 0, 1078, 427};
+
+    if (SDL_QueryTexture(surface.get(), NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
+        SDL_Log("Erreur > %s", SDL_GetError());
+        return;
+    }
+
+    dest_rect.w = WIDTH/2;
+    dest_rect.h = (dest_rect.h * WIDTH/1078)/2;
+    dest_rect.x = WIDTH/4;
+    dest_rect.y = HEIGHT/4;
+
+    if (SDL_RenderCopyEx(renderer.get(), surface.get(), NULL, &dest_rect, 0, NULL, SDL_FLIP_NONE) != 0) {
+        SDL_Log("Erreur > %s", SDL_GetError());
+        return;
+    }
+
+    render_color("255220220", 255);
+    this->textRenderer.draw_text(renderer, "PRESS ESCAPE TO START", WIDTH/2 - 200, 4*HEIGHT/5, 1, 2);
     
     // màj du rendu
     SDL_RenderPresent(renderer.get());

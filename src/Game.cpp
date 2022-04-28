@@ -126,12 +126,20 @@ void Game::update() {
 
     // Passer au niveau suivant ?
 
-    if (this->timer->get_clock(clock_list::level) > LEVEL_TIME){
+    if (!this->isTransitioning && this->timer->get_clock(clock_list::level) > LEVEL_TIME){
         this->isTransitioning = true;
         this->timer->reset_clock(clock_list::level);
         this->next_level();
         return;
     }
+
+    if(this->isTransitioning && this->timer->get_clock(clock_list::current_transition) > TRANSISTION_TIME){
+        this->isTransitioning = false;
+        this->timer->reset_clock(clock_list::current_transition);
+    }
+
+    // on ne veut pas update le jeu avant de finir l'animation de transition
+    else if(this->isTransitioning) return;
 
     if(this->superzapping && this->timer->get_clock(clock_list::current_transition) > SUPERZAPPER_TIME){
             this->superzapping = false;
@@ -303,6 +311,13 @@ void Game::render() {
         isRunning = false;
     }
 
+    if(this->isTransitioning){
+        render_color(std::move(this->level->get_map_color()));
+        this->textRenderer.draw_text(renderer,  "LEVEL " + std::to_string(this->level->get_current_level()), WIDTH/2-100, HEIGHT/3., 2, 3);
+        SDL_RenderPresent(renderer.get());
+        return;
+    }
+
     if (getPause()) { SDL_RenderPresent(renderer.get()); return;}
     render_color(std::move(map->get_color()));
     map->draw(renderer);
@@ -450,7 +465,8 @@ void Game::render_color(std::string color, const int opacity){
 
 void Game::next_level(){
     std::cout << "next level" << std::endl;
-
+    this->timer->reset_clock(clock_list::current_transition);
+    this->isTransitioning = true;
     this->vm.clear();
     this->vh.clear();
     this->enemies.clear();
@@ -463,6 +479,7 @@ void Game::next_level(){
     this->player.set_hall(map->get_hall(0));
     this->player.build();
     this->player.set_superzapper(2);
+    this->superzapping = false;
 }
 
 void Game::handle_events_main_menu() {
@@ -475,6 +492,8 @@ void Game::handle_events_main_menu() {
         }
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
+                this->timer->reset_clock(clock_list::level);
+                this->timer->reset_clock(clock_list::current_transition);
                 setStart(true);
             }
             break;

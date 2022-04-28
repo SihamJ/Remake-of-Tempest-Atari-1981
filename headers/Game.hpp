@@ -79,7 +79,7 @@ private:
 
     // savoir si le jeu doit continuer de fonctionner
     bool isRunning;
-    bool isTransitioning=false;
+    bool isTransitioning=true;
     // fenêtre
     std::shared_ptr<SDL_Window> window;
 

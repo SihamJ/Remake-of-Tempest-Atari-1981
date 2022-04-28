@@ -51,13 +51,20 @@
         long  double h0 = this->hall.get_small_line().length() / this->hall.get_big_line().length();
         long  double z = this->pos.euclideanDistance(this->dest);
         long  double d = this->start.euclideanDistance(this->dest);
-
         long  double h = 1 - ( (1-h0) / (sqrt(d) ) * (sqrt(z)));
 
-        this->pos = Line(this->pos, this->dest).inLine(h);
+        if( !this->enemy ){
+            
+            this->pos = Line(this->pos, this->dest).inLine(h);
+            this->width = (this->hall.get_big_line().length()/3.) * (1-h) / 3.;
+            this->height = this->width;
+        }
+        else{
 
-        this->width = (this->hall.get_big_line().length()/3.) * (1-h) / 3.;
-        this->height = this->width;
+            this->width = (this->hall.get_big_line().length()/3.) * (h) ;
+            this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
+            this->pos = Line(this->pos, this->dest).inLine(h);
+        }
 
         if (this->enemy) 
             return intersect(this->hall.get_big_line());

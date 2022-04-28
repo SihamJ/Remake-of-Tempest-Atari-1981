@@ -206,7 +206,7 @@ void Game::update() {
 
             bool cond = false;
             if ((*it)->get_closer()) {
-                if ((*it)->getEnemy()) {
+                if ((*it)->getEnemy() && this->player.get_hall() == (*it)->get_hall()) {
                     if(this->player.decr_life_point()){
                         std::cout << "decr lfie point " << std::endl;
                         this->setGameOver(true);

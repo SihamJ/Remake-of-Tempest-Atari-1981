@@ -1,14 +1,15 @@
-#ifndef __GAMEOVER_HPP__
-#define __GAMEOVER_HPP__
+#ifndef __PAUSE_HPP__
+#define __PAUSE_HPP__
 
 #include "Utils.hpp"
 #include "Game.hpp"
 #include "TextRenderer.hpp"
+#include "Player.hpp"
 
-class GameOver {
+class Pause {
     public:
-        GameOver(std::shared_ptr<Game> g);
-        ~GameOver();
+        Pause(std::shared_ptr<Game> g);
+        ~Pause();
         void handle_events();
         void update();
         void render();

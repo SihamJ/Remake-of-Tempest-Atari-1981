@@ -15,40 +15,39 @@ Game::~Game() {}
  */
 void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flagsRenderer) {
 
-    if (init_sdl(SDL_INIT_VIDEO) == 0) {
-
-        window = create_window(title, xpos, ypos, flagsWindow);
-        renderer = create_renderer(window, -1, flagsRenderer);
-
-        this->timer = std::make_unique<Timer>();
-        
-        // clock 1 game update
-        this->timer->add_clock();
-        // clock 2 pour enemies
-        this->timer->add_clock();
-        // clock 3 pour passer au niveau suivant
-        this->timer->add_clock();
-        // clock 4 pour animation courante
-        this->timer->add_clock();
-
-        this->level = std::make_shared<Level>(81);
-        this->level->next_level();
-        this->player.set_score(this->level->get_level_score());
-        this->map = level->get_map();
-
-        // construction de la map
-        map->build_map();
-        this->player = Player(0, std::move(map->get_hall(0)), std::move(this->level->get_player_color()));
-        // récupère le point central de la Map
-        center.set_point( map->get_center().get_x(), map->get_center().get_y());
-        
-        vh = map->get_hall_list();
-        isRunning = true;
-    }
-    else {
+    if (init_sdl(SDL_INIT_VIDEO) != 0) {
         // si problème, le jeu doit s'arrêter
         isRunning = false;
+        return;
     }
+
+    window = create_window(title, xpos, ypos, flagsWindow);
+    renderer = create_renderer(window, -1, flagsRenderer);
+
+    this->timer = std::make_shared<Timer>();
+    
+    // clock 1 game update
+    this->timer->add_clock();
+    // clock 2 pour enemies
+    this->timer->add_clock();
+    // clock 3 pour passer au niveau suivant
+    this->timer->add_clock();
+    // clock 4 pour animation courante
+    this->timer->add_clock();
+
+    this->level = std::make_shared<Level>();
+    this->level->next_level();
+    this->player.set_score(this->level->get_level_score());
+    this->map = level->get_map();
+
+    // construction de la map
+    map->build_map();
+    this->player = Player(0, std::move(map->get_hall(0)), std::move(this->level->get_player_color()));
+    // récupère le point central de la Map
+    center.set_point( map->get_center().get_x(), map->get_center().get_y());
+    
+    vh = map->get_hall_list();
+    isRunning = true;
     
 }
 
@@ -335,7 +334,7 @@ void Game::render() {
 
     if(this->isTransitioning){
         render_color(renderer, std::move(this->level->get_map_color()));
-        this->textRenderer.draw_text(renderer,  std::move(std::string("LEVEL ") + std::to_string(this->level->get_current_level())), WIDTH/2-100, HEIGHT/3., 2, 3);
+        TextRenderer::draw_text(renderer,  std::move(std::string("LEVEL ") + std::to_string(this->level->get_current_level())), WIDTH/2-100, HEIGHT/3., 2, 3);
         render_present(renderer);
         return;
     }
@@ -369,91 +368,24 @@ void Game::render() {
     // }
 
     render_color(renderer, std::move(this->level->get_score_color()));
-    this->textRenderer.draw_text(renderer,  std::move(std::to_string(this->player.get_score())), 1*WIDTH/4, 50, 1, 2);
+    TextRenderer::draw_text(renderer,  std::move(std::to_string(this->player.get_score())), 1*WIDTH/4, 50, 1, 2);
 
     // Player Name
-    this->textRenderer.draw_text(renderer,  std::move(this->player.get_name()), WIDTH/2-60 , 50, 1, 2);
+    TextRenderer::draw_text(renderer,  std::move(this->player.get_name()), WIDTH/2-60 , 50, 1, 2);
 
-    this->textRenderer.draw_life(renderer, this->player.get_life_point(), 1*WIDTH/4, 70, this->player.get_color().get_name());
+    TextRenderer::draw_life(renderer, this->player.get_life_point(), 1*WIDTH/4, 70, this->player.get_color().get_name());
 
     render_color(renderer, std::move(this->map->get_color()));
-    this->textRenderer.draw_text(renderer, std::move(std::to_string(this->level->get_current_level())), WIDTH/2-10, 110, 0.8, 2);
+    TextRenderer::draw_text(renderer, std::move(std::to_string(this->level->get_current_level())), WIDTH/2-10, 110, 0.8, 2);
     
     if(this->superzapping){
         render_color(renderer, std::move(LIGHT_BLUE), 255);
-        this->textRenderer.draw_text(renderer, std::move("SUPERZAPPER!"), WIDTH/3, HEIGHT/3, 2, 4);
+        TextRenderer::draw_text(renderer, std::move("SUPERZAPPER!"), WIDTH/3, HEIGHT/3, 2, 4);
     }
     
     // màj du rendu
     render_present(renderer);
 }
-
-/**
- * @brief Gère les évènements de l'utilisateur (click souris/tape au clavier)
- * en mode pause
- * 
- */
-void Game::handle_events_pause_mode() {
-    SDL_Event event;
-    SDL_PollEvent(&event);
-    switch(event.type) {
-        case SDL_QUIT: {
-            isRunning = false;
-            break;
-        }
-        case SDL_KEYDOWN: {
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
-                setPause(false);
-                this->timer->unpause_clock(clock_list::level);
-                this->timer->unpause_clock(clock_list::current_transition);
-            }
-            break;
-        }
-        default:
-            break;
-    }
-}
-
-/**
- * @brief On met à jour tous les éléments -> tous les TICK millisecondes
- * en mode pause
- * 
- */
-void Game::update_pause_mode() { }
-    
-
-/**
- * @brief On clear + draw tous les éléments
- * en mode pause
- * 
- */
-void Game::render_pause_mode() {
-    // clear la fenêtre en noir
-    clear_renderer(renderer, BLACK);
-
-    render_color(renderer, YELLOW, 255);
-
-    this->textRenderer.draw_text(renderer, std::move("PAUSE"), WIDTH/2 - 70,  150, 1, 2);
-    this->textRenderer.draw_text(renderer, std::move("Press escape to return to the game"), WIDTH/2 - 110, 200, 0.6, 2);
-
-    // score
-    render_color(renderer, std::move(this->level->get_score_color()));
-    this->textRenderer.draw_text(renderer,  std::move("Score: " + std::to_string(this->player.get_score())), 30, 50, 0.6, 2);
-
-    // Player Name
-    this->textRenderer.draw_text(renderer, std::move(this->player.get_name()), 30 , 100, 0.6, 2);
-    this->textRenderer.draw_life(renderer, this->player.get_life_point(), 30, 150, std::move(this->player.get_color().get_name()));
-
-    // niveau
-    render_color(renderer, this->map->get_color());
-    this->textRenderer.draw_text(renderer, std::move("Level " + std::to_string(this->level->get_current_level())), 30, 200, 0.6, 2);
-
-    // màj du rendu
-    render_present(renderer);
-}
-
-
-
 
 void Game::next_level(){
 
@@ -473,74 +405,6 @@ void Game::next_level(){
     this->player.set_superzapper(2);
     this->superzapping = false;
     
-}
-
-void Game::handle_events_main_menu() {
-    SDL_Event event;
-    SDL_PollEvent(&event);
-    switch(event.type) {
-        case SDL_QUIT: {
-            isRunning = false;
-            break;
-        }
-        case SDL_KEYDOWN: {
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
-                this->timer->reset_clock(clock_list::level);
-                this->timer->reset_clock(clock_list::current_transition);
-                setStart(true);
-            }
-            break;
-        }
-        default:
-            break;
-    }
-}
-
-void Game::update_main_menu() {}
-void Game::render_main_menu() {
-    // clear la fenêtre en noir
-    clear_renderer(renderer, BLACK);
-    render_image(renderer, "images/logo.bmp", 1078, 427, WIDTH/2, HEIGHT/2, WIDTH/4, HEIGHT/4, 0, NULL);
-    render_color(renderer, "255220220", 255);
-    this->textRenderer.draw_text(renderer, std::move("PRESS ESCAPE TO START"), WIDTH/2 - 200, 4*HEIGHT/5, 1, 2);
-    
-    // màj du rendu
-    render_present(renderer);
-}
-
-void Game::handle_events_game_over() {
-    SDL_Event event;
-    SDL_PollEvent(&event);
-    switch(event.type) {
-        case SDL_QUIT: {
-            isRunning = false;
-            break;
-        }
-        case SDL_KEYDOWN: {
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
-                setGameOver(false);
-            }
-            break;
-        }
-        default:
-            break;
-    }
-}
-
-void Game::update_game_over() {}
-
-void Game::render_game_over() {
-
-    clear_renderer(renderer, BLACK);
-
-    if(render_image(renderer, "./images/gameover.bmp", 347, 63, 347,63 , WIDTH/2 - 173, HEIGHT/3, 0, NULL))
-        return;
-
-    render_color(renderer, WHITE, 255);
-    this->textRenderer.draw_text(renderer, std::move(this->game_over_msg), WIDTH/2 - 160, HEIGHT/3 + 100, 1, 2);
-    this->textRenderer.draw_text(renderer, std::move("PRESS ESCAPE TO GO BACK TO MAIN MENU"), WIDTH/2 - 330, HEIGHT/3 + 170, 1, 2);
-    // màj du rendu
-    render_present(renderer);
 }
 
 void Game::superzapper(bool all_enemies){
@@ -579,3 +443,10 @@ void Game::setGameOver(bool go) { this->game_over = go; }
 bool Game::getGameOver() { return this->game_over; }
 bool Game::getStart() { return this->start; }
 void Game::setStart(bool start) { this->start = start; }
+std::shared_ptr<SDL_Renderer> Game::getRenderer() { return this->renderer; }
+void Game::setIsRunning(bool isRunning) { this->isRunning = isRunning; }
+std::shared_ptr<Timer> Game::getTimer() { return this->timer; }
+std::shared_ptr<Player> Game::getPlayer() { return std::make_shared<Player>(this->player); }
+std::shared_ptr<Level> Game::getLevel() { return this->level; }
+std::shared_ptr<Tube> Game::getMap() { return this->map; }
+std::string && Game::getMsgGameOver() { return std::move(this->game_over_msg); }

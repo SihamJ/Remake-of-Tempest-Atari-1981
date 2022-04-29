@@ -14,7 +14,7 @@ Pout télécharger le code et le compiler sur tous les systèmes vous pouvez uti
 
 # Lancer le jeu (Toujours depuis le répertoir Build)
 
-	./Tempest
+	./Tempest-exe/Tempest-Atari
 
 # Utilisation
 

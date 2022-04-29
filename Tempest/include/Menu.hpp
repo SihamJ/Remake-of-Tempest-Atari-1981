@@ -17,7 +17,7 @@ class Menu {
 
     private:
         std::shared_ptr<Game> game_ptr;
-        int chosen_level = 0;
+        int chosen_level = 1;
 };
 
 

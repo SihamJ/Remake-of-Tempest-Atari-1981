@@ -31,11 +31,11 @@ void Menu::handle_events() {
         case SDL_MOUSEWHEEL: {
             if(event.wheel.y > 0) // scroll up
             {
-                this->chosen_level = (this->chosen_level + 1) % 80;
+                this->chosen_level = (this->chosen_level + 1) % 80 + 1;
             }
             else if(event.wheel.y < 0) // scroll down
             {
-                this->chosen_level = (this->chosen_level > 1) ? this->chosen_level - 1 : 0;
+                this->chosen_level = (this->chosen_level > 2) ? this->chosen_level - 1 : 1;
             }
         }
         default:

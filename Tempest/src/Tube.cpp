@@ -1,5 +1,8 @@
 #include "Tube.hpp"
 
+extern int WIDTH;
+extern int HEIGHT;
+
 // constructeur
 Tube::Tube(){}
 

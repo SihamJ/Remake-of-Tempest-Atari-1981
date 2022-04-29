@@ -1,5 +1,8 @@
 #include "CircleMap.hpp"
 
+    extern int WIDTH;
+    extern int HEIGHT;
+
     CircleMap::CircleMap(){}
 
     CircleMap::CircleMap(const long double ratio, Color&& c)
@@ -99,6 +102,7 @@
     }
 
     void CircleMap::build_map(){
+
         this->set_inner_circle();
         this->set_outer_circle();
 

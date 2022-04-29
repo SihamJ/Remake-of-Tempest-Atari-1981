@@ -6,6 +6,7 @@
 #include <iterator>
 #include "Utils.hpp"
 
+
 class Color {
     public:
         Color();

@@ -3,6 +3,9 @@
 
 #include <SDL.h>
 
+extern int WIDTH;
+extern int HEIGHT;
+
 class Formes {
 
 public:

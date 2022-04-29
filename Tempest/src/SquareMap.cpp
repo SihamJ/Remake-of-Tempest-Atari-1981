@@ -1,5 +1,7 @@
 #include "SquareMap.hpp"
 
+extern int WIDTH;
+extern int HEIGHT;
 
 SquareMap::SquareMap(){};
 
@@ -105,6 +107,7 @@ void SquareMap::set_outer_square(){
 }
 
 void SquareMap::build_map(){
+
     this->set_inner_square();
     this->set_outer_square();
 

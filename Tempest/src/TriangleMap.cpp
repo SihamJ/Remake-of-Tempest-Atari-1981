@@ -1,5 +1,7 @@
 #include "TriangleMap.hpp"
 
+extern int WIDTH;
+extern int HEIGHT;
 
 TriangleMap::TriangleMap(){}
 
@@ -9,17 +11,7 @@ TriangleMap::TriangleMap(const int nbHall, Color&& c)
         this->width = 2*WIDTH/5;
         this->height = 5*HEIGHT/7;
 
-        set_big_triangle();
-
-        // On calcule de 2 -lignes- médianes du triangles
-        set_medians();
-
-        // On determine le barycentre (intersection de deux médianes)
-        // il servira par la suite comme point central pour les missiles ennemis
-        this->center = medians[0].intersect(medians[1]);
-
-        // On peut maintenant définir le triangle intérieur
-        set_small_triangle(0.6);
+        
     }
 
 //destructeur
@@ -55,6 +47,19 @@ void TriangleMap::set_small_triangle(const long  double ratio){
 
 // Constructions des couloirs
 void TriangleMap::build_map(){
+
+    set_big_triangle();
+
+    // On calcule de 2 -lignes- médianes du triangles
+    set_medians();
+
+    // On determine le barycentre (intersection de deux médianes)
+    // il servira par la suite comme point central pour les missiles ennemis
+    this->center = medians[0].intersect(medians[1]);
+
+    // On peut maintenant définir le triangle intérieur
+    set_small_triangle(0.6);
+
     int hallPerSide = nbHall / 3;
     int nbLastSide = hallPerSide + nbHall % 3;
     std::vector<Point> bigLines;

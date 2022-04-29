@@ -3,6 +3,7 @@
 
 #include "Enemy.hpp"
 
+
 class FuseballTankers : public Enemy {
 
 public:

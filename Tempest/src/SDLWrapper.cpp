@@ -1,5 +1,7 @@
 #include "SDLWrapper.hpp"
 
+extern int WIDTH;
+extern int HEIGHT;
 
 const bool render_image(std::shared_ptr<SDL_Renderer> renderer, const std::string path, const int init_width, const int init_height, const int dest_width, 
                         const int dest_height, const int x, const  int y, const long double angle, const std::shared_ptr<SDL_Point> center) {
@@ -56,6 +58,20 @@ std::shared_ptr<SDL_Window> create_window(std::string title, int xpos, int ypos,
 
 std::shared_ptr<SDL_Renderer> create_renderer(std::shared_ptr<SDL_Window> window, int index, int flagsRenderer){
     return sdl_shared(SDL_CreateRenderer(window.get(), -1, flagsRenderer));
+}
+
+void resizeWindow(std::shared_ptr<SDL_Window> window, Uint32 windowWidth, Uint32 windowHeight) {
+    SDL_SetWindowSize(window.get(), windowWidth, windowHeight);
+    WIDTH = windowWidth;
+    HEIGHT = windowHeight;
+}
+
+void get_window_size(std::shared_ptr<SDL_Window> window, int *w, int *h){
+    SDL_GetWindowSize(window.get(), w, h);
+}
+
+int set_display(std::shared_ptr<SDL_Window> window, std::shared_ptr<SDL_DisplayMode> mode){
+    return SDL_SetWindowDisplayMode(window.get(), mode.get());
 }
 
 void quit_game(std::shared_ptr<SDL_Window> window, std::shared_ptr<SDL_Renderer> renderer){

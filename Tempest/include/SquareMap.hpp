@@ -6,6 +6,7 @@
 #include "Line.hpp"
 #include "Color.hpp"
 
+
 class SquareMap : public Tube {
     public:
         SquareMap();

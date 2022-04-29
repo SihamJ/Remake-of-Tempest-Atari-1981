@@ -1,4 +1,6 @@
 #include <Game.hpp>
+extern int WIDTH;
+extern int HEIGHT;
 
 // #define SDL_WINDOWPOS_CENTERED SDL_WINDOWPOS_CENTERED_DISPLAY(0)
 
@@ -11,8 +13,9 @@ int main(int argc, char** argv) {
     // 480 et 420 à la place de windowpos_centered 
     // psq la fenêtre s'affiche entre mes deux écrans chez moi
     game->init("Tempest", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI, 
+                SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI|SDL_WINDOW_RESIZABLE|SDL_WINDOW_OPENGL|SDL_WINDOW_FULLSCREEN_DESKTOP, 
                 SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+
 
     int i = 0;
     // boucle principal

@@ -13,6 +13,7 @@
 #include "SDLWrapper.hpp"
 #include "Line.hpp"
 
+
 class TextRenderer
 {
     public:

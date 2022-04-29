@@ -3,6 +3,7 @@
 
 #include "Enemy.hpp"
 
+
 class Pulsars : public Enemy {
 
 public:

@@ -1,5 +1,8 @@
 #include <Game.hpp>
 
+// width and height of our window
+int WIDTH = 1400;
+int HEIGHT = 800;
 
 Game::Game() {}
 Game::~Game() {}
@@ -20,6 +23,11 @@ void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flag
         window = create_window(title, xpos, ypos, flagsWindow);
         renderer = create_renderer(window, -1, flagsRenderer);
 
+        int w,h;
+        get_window_size(window, &w, &h);
+        WIDTH = w;
+        HEIGHT = h;
+
         this->timer = std::make_unique<Timer>();
         
         // clock 1 game update
@@ -31,7 +39,7 @@ void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flag
         // clock 4 pour animation courante
         this->timer->add_clock();
 
-        this->level = std::make_shared<Level>(81);
+        this->level = std::make_shared<Level>(8);
         this->level->next_level();
         this->player.set_score(this->level->get_level_score());
         this->map = level->get_map();
@@ -59,7 +67,7 @@ void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flag
 void Game::handle_events() {
     SDL_Event event;
     SDL_PollEvent(&event);
-    switch(event.type) {
+    switch((&event)->type) {
         case SDL_QUIT: {
             isRunning = false;
             break;
@@ -79,6 +87,7 @@ void Game::handle_events() {
                 // On met en pause les timer de passage au niveau suivant et de transition courante s'il y en une
                 this->timer->pause_clock(clock_list::level);
                 this->timer->pause_clock(clock_list::current_transition);
+                break;
             }
             if(event.key.keysym.sym == SDLK_RIGHT)
                 player.decr_n_hall ( std::move (map->get_hall (player.get_n_hall () - 1)) );
@@ -90,6 +99,10 @@ void Game::handle_events() {
                 if( !this->superzapping && player.dec_superzapper()){
                     this->superzapper(player.get_superzapper()==0 ? false : true);
                 }
+            }
+            if(event.key.keysym.sym == SDLK_q){
+                isRunning = false;
+                break;
             }
             break;
         }
@@ -170,6 +183,7 @@ void Game::update() {
     }
     // Si on a dépassé les TICK millisecondes, on update
     if (timer->get_clock(clock_list::update) > TICK) {
+        timer->reset_clock(clock_list::update);
 
         for (auto e : enemies) {
 
@@ -195,7 +209,7 @@ void Game::update() {
 
         // collisions.clear();
 
-        timer->reset_clock(clock_list::update);
+        //timer->reset_clock(clock_list::update);
         // Rapproche tous les missiles de leur destination
         // détruit le missile si il a atteint sa cible
         
@@ -330,6 +344,7 @@ void Game::update() {
  * 
  */
 void Game::render() {
+
     // clear la fenêtre en noir
     clear_renderer(renderer, BLACK);
 
@@ -407,8 +422,13 @@ void Game::handle_events_pause_mode() {
                 this->timer->unpause_clock(clock_list::level);
                 this->timer->unpause_clock(clock_list::current_transition);
             }
+            if(event.key.keysym.sym == SDLK_q){
+                isRunning = false;
+                break;
+            }
             break;
         }
+        
         default:
             break;
     }
@@ -490,7 +510,14 @@ void Game::handle_events_main_menu() {
                 setStart(true);
             }
             break;
+            if(event.key.keysym.sym == SDLK_q){
+                isRunning = false;
+                break;
+            }
         }
+
+        break;
+        
         default:
             break;
     }

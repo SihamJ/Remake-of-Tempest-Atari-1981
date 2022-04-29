@@ -8,6 +8,8 @@
 #include <cmath>
 #include <random>
 
+
+
 class Enemy : public Character {
 
 public:

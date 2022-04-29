@@ -7,6 +7,7 @@
 #include "Color.hpp"
 #include "Point.hpp"
 
+
 static void SDL_DelRes(SDL_Window   *r) { SDL_DestroyWindow(r);   }
 static void SDL_DelRes(SDL_Renderer *r) { SDL_DestroyRenderer(r); }
 
@@ -36,6 +37,10 @@ std::shared_ptr<SDL_Window> create_window(std::string title, int xpos, int ypos,
 std::shared_ptr<SDL_Renderer> create_renderer(std::shared_ptr<SDL_Window> window, int index, int flagsRenderer);
 
 void quit_game(std::shared_ptr<SDL_Window> window, std::shared_ptr<SDL_Renderer> renderer);
+void resizeWindow(std::shared_ptr<SDL_Window> window, Uint32 windowWidth, Uint32 windowHeight);
+void get_window_size(std::shared_ptr<SDL_Window> window, int *w, int *h);
+
+int set_display(std::shared_ptr<SDL_Window> window, std::shared_ptr<SDL_DisplayMode> mode);
 
 void render_color(std::shared_ptr<SDL_Renderer> renderer, Color&& c);
 void render_color(std::shared_ptr<SDL_Renderer> renderer, std::string&& color);

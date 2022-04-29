@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
     std::unique_ptr<Menu> main_menu = std::make_unique<Menu>(game);
 
     game->init("Tempest", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI|SDL_WINDOW_RESIZABLE|SDL_WINDOW_OPENGL|SDL_WINDOW_FULLSCREEN_DESKTOP, 
+                SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI|SDL_WINDOW_RESIZABLE|SDL_WINDOW_OPENGL, 
                 SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
 
     // boucle principal

@@ -34,7 +34,7 @@ public:
     const bool intersect(Line l) const ;    
 
 private:
-    const int scoring=150;
+    const int scoring=200;
     const int init_width = 128;
     const int init_height = 49;
     int width;

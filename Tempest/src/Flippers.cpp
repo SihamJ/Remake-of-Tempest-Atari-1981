@@ -91,7 +91,7 @@ const bool Flippers::flipping() const{
 const bool Flippers::shoot() {
 
     std::mt19937 gen(this->rd());
-    std::uniform_int_distribution<int> rand (0, 5);
+    std::uniform_int_distribution<int> rand (0, 15);
     
     return rand(gen) == 0 ? true : false;
 }
@@ -155,7 +155,7 @@ bool Flippers::get_closer(long double h) {
     // Si le flipper est arrivé à sa destination, on passe à l'état 1 (mode flip)
     if(this->state == 0 && this->center == this->limit_init.inLine(0.5))
     {
-        this->state = 1;
+        //this->state = 1;
         this->isFlipping = false;
         return intersect(this->hall.get_big_line());
     }

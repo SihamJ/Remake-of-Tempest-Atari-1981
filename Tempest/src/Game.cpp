@@ -66,7 +66,7 @@ void Game::handle_events() {
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_SPACE){
                 // le couloir où le player se trouve
-                Tunel h = vh.at(player.get_n_hall());
+                Tunel h = this->map->get_hall(player.get_n_hall());
 
                 std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(h));
                 // ajoute le point au vecteur qui répertorie tous les missiles
@@ -226,14 +226,14 @@ void Game::update() {
                     std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(*e);
 
                     // si le missile tue un ennemi, on sort de la boucle ennemies car le missile est détruit, on passe au missile qui suit
-                    if( (enemy_spiker == nullptr || (enemy_spiker->get_state() != -1)) && (*e)->collides_with(*(*it))) {
+                    if( (enemy_spiker == nullptr || enemy_spiker->get_state() != -1) && (*e)->collides_with(*(*it))) {
                         this->player.incr_score((*e)->get_scoring());
                         vm.erase(it--);
                         enemies.erase(e--);
                         break;
                     }
 
-                    // si on tire sur la ligne d'un spiker, on diminue la ligne
+                    // si on tire sur la ligne d'un spiker en état -1, on diminue la ligne
                     
                     if (enemy_spiker != nullptr && enemy_spiker->get_state() == -1) {
                         // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
@@ -535,7 +535,7 @@ void Game::render_game_over() {
     if(render_image(renderer, "./images/gameover.bmp", 347, 63, 347,63 , WIDTH/2 - 173, HEIGHT/3, 0, NULL))
         return;
 
-    render_color(renderer, "255205205", 255);
+    render_color(renderer, WHITE, 255);
     this->textRenderer.draw_text(renderer, this->game_over_msg, WIDTH/2 - 160, HEIGHT/3 + 100, 1, 2);
     this->textRenderer.draw_text(renderer, std::move("PRESS ESCAPE TO GO BACK TO MAIN MENU"), WIDTH/2 - 330, HEIGHT/3 + 170, 1, 2);
     // màj du rendu

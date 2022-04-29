@@ -6,9 +6,8 @@
     //constructeur
     Missile::Missile(const Tunel& h){
         this->hall = h;
-        int dist = this->hall.get_small_line().get_p0().euclideanDistance(this->hall.get_small_line().get_p1());
-        this->width = dist/2.0;
-        this->height = dist/2.0;
+        this->width = h.get_big_line().length()/2.0;
+        this->height = static_cast<double>(this->init_height) * static_cast<double>(this->width) / static_cast<double>(this->init_width);
         this->pos = this->hall.get_big_line().inLine(0.5);
         this->dest = this->hall.get_small_line().inLine(0.5);
         this->start = this->pos;
@@ -16,10 +15,9 @@
     }
 
     Missile::Missile(const Tunel&& h){
-        this->hall = std::move(h);
-        int dist = this->hall.get_small_line().get_p0().euclideanDistance(this->hall.get_small_line().get_p1());
-        this->width = dist/2.0;
-        this->height = dist/2.0;
+        this->hall = h;
+        this->width = h.get_big_line().length()/2.0;
+        this->height = static_cast<double>(this->init_height) * static_cast<double>(this->width) / static_cast<double>(this->init_width);
         this->pos = this->hall.get_big_line().inLine(0.5);
         this->dest = this->hall.get_small_line().inLine(0.5);
         this->start = this->pos;
@@ -74,7 +72,7 @@
 
     bool Missile::intersect(Line l)  const{
 
-        SDL_Rect r = {static_cast<int>(this->pos.get_x()), static_cast<int>(this->pos.get_y()), this->width, this->height};
+        SDL_Rect r = {static_cast<int>(this->pos.get_x() - this->width/2), static_cast<int>(this->pos.get_y() - this->height/2), this->width, this->height};
 
         int x1 = l.get_p0().get_x();
         int y1 = l.get_p0().get_y();
@@ -91,8 +89,8 @@
 
     void Missile::draw(std::shared_ptr<SDL_Renderer> renderer) {
         
-        if(render_image(renderer, "images/missile_ennemi2.bmp", this->init_width, this->init_height, width, height, static_cast<const int>(this->pos.get_x()),
-                          static_cast<const int>(this->pos.get_y()), this->angle, NULL)){
+        if(render_image(renderer, "images/missile_ennemi2.bmp", this->init_width, this->init_height, width, height, static_cast<const int>(this->pos.get_x() - this->width/2),
+                          static_cast<const int>(this->pos.get_y() - this->height/2), this->angle, NULL)){
             std::cout << "Can't load missile image" << std::endl;
             return;
         }

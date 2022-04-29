@@ -94,16 +94,12 @@ SDL_Rect Enemy::get_rect() const {
 }
 
 const bool Enemy::collides_with(Missile m) const {
-    SDL_Rect r_enemy, r_missile, result;
-    r_enemy.x = this->x;
-    r_enemy.y = this->y;
-    r_enemy.h = this->height;
-    r_enemy.w = this->width;
-    r_missile.x = m.get_x()-m.get_width()/2;
-    r_missile.y = m.get_y()+m.get_height()/2;
-    r_missile.h = m.get_height()*2;
-    r_missile.w = m.get_width()*2;
 
-    bool res = SDL_IntersectRect(&r_enemy, &r_missile, &result);
-    return res;
+    // Les collisions standards ne fonctionnent pas à tous les coups à cause de la durée des Timeframes.
+    // On compare la distance du missile à sa destination, et la distance de l'ennemi et cette même destination.
+    // Si la distance de l'ennemi est plus grande, cela veut dire que le missile l'a dépassé donc collision.
+    double dist1 = this->get_center().euclideanDistance(this->hall.get_small_line().inLine(0.5));
+    double dist2 = m.get_pos().euclideanDistance(m.get_hall().get_small_line().inLine(0.5));
+
+    return dist1 >= dist2;
 }

@@ -20,6 +20,7 @@ public:
     const double get_current_angle() const;
     const double get_next_angle() const;
     const int get_state() const ;
+    const bool get_will_flip() const;
 
     void set_dest (Point&& destination);
     void set_tunnel(Tunel&& h);
@@ -29,6 +30,7 @@ public:
     void set_current_angle(double angle);
     void set_next_angle(double angle);
     void set_flipping(bool flipping);
+    void set_will_flip(bool val);
 
     std::string get_name(){ return "Flippers";}
     const int get_scoring() const { return this->scoring;}
@@ -53,6 +55,7 @@ private:
     float r;
     const int flip_steps = 5;
     bool isFlipping = false;
+    bool willFlip = false;
     Tunel next_hall;
     Point flip_center;
     bool first = true;

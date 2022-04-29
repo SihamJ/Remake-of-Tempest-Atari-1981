@@ -63,6 +63,10 @@ void Flippers::set_flipping(bool flipping){
     this->isFlipping = flipping;
 }
 
+void Flippers::set_will_flip(bool val){
+    this->willFlip = val;
+}
+
 const Tunel Flippers::get_next_hall() const {
     return this->next_hall;
 }
@@ -75,23 +79,29 @@ const int Flippers::get_state() const {
     return this->state;
 }
 
+const bool Flippers::get_will_flip() const {
+    return this->willFlip;
+}
+
 const bool Flippers::flipping() const{
     return this->isFlipping;
 }
 
 void Flippers::set(Tunel&& h){
 
-        std::random_device rd;  // Will be used to obtain a seed for the random number engine
-        std::mt19937 gen(rd());
-        std::uniform_real_distribution<double> rand (0.25, 0.85);
+        std::mt19937 gen(this->rd());
+        std::uniform_real_distribution<double> rand (0.5, 1);
 
         this->random_p = rand(gen);
+        
 
         this->hall = h;
 
         double dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
         this->width = dist;
         this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
+
+        this->random_p -= this->height / (2 * this->hall.get_small_line().inLine(0.5).euclideanDistance(this->hall.get_big_line().inLine(0.5)));
 
         Point centre_small_line { std::move( hall.get_small_line().inLine(0.5))};
         this->center = centre_small_line;
@@ -137,37 +147,34 @@ bool Flippers::get_closer(long double h) {
     {
         this->state = 1;
         this->isFlipping = false;
-        this->current_angle = this->angle;
-        this->flip_center = Point(0,height/2.);
-        this->current_angle = this->hall.get_angle();
+
+        // flip or not flip ?
+        std::mt19937 gen(this->rd());
+        std::uniform_int_distribution<int> rand (0, 2);
+        this->willFlip = rand(gen);
     }
 
-    else if(this->state == 1 && !this->isFlipping && first){
-        first = false;
+    else if(this->state == 1 && !this->isFlipping && this->willFlip){
+
         this->isFlipping = true;
         
         if(this->next_hall.get_n_hall() - this->hall.get_n_hall() == 1 || (this->hall.get_n_hall()==0 && this->next_hall.get_n_hall()!=1)){
-            this->next_angle = this->hall.get_angle(this->next_hall) + this->angle;
-            this->xflip = this->x ;
-            this->yflip = this->y - height/2;
-            this->flip_center = Point(0,height/2.);
-        }
-        else {
             this->next_angle = this->next_hall.get_angle(this->hall) + this->angle;
-            this->xflip = this->x + width;
-            this->yflip = this->y - height/2;
             this->flip_center = Point(width,height/2.);
         }
-
-        this->current_angle += (this->next_angle / this->flip_steps);
         
+        else {
+            this->next_angle = this->hall.get_angle(this->hall) + this->angle;
+            this->flip_center = Point(0,height/2.);
+        }
+        
+        this->current_angle += (this->next_angle / this->flip_steps);  
     }
 
     else if(this->state == 1 && this->isFlipping){
         if(this->current_angle >= this->next_angle){
-            this->isFlipping = false;
 
-            //this->center.rotate( Point(this->xflip, this->yflip), this->next_angle/2.);
+            this->isFlipping = false;
             this->hall = Tunel(this->next_hall);
             this->center = Line( std::move(this->hall.get_small_line().inLine(0.5)), std::move(this->hall.get_big_line().inLine(0.5))).inLine(this->random_p);
             this->angle = this->hall.get_angle();
@@ -176,8 +183,6 @@ bool Flippers::get_closer(long double h) {
             this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
             this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
 
-            this->xflip = this->x;
-            this->yflip = this->y + height/2;
         }
         else
             this->current_angle += (this->next_angle / this->flip_steps);
@@ -192,14 +197,13 @@ bool Flippers::get_closer(long double h) {
         this->flip_center = Point(this->width/2, this->height/2);
     }
 
-    // else if(!this->isFlipping){
-    //     this->center = this->center.get_point_from_rotation(Point(this->x, this->y), this->next_angle);
-    //     this->angle = this->hall.get_angle();
-    //     this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
-    //     this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
-    // }
+    // Next: flip or not flip ? proba = 20%
+    else if(!this->isFlipping){
+        std::mt19937 gen(this->rd());
+        std::uniform_int_distribution<int> rand (0, 5);
+        this->willFlip = rand(gen) == 0 ? true : false;
+    }
 
-    //return false;
     return intersect(this->hall.get_big_line());
 }
 
@@ -220,31 +224,10 @@ bool Flippers::intersect(Line l) {
 void Flippers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     std::string path;
     path = static_cast<std::string>("images/flipper_") + this->color.get_name() + static_cast<std::string>(".bmp"); 
-    double angle = 0.;
-    auto image = (sdl_shared(SDL_LoadBMP(path.c_str())));
 
-    if(!image)
-    {
-        SDL_Log("Erreur > %s", SDL_GetError());
-        return;
-    }
-
-    // dessiner le spiker
-    SDL_Rect dest_rect = {static_cast<int>(x), static_cast<int>(y), init_width, init_height};
-
-    auto monImage = sdl_shared(SDL_CreateTextureFromSurface(renderer.get(), image.get()));
-   
-    if (SDL_QueryTexture(monImage.get(), NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
-        SDL_Log("Erreur > %s", SDL_GetError());
-        return;
-    }
-
-
-    dest_rect.w = width;
-    dest_rect.h = height;
-
-    if (SDL_RenderCopyEx(renderer.get(), monImage.get(), NULL, &dest_rect, this->current_angle, this->flip_center.get_point().get(), SDL_FLIP_NONE) != 0) {
-        SDL_Log("Erreur > %s", SDL_GetError());
+    if(render_image(renderer, path, this->init_width, this->init_height, this->width, this->height, static_cast<const int>(x),  static_cast<const int>(y), 
+                    this->current_angle, this->flip_center.get_point())){
+        std::cout << "Can't load flipper image" <<std::endl;
         return;
     }
 }

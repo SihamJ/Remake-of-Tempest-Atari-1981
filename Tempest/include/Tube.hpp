@@ -20,8 +20,11 @@ public:
     int get_nb_hall();
     Point get_center();
     Color get_color();
+    const bool get_open() const;
+
     void set_center(Point&& c);
     void set_nb_hall(int n);
+    void set_open(bool val);
     void add_Hall (Tunel&& h);
     void delete_hall();
     virtual void build_map();
@@ -40,6 +43,8 @@ protected:
     Color color;
     const int thickness = 2;
 
+    // vrai si la map est fermée
+    bool open = false;
     
 };
 

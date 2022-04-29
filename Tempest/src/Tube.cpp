@@ -37,6 +37,10 @@ Color Tube::get_color(){
     return this->color;
 }
 
+const bool Tube::get_open() const {
+    return this->open;
+}
+
 void Tube::set_center(Point&& c){
     this->center = c;
 }
@@ -45,7 +49,9 @@ void Tube::set_nb_hall(int n){
     this->nbHall = n;
 }
 
-
+void Tube::set_open(bool val){
+    this->open = val;
+}
 
 void Tube::add_Hall (Tunel&& h) {
     hallList.push_back(h);

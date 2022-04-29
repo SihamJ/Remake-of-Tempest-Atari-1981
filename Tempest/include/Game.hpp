@@ -30,7 +30,7 @@ public:
     Game();
     ~Game();
 
-    void init(const char *title, int xpos, int ypos, int flagsWindow, int flagsRenderer);
+    void init(std::string title, int xpos, int ypos, int flagsWindow, int flagsRenderer);
 
     void handle_events();
     void update();
@@ -51,11 +51,6 @@ public:
     void clean();
 
     void next_level();
-
-    void render_color(Color&& c);
-    void render_color(std::string&& color);
-    void render_color(std::string&& color, int opacity);
-
 
     // checks if the game is still running
     bool running();

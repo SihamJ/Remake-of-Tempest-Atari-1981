@@ -13,20 +13,12 @@ Game::~Game() {}
  * @param width la largeur de la fenêtre
  * @param height la hauteur de la fenêtre
  */
-void Game::init(const char *title, int xpos, int ypos, int flagsWindow, int flagsRenderer) {
+void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flagsRenderer) {
 
-    if (SDL_Init(SDL_INIT_VIDEO) == 0) {
-		std::cout << "SDL Init" << std::endl;
+    if (init_sdl(SDL_INIT_VIDEO) == 0) {
 
-        window = (sdl_shared<SDL_Window>(SDL_CreateWindow(title, xpos, ypos, WIDTH, HEIGHT, flagsWindow)));
-        if (window) {
-            std::cout << "Window created" << std::endl;
-        }
-
-        renderer = (sdl_shared(SDL_CreateRenderer(window.get(), -1, flagsRenderer)));
-        if (renderer) {
-            std::cout << "Renderer created" << std::endl;
-        }
+        window = create_window(title, xpos, ypos, flagsWindow);
+        renderer = create_renderer(window, -1, flagsRenderer);
 
         this->timer = std::make_unique<Timer>();
         
@@ -143,8 +135,6 @@ void Game::update() {
     if(this->superzapping && this->timer->get_clock(clock_list::current_transition) > SUPERZAPPER_TIME){
             this->superzapping = false;
     }
-    
-
     
     std::mt19937 gen(this->rd());
     std::uniform_int_distribution<int> random (0, 100000);
@@ -264,20 +254,31 @@ void Game::update() {
 
             std::shared_ptr<Spikers> s = std::dynamic_pointer_cast<Spikers>(*i);
             std::shared_ptr<Flippers> f = std::dynamic_pointer_cast<Flippers>(*i);
-
-            // Test collision
             
+            // si c'est un flipper, on check son état (entrain de flipper, va flipper, ou ne rien faire)
+            if( f!= NULL && f->get_state() == 1 && !f->flipping() && f->get_will_flip()){
+                
+                // flip aléatoirement à gauche ou à droite
+                std::mt19937 gen(rd());
+                std::uniform_int_distribution<int> random (0, 2);
+                int nb_hall = random(gen);
+                nb_hall = nb_hall == 0 ? 1 : -1;
 
-            if( f!= NULL && f->get_state() == 1 && !f->flipping()){
+                // si map ouverte (couloirs non collés), il faut vérifier les index de couloir
+                if(this->map->get_open()){
+                    if (f->get_hall().get_n_hall() + nb_hall >= this->map->get_nb_hall())
+                        nb_hall = -1;
+                    else if(f->get_hall().get_n_hall() + nb_hall < 0)
+                        nb_hall = 1;
+                }
 
-                // std::random_device rd;  
-                // std::mt19937 gen(rd());
-                // std::uniform_int_distribution<int> random (-1, 0);
-
-                f->set_next_hall(std::move(this->map->get_hall(f->get_hall().get_n_hall() + 1)));
+                // on set le nouveau hall dans lequel le flipper va flipper
+                f->set_next_hall(std::move(this->map->get_hall(f->get_hall().get_n_hall() + nb_hall)));
+                // on determine l'angle entre le couloir actuel et le couloir suivant pour effectuer notre rotation
                 f->set_next_angle(std::move(f->get_hall().get_angle(f->get_next_hall())));
             }
 
+            // si c'est un spiker à l'état 1 (marche arrière), les paramètres d'homothétie sont différents
             if( s != NULL && s->get_state() == 1){
 
                 h0 = s->get_hall().get_small_line().length() / s->get_limit().length();
@@ -286,17 +287,19 @@ void Game::update() {
                 backwards = true;
             }
 
+            // Sinon même paramètres d'homothétie
             else {
-
                 h0 = (*i)->get_start().length() / (*i)->get_dest().length(); 
                 d = (*i)->get_start().inLine(0.5).euclideanDistance((*i)->get_dest().inLine(0.5));
                 z = (*i)->get_center().euclideanDistance((*i)->get_dest().inLine(0.5));
             }
             
+            // La génération du facteur h se fait à partir de la classe niveau car on fait varier la vitesse des ennemis selon le niveau
             h = this->level->get_h(h0, d, z, backwards);
 
+            // Déplacement de l'ennemi et vérification s'il a atteint la périphérie
             if ((*i)->get_closer(h)) {
-                //si flipper, et couloir player, game over
+                // si flipper, et couloir player, game over
                 if( f!=NULL && f->get_n_hall() == player.get_n_hall()){
                     this->setGameOver(true);
                     this->setStart(false);
@@ -317,28 +320,25 @@ void Game::update() {
  */
 void Game::render() {
     // clear la fenêtre en noir
-    render_color(BLACK, 255);
-    if (SDL_RenderClear(renderer.get()) < 0) {
-        std::cerr<<"Pb render clear SDL"<< std::endl;
-        isRunning = false;
-    }
+    clear_renderer(renderer, BLACK);
 
     if(this->isTransitioning){
-        render_color(std::move(this->level->get_map_color()));
+        render_color(renderer, std::move(this->level->get_map_color()));
         this->textRenderer.draw_text(renderer,  "LEVEL " + std::to_string(this->level->get_current_level()), WIDTH/2-100, HEIGHT/3., 2, 3);
-        SDL_RenderPresent(renderer.get());
+        render_present(renderer);
         return;
     }
 
-    if (getPause()) { SDL_RenderPresent(renderer.get()); return;}
-    render_color(std::move(map->get_color()));
+    if (getPause()) { render_present(renderer); return;}
+    render_color(renderer, std::move(map->get_color()));
     map->draw(renderer);
 
-    render_color(YELLOW, 255);
+    if(this->level->get_current_level() < 17){
+        render_color(renderer, YELLOW, 255);
+        map->get_hall(player.get_n_hall()).draw(renderer);
+    }
 
-    map->get_hall(player.get_n_hall()).draw(renderer);
-
-    render_color(std::move(level->get_player_color()));    
+    render_color(renderer, std::move(level->get_player_color()));    
     player.draw(renderer);
 
 
@@ -349,7 +349,7 @@ void Game::render() {
 
     for (auto i : enemies){
         // on récupère la couleur de l'ennemi
-        render_color(std::move(i->get_color()));
+        render_color(renderer, std::move(i->get_color()));
         i->draw(renderer);
     }
 
@@ -357,7 +357,7 @@ void Game::render() {
     //     i.draw(renderer);
     // }
 
-    render_color(std::move(this->level->get_score_color()));
+    render_color(renderer, std::move(this->level->get_score_color()));
     this->textRenderer.draw_text(renderer,  std::to_string(this->player.get_score()), 1*WIDTH/4, 50, 1, 2);
 
     // Player Name
@@ -365,17 +365,16 @@ void Game::render() {
 
     this->textRenderer.draw_life(renderer, this->player.get_life_point(), 1*WIDTH/4, 70, this->player.get_color().get_name());
 
-
-    render_color(std::move(this->map->get_color()));
+    render_color(renderer, std::move(this->map->get_color()));
     this->textRenderer.draw_text(renderer, std::to_string(this->level->get_current_level()), WIDTH/2-10, 110, 0.8, 2);
     
     if(this->superzapping){
-        render_color(std::move(LIGHT_BLUE), 255);
+        render_color(renderer, std::move(LIGHT_BLUE), 255);
         this->textRenderer.draw_text(renderer, "SUPERZAPPER!", WIDTH/3, HEIGHT/3, 2, 4);
     }
     
     // màj du rendu
-    SDL_RenderPresent(renderer.get());
+    render_present(renderer);
 }
 
 /**
@@ -412,9 +411,6 @@ void Game::handle_events_pause_mode() {
 void Game::update_pause_mode() { }
     
 
-
-
-
 /**
  * @brief On clear + draw tous les éléments
  * en mode pause
@@ -422,19 +418,15 @@ void Game::update_pause_mode() { }
  */
 void Game::render_pause_mode() {
     // clear la fenêtre en noir
-    render_color(BLACK, 255);
-    if (SDL_RenderClear(renderer.get()) < 0) {
-        std::cerr<<"Pb render clear SDL"<< std::endl;
-        isRunning = false;
-    }
+    clear_renderer(renderer, BLACK);
 
-    render_color(YELLOW, 255);
+    render_color(renderer, YELLOW, 255);
 
     this->textRenderer.draw_text(renderer, std::move("PAUSE"), WIDTH/2 - 70,  150, 1, 2);
     this->textRenderer.draw_text(renderer, std::move("Press escape to return to the game"), WIDTH/2 - 110, 200, 0.6, 2);
 
     // score
-    render_color(std::move(this->level->get_score_color()));
+    render_color(renderer, std::move(this->level->get_score_color()));
     this->textRenderer.draw_text(renderer,  std::move("Score: " + std::to_string(this->player.get_score())), 30, 50, 0.6, 2);
 
     // Player Name
@@ -442,39 +434,14 @@ void Game::render_pause_mode() {
     this->textRenderer.draw_life(renderer, this->player.get_life_point(), 30, 150, std::move(this->player.get_color().get_name()));
 
     // niveau
-    render_color(this->map->get_color());
+    render_color(renderer, this->map->get_color());
     this->textRenderer.draw_text(renderer, std::move("Level " + std::to_string(this->level->get_current_level())), 30, 200, 0.6, 2);
 
     // màj du rendu
-    SDL_RenderPresent(renderer.get());
-}
-
-/**
- * @brief Clean tout quand l'utilisateur a décidé de quitter le jeu
- * 
- */
-void Game::clean() {
-    SDL_DestroyWindow(window.get());
-    SDL_DestroyRenderer(renderer.get());
-    SDL_Quit();
-    std::cout << "Game cleaned" << std::endl;
+    render_present(renderer);
 }
 
 
-void Game::render_color(Color&& c){
-    SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), c.get_a());
-}
-
-
-void Game::render_color(std::string&& color){
-    Color c { "", std::move(color) };
-    SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), 255);
-}
-
-void Game::render_color(std::string&& color, const int opacity){
-    Color c { "", std::move(color), opacity };
-    SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), opacity);
-}
 
 
 void Game::next_level(){
@@ -521,45 +488,13 @@ void Game::handle_events_main_menu() {
 void Game::update_main_menu() {}
 void Game::render_main_menu() {
     // clear la fenêtre en noir
-    render_color(BLACK, 255);
-    if (SDL_RenderClear(renderer.get()) < 0) {
-        std::cerr<<"Pb render clear SDL"<< std::endl;
-        isRunning = false;
-    }
-
-    render_color(YELLOW, 255);
-    
-
-    auto image = sdl_shared(SDL_LoadBMP("images/logo.bmp"));
-
-    if(!image){
-        SDL_Log("Erreur > %s", SDL_GetError());
-        return;
-    }
-    auto surface = sdl_shared(SDL_CreateTextureFromSurface(renderer.get(), image.get()));
-
-    SDL_Rect dest_rect = {0, 0, 1078, 427};
-
-    if (SDL_QueryTexture(surface.get(), NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
-        SDL_Log("Erreur > %s", SDL_GetError());
-        return;
-    }
-
-    dest_rect.w = WIDTH/2;
-    dest_rect.h = (dest_rect.h * WIDTH/1078)/2;
-    dest_rect.x = WIDTH/4;
-    dest_rect.y = HEIGHT/4;
-
-    if (SDL_RenderCopyEx(renderer.get(), surface.get(), NULL, &dest_rect, 0, NULL, SDL_FLIP_NONE) != 0) {
-        SDL_Log("Erreur > %s", SDL_GetError());
-        return;
-    }
-
-    render_color("255220220", 255);
+    clear_renderer(renderer, BLACK);
+    render_image(renderer, "images/logo.bmp", 1078, 427, WIDTH/2, HEIGHT/2, WIDTH/4, HEIGHT/4, 0, NULL);
+    render_color(renderer, "255220220", 255);
     this->textRenderer.draw_text(renderer, "PRESS ESCAPE TO START", WIDTH/2 - 200, 4*HEIGHT/5, 1, 2);
     
     // màj du rendu
-    SDL_RenderPresent(renderer.get());
+    render_present(renderer);
 }
 
 void Game::handle_events_game_over() {
@@ -582,54 +517,21 @@ void Game::handle_events_game_over() {
 }
 
 void Game::update_game_over() {}
+
 void Game::render_game_over() {
-    // clear la fenêtre en noir
-    render_color(BLACK, 255);
-    if (SDL_RenderClear(renderer.get()) < 0) {
-        std::cerr<<"Pb render clear SDL"<< std::endl;
-        isRunning = false;
-    }
 
-    auto image = sdl_shared(SDL_LoadBMP("./images/gameover.bmp"));
-    auto surface = sdl_shared(SDL_CreateTextureFromSurface(renderer.get(), image.get()));
+    clear_renderer(renderer, BLACK);
 
-    SDL_Rect dest_rect = {0, 0, 347, 63};
-
-    if (SDL_QueryTexture(surface.get(), NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
-        SDL_Log("Erreur > %s", SDL_GetError());
+    if(render_image(renderer, "./images/gameover.bmp", 347, 63, 347,63 , WIDTH/2 - 173, HEIGHT/3, 0, NULL))
         return;
-    }
 
-    dest_rect.w = 347;
-    dest_rect.h = 63;
-    dest_rect.x = WIDTH/2 - 173;
-    dest_rect.y = HEIGHT/3;
-
-    if (SDL_RenderCopyEx(renderer.get(), surface.get(), NULL, &dest_rect, 0, NULL, SDL_FLIP_NONE) != 0) {
-        SDL_Log("Erreur > %s", SDL_GetError());
-        return;
-    }
-
-    render_color("255230230", 255);
+    render_color(renderer, "255255255", 255);
     this->textRenderer.draw_text(renderer, std::move(this->game_over_msg), WIDTH/2 - 140, 2*HEIGHT/3 + 100, 1, 2);
     this->textRenderer.draw_text(renderer, std::move("PRESS ESCAPE TO GO BACK TO MAIN MENU"), WIDTH/2 - 330, HEIGHT/3 + 170, 1, 2);
     
     // màj du rendu
-    SDL_RenderPresent(renderer.get());
+    render_present(renderer);
 }
-
-
-bool Game::running() { return this->isRunning; }
-bool Game::transitioning() { return this->isTransitioning; }
-
-bool Game::getPause() { return this->pause; }
-void Game::setPause(bool pause) { this->pause = pause; }
-void Game::setGameOver(bool go) { this->game_over = go; }
-bool Game::getGameOver() { return this->game_over; }
-
-bool Game::getStart() { return this->start; }
-void Game::setStart(bool start) { this->start = start; }
-
 
 void Game::superzapper(bool all_enemies){
 
@@ -643,10 +545,27 @@ void Game::superzapper(bool all_enemies){
         this->enemies.clear();
     // 2eme superzapper détruit un seul ennemi aléatoirement
     else {
-        std::random_device rd;  // Will be used to obtain a seed for the random number engine
         std::mt19937 gen(rd());
         std::uniform_int_distribution<int> random (0, this->enemies.size());
         int i = random(gen);
         this->enemies.erase(this->enemies.begin()+i);
     }
 }
+
+/**
+ * @brief Clean tout quand l'utilisateur a décidé de quitter le jeu
+ * 
+ */
+void Game::clean() {
+    quit_game(window, renderer);
+}
+
+
+bool Game::running() { return this->isRunning; }
+bool Game::transitioning() { return this->isTransitioning; }
+bool Game::getPause() { return this->pause; }
+void Game::setPause(bool pause) { this->pause = pause; }
+void Game::setGameOver(bool go) { this->game_over = go; }
+bool Game::getGameOver() { return this->game_over; }
+bool Game::getStart() { return this->start; }
+void Game::setStart(bool start) { this->start = start; }

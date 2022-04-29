@@ -23,6 +23,12 @@ public:
     Point get_center() const;
    
     virtual const int get_scoring() const  = 0;
+
+    /**
+     * @brief Déplacement de l'ennemi dans sa trajectoire
+     * 
+     * @return vrai si l'ennemi a atteint sa cible (souvent c'est la périphérie)
+     */
     virtual bool get_closer(long double h);
     Line get_dest() const;
     Line get_start() const;
@@ -51,6 +57,9 @@ protected:
 
     // angle de rotation de l'image
     long double angle = 0.;
+
+    // random number generator
+    std::random_device rd; 
 
 };
 

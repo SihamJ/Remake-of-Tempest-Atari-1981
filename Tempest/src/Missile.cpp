@@ -90,31 +90,10 @@
     }
 
     void Missile::draw(std::shared_ptr<SDL_Renderer> renderer) {
-
-        auto image = sdl_shared(SDL_LoadBMP("images/missile.bmp"));
-
-        if(!image)
-        {
-            SDL_Log("Erreur > %s", SDL_GetError());
-            return;
-        }
-
-        // dessiner le spiker
-        SDL_Rect dest_rect = { static_cast<int>(this->pos.get_x()), static_cast<int>(this->pos.get_y()), init_width, init_height};
-        
-        auto monImage = sdl_shared(SDL_CreateTextureFromSurface(renderer.get(), image.get()));
-        
-
-        if (SDL_QueryTexture(monImage.get(), NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
-            SDL_Log("Erreur > %s", SDL_GetError());
-            return;
-        }
-
-        dest_rect.w = width;
-        dest_rect.h = height;
-
-        if (SDL_RenderCopyEx(renderer.get(), monImage.get(), NULL, &dest_rect, this->angle, NULL, SDL_FLIP_NONE) != 0) {
-            SDL_Log("Erreur > %s", SDL_GetError());
+    
+        if(render_image(renderer, "images/missile.bmp", this->init_width, this->init_height, width, height, static_cast<const int>(this->pos.get_x()),
+                          static_cast<const int>(this->pos.get_y()), this->angle, NULL)){
+            std::cout << "Can't load missile image" <<std::endl;
             return;
         }
     }

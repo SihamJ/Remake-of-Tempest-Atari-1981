@@ -24,6 +24,7 @@ add_library(
     src/CircleMap.cpp 
     src/SquareMap.cpp 
     src/TextRenderer.cpp
+    src/SDLWrapper.cpp
 
 )
 

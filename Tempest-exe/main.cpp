@@ -1,57 +1,54 @@
 #include <Game.hpp>
 extern int WIDTH;
 extern int HEIGHT;
+#include <Pause.hpp>
+#include <GameOver.hpp>
+#include <Menu.hpp>
 
 // #define SDL_WINDOWPOS_CENTERED SDL_WINDOWPOS_CENTERED_DISPLAY(0)
 
 
-std::unique_ptr<Game> game;
 
 int main(int argc, char** argv) {
-    game = std::make_unique<Game>();
+    std::shared_ptr<Game> game = std::make_shared<Game>();
+    std::unique_ptr<Pause> pause = std::make_unique<Pause>(game);
+    std::unique_ptr<GameOver> game_over = std::make_unique<GameOver>(game);
+    std::unique_ptr<Menu> main_menu = std::make_unique<Menu>(game);
 
-    // 480 et 420 à la place de windowpos_centered 
-    // psq la fenêtre s'affiche entre mes deux écrans chez moi
     game->init("Tempest", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                 SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI|SDL_WINDOW_RESIZABLE|SDL_WINDOW_OPENGL|SDL_WINDOW_FULLSCREEN_DESKTOP, 
                 SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
 
-
-    int i = 0;
     // boucle principal
 
     while (game->running()) {
 
         while(!game->getStart() && game->running()) {
-            game->handle_events_main_menu();
-            game->update_main_menu();
-            game->render_main_menu();
-            i++;
+            main_menu->handle_events();
+            main_menu->update();
+            main_menu->render();
         }
 
         while(!game->getGameOver() && game->getStart() && game->running()) {
         
             while(game->getPause() && !game->getGameOver() && game->getStart() && game->running()) {
-                game->handle_events_pause_mode();
-                game->update_pause_mode();
-                game->render_pause_mode();
-                i++;
+                pause->handle_events();
+                pause->update();
+                pause->render();
             }
 
             while (!game->getPause() && !game->getGameOver() && game->getStart() && game->running()) {
                 game->handle_events();
                 game->update();
                 game->render();
-                i++;
             }
 
         }
         
         while (game->getGameOver() && !game->getStart() && game->running()) {
-            game->handle_events_game_over();
-            game->update_game_over();
-            game->render_game_over();
-            i++;
+            game_over->handle_events();
+            game_over->update();
+            game_over->render();
         }
     }
 

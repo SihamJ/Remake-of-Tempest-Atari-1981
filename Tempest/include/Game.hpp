@@ -41,14 +41,6 @@ public:
     void update_pause_mode();
     void render_pause_mode();
 
-    void handle_events_main_menu();
-    void update_main_menu();
-    void render_main_menu();
-
-    void handle_events_game_over();
-    void update_game_over();
-    void render_game_over();
-
     void clean();
 
     void next_level();
@@ -62,12 +54,18 @@ public:
     void setGameOver(bool go);
     bool getStart();
     void setStart(bool start);
-
+    std::shared_ptr<SDL_Renderer> getRenderer();
+    void setIsRunning(bool isRunning);
+    std::shared_ptr<Timer> getTimer();
+    std::shared_ptr<Player> getPlayer();
+    std::shared_ptr<Level> getLevel();
+    std::shared_ptr<Tube> getMap();
     void superzapper(bool all_enemies);
+    std::string && getMsgGameOver();
 
 private:
 
-    std::unique_ptr<Timer> timer;
+    std::shared_ptr<Timer> timer;
     // temps enregistré pr faire des updates toutes les x secondes
     Uint32 clock = 0;
     bool generated = false;
@@ -108,8 +106,6 @@ private:
     std::shared_ptr<Level> level;
 
     std::vector<Collision> collisions;
-
-    TextRenderer textRenderer;
 
     std::string game_over_msg;
 

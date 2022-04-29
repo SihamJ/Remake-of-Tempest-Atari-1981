@@ -1,16 +1,15 @@
-#ifndef __MENU_HPP__
-#define __MENU_HPP__
+#ifndef __PAUSE_HPP__
+#define __PAUSE_HPP__
 
 #include "Utils.hpp"
 #include "Game.hpp"
 #include "TextRenderer.hpp"
+#include "Player.hpp"
 
-
-
-class Menu {
+class Pause {
     public:
-        Menu(std::shared_ptr<Game> g);
-        ~Menu();
+        Pause(std::shared_ptr<Game> g);
+        ~Pause();
         void handle_events();
         void update();
         void render();

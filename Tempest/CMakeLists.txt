@@ -10,6 +10,7 @@ add_library(
     src/Flippers.cpp 
     src/Spikers.cpp 
     src/Game.cpp 
+    src/GameOver.cpp
     src/Line.cpp 
     src/Point.cpp 
     src/TriangleMap.cpp 
@@ -20,6 +21,8 @@ add_library(
     src/Player.cpp 
     src/Collision.cpp 
     src/Missile.cpp 
+    src/Pause.cpp
+    src/Menu.cpp
     src/Timer.cpp 
     src/CircleMap.cpp 
     src/SquareMap.cpp 

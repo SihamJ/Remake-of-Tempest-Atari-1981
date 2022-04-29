@@ -303,9 +303,11 @@ void Line::draw_shadow(std::shared_ptr<SDL_Renderer> renderer){
     }
     else 
         return;
-    SDL_SetRenderDrawColor(renderer.get(), 0, 80, 40, 255);
+
+    render_color(renderer, GLOW);
     for(int i = 0, j=0 ; i < this->thickness && j < this->thickness; i +=xstep, j+=ystep)
         SDL_RenderDrawLine(renderer.get(), x1start-i, y1sart-j, x2start-i, y2start-j);
+    
     SDL_SetRenderDrawColor(renderer.get(), r, g, b, a);
 }
 

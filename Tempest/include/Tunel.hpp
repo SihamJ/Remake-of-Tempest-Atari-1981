@@ -35,6 +35,8 @@ public:
 
     void set_big_line (int x1, int y1, int x2, int y2);
     void set_small_line (int x1, int y1, int x2, int y2);
+    void set_big_line (Line l);
+    void set_small_line (Line l);
     void set_lines (std::array<Line, 2> lines);
     void set_angle();
     void set_nb_hall(int index);

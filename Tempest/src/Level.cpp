@@ -192,17 +192,17 @@ void Level::set_enemies(){
     }
 
     // SPikers appears at level 4
-    if(this->current_level == 4){
+    if(this->current_level >= 4 && this->current_level < 17){
         this->current_enemies.insert({ enemies_list::spikers, Color("LIGHTBLUE", LIGHT_BLUE) });
     }
     // fuseballs appear at level 11
-    else if(this->current_level == 11){
+    else if(this->current_level >= 11 && this->current_level < 17){
         this->current_enemies.insert({ enemies_list::fuseballs, Color("LIGHTBLUE", LIGHT_BLUE) });
     }
     // fuseballTankers appear at level 33 (all good, level.hpp)
 
     // pulsarTankers appear at level 41
-    else if(this->current_level == 41){
+    else if(this->current_level >= 41 && this->current_level < 49){
         this->current_enemies.insert({ enemies_list::pulsarTankers, Color("YELLOW", YELLOW)});
     }
 }
@@ -250,14 +250,13 @@ std::shared_ptr<Enemy> Level::new_enemy(){
     std::uniform_int_distribution<int> rand (0, this->current_enemies.size()-1);
 
     int i = rand(gen);
-    std::cout << "max = " << this->current_enemies.size() << std::endl;
-    std::cout << i << std::endl;
+
     // affiche que des flippers et spikers
     // int i = rand() % 2;
     // if (i == 1) i++;
 
     // force à afficher que des flippers
-   // i = 0;
+   //i = 0;
     
     //force à afficher que des tankers
     //i = 1;
@@ -285,7 +284,7 @@ std::shared_ptr<Enemy> Level::new_enemy(){
         e = std::make_shared<Fuseballs>("fuseballs", std::move(color));
         break;
     case enemies_list::fuseballTankers:
-        color = Color( this->current_enemies.at(enemies_list::tankers).get_name()+"", this->current_enemies.at(enemies_list::tankers).get_name()+""); 
+        color = Color( this->current_enemies.at(enemies_list::tankers).get_name()+ "", this->current_enemies.at(enemies_list::tankers).get_name()+""); 
         e = std::make_shared<FuseballTankers>("fuseballTankers", std::move(color));
         break;
     case enemies_list::pulsarTankers:

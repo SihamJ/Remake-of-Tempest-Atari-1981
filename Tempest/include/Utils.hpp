@@ -10,7 +10,7 @@
 #define GREEN "000255000"
 #define PURPLE "220000220"
 
-
+#define GLOW "095085085"
 
 #define PI 3.141592653589793238463
 
@@ -31,6 +31,7 @@ enum color  { red = 0XFF0000,  white = 0XFFFFFF, black = 0X000000, light_blue = 
 // width and height of our window
 #define WIDTH 1400
 #define HEIGHT 800
+
 
 
 enum enemies_list {

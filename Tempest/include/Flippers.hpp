@@ -18,9 +18,12 @@ public:
     std::vector<Line> get_lines() const { return this->lines; }
     const Tunel get_next_hall() const;
     const double get_current_angle() const;
-    const double get_next_angle() const;
+    const double get_next_angle() const { return this->next_angle; }
     const int get_state() const ;
-    const bool get_will_flip() const;
+    const int get_height() { return this->height;}
+    const int get_width() { return this->width;}
+    const bool will_flip();
+    const int get_flip_steps(){ return this->flip_steps;}
 
     void set_dest (Point&& destination);
     void set_tunnel(Tunel&& h);
@@ -30,7 +33,7 @@ public:
     void set_current_angle(double angle);
     void set_next_angle(double angle);
     void set_flipping(bool flipping);
-    void set_will_flip(bool val);
+    void set_flip_center(Point p);
 
     std::string get_name(){ return "Flippers";}
     const int get_scoring() const { return this->scoring;}
@@ -40,6 +43,7 @@ public:
     void draw(std::shared_ptr<SDL_Renderer> renderer) override;
     bool intersect(Line l);    
     const bool flipping() const;
+    const bool shoot() ;
 
 private:
     const int scoring=150;
@@ -53,14 +57,11 @@ private:
     float next_angle = 0;
     float current_angle = 0;
     float r;
-    const int flip_steps = 5;
+    const int flip_steps = 15;
     bool isFlipping = false;
-    bool willFlip = false;
     Tunel next_hall;
     Point flip_center;
-    bool first = true;
-    long double xflip;
-    long double yflip;
+    bool done = false;
 };
 
 

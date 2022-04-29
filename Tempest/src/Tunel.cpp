@@ -52,6 +52,14 @@
         lines[0] = Line(x1, y1, x2, y2);
     }
 
+    void Tunel::set_big_line (Line l) {
+        lines[1] = l;
+    }
+
+    void Tunel::set_small_line (Line l) {
+        lines[0] = l;
+    }
+
     void Tunel::set_lines (std::array<Line, 2> lines){
         this->lines = lines;
     }
@@ -72,49 +80,29 @@
         if(this->get_small_line().get_x_projected().length() == 0 || this->get_small_line().get_y_projected().length() == 0)
             this->angle = 180. + this->angle;
         
-         if (this->angle < 0) this->angle += 360.;
+        //if (this->angle < 0) this->angle += 360.;
     }
     
     const long double Tunel::get_angle(Tunel h) const {
 
-        if(this->parallel(h)){
-            return 180.;
-        }
-
-        Point ab { h.get_small_line().get_p1().get_x() - h.get_small_line().get_p0().get_x(), 
-                    h.get_small_line().get_p1().get_y() - h.get_small_line().get_p0().get_y()};
+        Point ab { h.get_small_line().get_p0().get_x() - this->get_small_line().get_p0().get_x(), 
+                    h.get_small_line().get_p0().get_y() - this->get_small_line().get_p0().get_y()};
         Point cb { h.get_small_line().get_p1().get_x() - this->get_small_line().get_p1().get_x(), 
                     h.get_small_line().get_p1().get_y() - this->get_small_line().get_p1().get_y()};
 
         float dot = ab.get_x() * cb.get_x() + ab.get_y()*cb.get_y();
         float cross = ab.get_x()*cb.get_y() - ab.get_y()*cb.get_x();
 
-        float angle = atan2(cross, dot) * (180. / PI);
+        float angle = atan2(cross, dot) * (180. / PI + 0.5);
         if (angle < 0) angle += 360.;
-
-        return angle;
-        
+        if (angle == 0) angle = 180.;
+        return angle;        
     }
 
     const bool Tunel::parallel(Tunel h) const {
         // same slope
         return this->get_small_line().get_parameters().at(0) == h.get_small_line().get_parameters().at(0);
     }
-
-    /*
-    int CGlEngineFunctions::GetAngleABC( POINTFLOAT a, POINTFLOAT b, POINTFLOAT c )
-{
-    POINTFLOAT ab = { b.x - a.x, b.y - a.y };
-    POINTFLOAT cb = { b.x - c.x, b.y - c.y };
-
-    float dot = (ab.x * cb.x + ab.y * cb.y); // dot product
-    float cross = (ab.x * cb.y - ab.y * cb.x); // cross product
-
-    float alpha = atan2(cross, dot);
-
-    return (int) floor(alpha * 180. / pi + 0.5);
-}
-    */
 
     const long  double Tunel::get_angle() const {
         return this->angle;

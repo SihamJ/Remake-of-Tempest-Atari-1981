@@ -43,8 +43,8 @@ class Missile {
         Point pos;
 
         // taille initial de l'image
-        const int init_width = 40;
-        const int init_height = 40;
+        const int init_width = 753;
+        const int init_height = 786;
 
         // taille à changer pr agrandir ou rétrécir l'image de l'ennemi
         int width = 40;

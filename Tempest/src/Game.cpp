@@ -31,7 +31,7 @@ void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flag
         // clock 4 pour animation courante
         this->timer->add_clock();
 
-        this->level = std::make_shared<Level>(0);
+        this->level = std::make_shared<Level>(5);
         this->level->next_level();
         this->map = level->get_map();
 
@@ -171,19 +171,25 @@ void Game::update() {
     if (timer->get_clock(clock_list::update) > TICK) {
 
         for (auto e : enemies) {
-            if (e->get_name().compare("spikers") == 0) {
 
-                std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(e);
-                if (enemy_spiker == nullptr)
-                    return;
-                if (enemy_spiker->get_state() == 2) {
+            std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(e);
+            std::shared_ptr<Flippers> enemy_flipper = std::dynamic_pointer_cast<Flippers>(e);
 
-                    std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(enemy_spiker->get_hall()));
-                    m->set_enemy();
-                    vm.push_back(std::move(m));
-                    enemy_spiker->set_state(-1);
-                }
+            if (enemy_spiker == nullptr && enemy_flipper == nullptr)
+                continue;
+
+            if (enemy_spiker != nullptr && enemy_spiker->get_state() == 2) {
+                std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(enemy_spiker->get_hall()));
+                m->set_enemy();
+                vm.push_back(std::move(m));
+                enemy_spiker->set_state(-1);
             }
+            else if(enemy_flipper != nullptr && enemy_flipper->get_state() == 0 && enemy_flipper->shoot()){
+                std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(enemy_flipper->get_hall()));
+                m->set_enemy();
+                vm.push_back(std::move(m));
+            }
+            
         }
 
         // collisions.clear();
@@ -256,8 +262,9 @@ void Game::update() {
             std::shared_ptr<Flippers> f = std::dynamic_pointer_cast<Flippers>(*i);
             
             // si c'est un flipper, on check son état (entrain de flipper, va flipper, ou ne rien faire)
-            if( f!= NULL && f->get_state() == 1 && !f->flipping() && f->get_will_flip()){
+            if( f!= NULL && f->get_state() == 1 && !f->flipping() && f->will_flip()){
                 
+                f->set_flipping(true);
                 // flip aléatoirement à gauche ou à droite
                 std::mt19937 gen(rd());
                 std::uniform_int_distribution<int> random (0, 2);
@@ -272,13 +279,16 @@ void Game::update() {
                         nb_hall = 1;
                 }
 
-                // on set le nouveau hall dans lequel le flipper va flipper
-                f->set_next_hall(std::move(this->map->get_hall(f->get_hall().get_n_hall() + nb_hall)));
-                // on determine l'angle entre le couloir actuel et le couloir suivant pour effectuer notre rotation
-                f->set_next_angle(std::move(f->get_hall().get_angle(f->get_next_hall())));
+                // on set le nouveau hall dans lequel le flipper va flipper, et on redéfinie les paramètres 
+                f->set_next_hall(std::move(this->map->get_hall( f->get_hall().get_n_hall() - 1)));
+                f->set_next_angle(f->get_hall().get_angle(f->get_next_hall()) + f->get_hall().get_angle());
+                f->set_flip_center(Point(f->get_width(), f->get_height()/2));
+                f->set_current_angle(f->get_hall().get_angle());
+
+                
             }
 
-            // si c'est un spiker à l'état 1 (marche arrière), les paramètres d'homothétie sont différents
+            // si c'est un spiker à l'état 1 (marche arrière), les paramètres d'homothétie seront différents
             if( s != NULL && s->get_state() == 1){
 
                 h0 = s->get_hall().get_small_line().length() / s->get_limit().length();
@@ -301,9 +311,9 @@ void Game::update() {
             if ((*i)->get_closer(h)) {
                 // si flipper, et couloir player, game over
                 if( f!=NULL && f->get_n_hall() == player.get_n_hall()){
-                    this->setGameOver(true);
-                    this->setStart(false);
-                    game_over_msg = std::string("Killed by the Flipper");
+                    //this->setGameOver(true);
+                    //this->setStart(false);
+                    game_over_msg = std::string("You Were Killed by the Flipper");
                     return;
                 }
                 // si pas flipper, disparition de l'ennemi

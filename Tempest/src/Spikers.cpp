@@ -165,6 +165,7 @@ bool Spikers::get_closer(long double h) {
         this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
         this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
         this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
+        this->angle = 2*360*h;
     }
 
     else if(this->state == 1) {
@@ -173,6 +174,7 @@ bool Spikers::get_closer(long double h) {
         this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
         this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
         this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
+        this->angle = -2*360*h;
     }
 
     // Update state if necessary
@@ -189,6 +191,7 @@ bool Spikers::get_closer(long double h) {
 
     else if (state == -1 && random_p == 0.) return true;
 
+    
     return false;
     //return intersect(this->hall.get_big_line());
 }

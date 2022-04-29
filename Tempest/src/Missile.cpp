@@ -56,12 +56,12 @@
         if( !this->enemy ){
             
             this->pos = Line(this->pos, this->dest).inLine(h);
-            this->width = (this->hall.get_big_line().length()/3.) * (1-h) / 3.;
+            this->width = (this->hall.get_big_line().length()/3.) * (1-h)/2.;
             this->height = this->width;
         }
         else{
 
-            this->width = (this->hall.get_big_line().length()/3.) * (h) ;
+            this->width = (this->hall.get_big_line().length()/3.) * (h)/2.;
             this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
             this->pos = Line(this->pos, this->dest).inLine(h);
         }
@@ -90,10 +90,10 @@
     }
 
     void Missile::draw(std::shared_ptr<SDL_Renderer> renderer) {
-    
-        if(render_image(renderer, "images/missile.bmp", this->init_width, this->init_height, width, height, static_cast<const int>(this->pos.get_x()),
+        
+        if(render_image(renderer, "images/missile_ennemi2.bmp", this->init_width, this->init_height, width, height, static_cast<const int>(this->pos.get_x()),
                           static_cast<const int>(this->pos.get_y()), this->angle, NULL)){
-            std::cout << "Can't load missile image" <<std::endl;
+            std::cout << "Can't load missile image" << std::endl;
             return;
         }
     }

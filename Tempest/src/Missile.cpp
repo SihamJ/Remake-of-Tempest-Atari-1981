@@ -44,6 +44,10 @@
         return this->pos;
     }
 
+    void Missile::set_pos(Point pos) {
+        this->pos = pos;
+    }
+
     bool Missile::get_closer() {
 
         long  double h0 = this->hall.get_small_line().length() / this->hall.get_big_line().length();

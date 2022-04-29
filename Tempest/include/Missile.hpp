@@ -26,6 +26,7 @@ class Missile {
         bool get_enemy() const;
 
         void set_enemy();
+        void set_pos(Point pos);
 
         bool intersect(Line l) const;
 

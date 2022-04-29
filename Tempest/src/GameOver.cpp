@@ -1,4 +1,4 @@
-#include "GameOver.hpp"
+#include <GameOver.hpp>
 
 extern int WIDTH;
 extern int HEIGHT;

@@ -201,6 +201,7 @@ void Game::update() {
             else if(enemy_flipper != nullptr && enemy_flipper->get_state() == 0 && enemy_flipper->shoot()){
                 std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(enemy_flipper->get_hall()));
                 m->set_enemy();
+                m->set_pos(enemy_flipper->get_center());
                 vm.push_back(std::move(m));
             }
             

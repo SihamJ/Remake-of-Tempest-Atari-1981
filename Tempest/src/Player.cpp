@@ -53,6 +53,10 @@
         return this->name;
     }
 
+    void Player::set_score(int score){
+        this->score = score;
+    }
+
     void Player::set_superzapper(int val){
         this->superzapper = val;
     }

@@ -35,6 +35,8 @@ class Level {
         Color get_score_color() const;
         const int get_nb_enemies() const;
 
+        const int get_level_score() const;
+
         void next_level();
         std::shared_ptr<Enemy> new_enemy();
         void print() const;
@@ -111,6 +113,9 @@ class Level {
         const Color level49_64_superzapper_color { "RED", RED };
         const Color level65_80_superzapper_color { "WHITE", WHITE };
         const Color level81_96_superzapper_color { "PURPLE", PURPLE };
+
+
+       
 
         
 };

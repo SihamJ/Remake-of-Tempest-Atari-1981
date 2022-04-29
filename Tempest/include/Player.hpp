@@ -21,6 +21,7 @@ public:
     const std::string get_name() const override;
     const int get_superzapper() const;
 
+    void set_score(int score);
     void set_name(std::string&& name);
     void set_superzapper(int val);
 

@@ -87,6 +87,40 @@ long double Level::get_h(long double h0, long double d, long double z, bool back
         return (1. - ((1.-h0) / (d*d)) * (z*z));
     }
 }
+
+const int Level::get_level_score() const {
+    
+    if(this->current_level >= 3) return 6000;
+    else if(this->current_level >= 5) return 16000;
+    else if(this->current_level >= 7) return 32000;
+    else if(this->current_level >= 9) return 54000;
+    else if(this->current_level >= 11) return 74000;
+    else if(this->current_level >= 13) return 94000;
+    else if(this->current_level >= 15) return 114000;
+    else if(this->current_level >= 17) return 134000;
+    else if(this->current_level >= 20) return 152000;
+    else if(this->current_level >= 22) return 170000;
+    else if(this->current_level >= 24) return 188000;
+    else if(this->current_level >= 26) return 208000;
+    else if(this->current_level >= 28) return 226000;
+    else if(this->current_level >= 31) return 248000;
+    else if(this->current_level >= 33) return 266000;
+    else if(this->current_level >= 36) return 300000;
+    else if(this->current_level >= 40) return 340000;
+    else if(this->current_level >= 44) return 382000;
+    else if(this->current_level >= 47) return 415000;
+    else if(this->current_level >= 49) return 439000;
+    else if(this->current_level >= 52) return 472000;
+    else if(this->current_level >= 56) return 531000;
+    else if(this->current_level >= 60) return 581000;
+    else if(this->current_level >= 63) return 624000;
+    else if(this->current_level >= 65) return 656000;
+    else if(this->current_level >= 73) return 766000;
+    else if(this->current_level >= 81) return 898000;
+    else return 0;
+}
+
+
 // TO DO: create the other maps and uncomment this code
 void Level::set_map(){
 

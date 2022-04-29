@@ -33,6 +33,7 @@ void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flag
 
         this->level = std::make_shared<Level>(5);
         this->level->next_level();
+        this->player.set_score(this->level->get_level_score());
         this->map = level->get_map();
 
         // construction de la map
@@ -40,7 +41,7 @@ void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flag
         this->player = Player(0, std::move(map->get_hall(0)), std::move(this->level->get_player_color()));
         // récupère le point central de la Map
         center.set_point( map->get_center().get_x(), map->get_center().get_y());
-
+        
         vh = map->get_hall_list();
         isRunning = true;
     }

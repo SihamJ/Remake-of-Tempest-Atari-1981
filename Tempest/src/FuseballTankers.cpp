@@ -100,11 +100,11 @@ bool FuseballTankers::intersect(Line l) {
 
 void FuseballTankers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     std::string path;
-    path = static_cast<std::string>("images/fuseballTanker") + this->get_color().get_name() + static_cast<std::string>(".bmp"); //+ this->color.get_name() + static_cast<std::string>(".bmp"); 
+    path = static_cast<std::string>("images/fuseballTanker_") + this->get_color().get_name() + static_cast<std::string>(".bmp"); //+ this->color.get_name() + static_cast<std::string>(".bmp"); 
     
     if(render_image(renderer, path, this->init_width, this->init_height, width, height, static_cast<const int>(x),  static_cast<const int>(y), 
                     angle, NULL)){
-        std::cout << "Can't load fuseballs image" <<std::endl;
+        std::cout << "Can't load fuseballStanker image " << path <<std::endl;
         return;
     }
 }

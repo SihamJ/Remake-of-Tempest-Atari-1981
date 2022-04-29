@@ -90,32 +90,32 @@ long double Level::get_h(long double h0, long double d, long double z, bool back
 
 const int Level::get_level_score() const {
     
-    if(this->current_level >= 3) return 6000;
-    else if(this->current_level >= 5) return 16000;
-    else if(this->current_level >= 7) return 32000;
-    else if(this->current_level >= 9) return 54000;
-    else if(this->current_level >= 11) return 74000;
-    else if(this->current_level >= 13) return 94000;
-    else if(this->current_level >= 15) return 114000;
-    else if(this->current_level >= 17) return 134000;
-    else if(this->current_level >= 20) return 152000;
-    else if(this->current_level >= 22) return 170000;
-    else if(this->current_level >= 24) return 188000;
-    else if(this->current_level >= 26) return 208000;
-    else if(this->current_level >= 28) return 226000;
-    else if(this->current_level >= 31) return 248000;
-    else if(this->current_level >= 33) return 266000;
-    else if(this->current_level >= 36) return 300000;
-    else if(this->current_level >= 40) return 340000;
-    else if(this->current_level >= 44) return 382000;
-    else if(this->current_level >= 47) return 415000;
-    else if(this->current_level >= 49) return 439000;
-    else if(this->current_level >= 52) return 472000;
-    else if(this->current_level >= 56) return 531000;
-    else if(this->current_level >= 60) return 581000;
-    else if(this->current_level >= 63) return 624000;
-    else if(this->current_level >= 65) return 656000;
-    else if(this->current_level >= 73) return 766000;
+    if(this->current_level >= 3 && this->current_level < 5) return 6000;
+    else if(this->current_level >= 5 && this->current_level < 7) return 16000;
+    else if(this->current_level >= 7 && this->current_level < 9) return 32000;
+    else if(this->current_level >= 9 && this->current_level < 11) return 54000;
+    else if(this->current_level >= 11 && this->current_level < 13) return 74000;
+    else if(this->current_level >= 13 && this->current_level < 15) return 94000;
+    else if(this->current_level >= 15 && this->current_level < 17) return 114000;
+    else if(this->current_level >= 17 && this->current_level < 20) return 134000;
+    else if(this->current_level >= 20 && this->current_level < 22) return 152000;
+    else if(this->current_level >= 22 && this->current_level < 24) return 170000;
+    else if(this->current_level >= 24 && this->current_level < 26) return 188000;
+    else if(this->current_level >= 26 && this->current_level < 28) return 208000;
+    else if(this->current_level >= 28 && this->current_level < 31) return 226000;
+    else if(this->current_level >= 31 && this->current_level < 33) return 248000;
+    else if(this->current_level >= 33 && this->current_level < 36) return 266000;
+    else if(this->current_level >= 36 && this->current_level < 40) return 300000;
+    else if(this->current_level >= 40 && this->current_level < 44) return 340000;
+    else if(this->current_level >= 44 && this->current_level < 47) return 382000;
+    else if(this->current_level >= 47 && this->current_level < 49) return 415000;
+    else if(this->current_level >= 49 && this->current_level < 52) return 439000;
+    else if(this->current_level >= 52 && this->current_level < 56) return 472000;
+    else if(this->current_level >= 56 && this->current_level < 60) return 531000;
+    else if(this->current_level >= 60 && this->current_level < 63) return 581000;
+    else if(this->current_level >= 63 && this->current_level < 65) return 624000;
+    else if(this->current_level >= 65 && this->current_level < 73) return 656000;
+    else if(this->current_level >= 73 && this->current_level < 81) return 766000;
     else if(this->current_level >= 81) return 898000;
     else return 0;
 }
@@ -318,11 +318,11 @@ std::shared_ptr<Enemy> Level::new_enemy(){
         e = std::make_shared<Fuseballs>("fuseballs", std::move(color));
         break;
     case enemies_list::fuseballTankers:
-        color = Color( this->current_enemies.at(enemies_list::tankers).get_name()+ "", this->current_enemies.at(enemies_list::tankers).get_name()+""); 
+        color = Color( std::string(this->current_enemies.at(enemies_list::tankers).get_name()), BLACK); 
         e = std::make_shared<FuseballTankers>("fuseballTankers", std::move(color));
         break;
     case enemies_list::pulsarTankers:
-        color = Color( this->current_enemies.at(enemies_list::pulsars).get_name() + "_" + this->current_enemies.at(enemies_list::tankers).get_name(), BLACK); 
+        color = Color( this->current_enemies.at(enemies_list::pulsars).get_name() + std::string("_") + this->current_enemies.at(enemies_list::tankers).get_name(), BLACK); 
         e = std::make_shared<PulsarTankers>("pulsarTankers", std::move(color));
         break;
 

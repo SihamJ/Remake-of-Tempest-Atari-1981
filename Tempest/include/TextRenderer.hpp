@@ -23,7 +23,7 @@ class TextRenderer
         std::vector<int> parse_score(int value);
         
         void draw_caracter(std::shared_ptr<SDL_Renderer> renderer, char c, int x, int y, float size, int thickness);
-        void draw_text(std::shared_ptr<SDL_Renderer> renderer, std::string text, int x, int y, float size, int thickness);
+        void draw_text(std::shared_ptr<SDL_Renderer> renderer, const std::string&& text, int x, int y, float size, int thickness);
 
         void draw_life(std::shared_ptr<SDL_Renderer> renderer, int value, int x, int y, const std::string&& color);
 

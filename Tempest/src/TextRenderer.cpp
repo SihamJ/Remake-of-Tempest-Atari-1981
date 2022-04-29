@@ -76,7 +76,7 @@
         }
     }
     
-    void TextRenderer::draw_text(std::shared_ptr<SDL_Renderer> renderer, std::string text, int x, int y, float size, int thickness){
+    void TextRenderer::draw_text(std::shared_ptr<SDL_Renderer> renderer, const std::string&& text, int x, int y, float size, int thickness){
         int space = 0;
 
         for(auto i : text){

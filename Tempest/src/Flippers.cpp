@@ -1,7 +1,5 @@
 #include "Flippers.hpp"
 
-#define RATIO_RANDOM_P 0.25
-
 Flippers::Flippers(){}
 
 //constructeur
@@ -93,8 +91,7 @@ void Flippers::set(Tunel&& h){
         std::uniform_real_distribution<double> rand (0.5, 1);
 
         this->random_p = rand(gen);
-        
-
+    
         this->hall = h;
 
         double dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
@@ -119,7 +116,7 @@ void Flippers::set(Tunel&& h){
         this->hall = h;
         this->state = 0;
 
-        // On calcule la ligne limit de déplacement du spiker (parallèle à big line)
+        // On calcule la ligne limit de déplacement du flipper (parallèle à big line)
         Point sp0 { std::move( this->hall.get_small_line().get_p0())};
         Point sp1 { std::move( this->hall.get_small_line().get_p1())};
         Point bp0 { std::move( this->hall.get_big_line().get_p0())};
@@ -176,9 +173,10 @@ bool Flippers::get_closer(long double h) {
 
             this->isFlipping = false;
             this->hall = Tunel(this->next_hall);
+            if(this->random_p < 0.95) this->random_p+=0.01;
+
             this->center = Line( std::move(this->hall.get_small_line().inLine(0.5)), std::move(this->hall.get_big_line().inLine(0.5))).inLine(this->random_p);
             this->angle = this->hall.get_angle();
-            this->flip_center = Point(this->width/2, this->height/2);
             this->current_angle = this->angle;
             this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
             this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);

@@ -201,7 +201,7 @@ void Game::update() {
 
                         this->setGameOver(true);
                         this->setStart(false);
-                        this->game_over_msg = "You Lost All Your Life Points";
+                        this->game_over_msg = std::string("You Lost All Your Life Points");
                         return;
                     }
                 }
@@ -303,7 +303,7 @@ void Game::update() {
                 if( f!=NULL && f->get_n_hall() == player.get_n_hall()){
                     this->setGameOver(true);
                     this->setStart(false);
-                    game_over_msg = "Killed by the Flipper";
+                    game_over_msg = std::string("Killed by the Flipper");
                     return;
                 }
                 // si pas flipper, disparition de l'ennemi
@@ -525,10 +525,9 @@ void Game::render_game_over() {
     if(render_image(renderer, "./images/gameover.bmp", 347, 63, 347,63 , WIDTH/2 - 173, HEIGHT/3, 0, NULL))
         return;
 
-    render_color(renderer, "255255255", 255);
-    this->textRenderer.draw_text(renderer, std::move(this->game_over_msg), WIDTH/2 - 140, 2*HEIGHT/3 + 100, 1, 2);
+    render_color(renderer, "255205205", 255);
+    this->textRenderer.draw_text(renderer, this->game_over_msg, WIDTH/2 - 160, HEIGHT/3 + 100, 1, 2);
     this->textRenderer.draw_text(renderer, std::move("PRESS ESCAPE TO GO BACK TO MAIN MENU"), WIDTH/2 - 330, HEIGHT/3 + 170, 1, 2);
-    
     // màj du rendu
     render_present(renderer);
 }

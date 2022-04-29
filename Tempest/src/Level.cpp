@@ -190,6 +190,21 @@ void Level::set_enemies(){
     else if(this->current_level >= 97){
         this->current_enemies = level81_96_characters;
     }
+
+    // SPikers appears at level 4
+    if(this->current_level == 4){
+        this->current_enemies.insert({ enemies_list::spikers, Color("LIGHTBLUE", LIGHT_BLUE) });
+    }
+    // fuseballs appear at level 11
+    else if(this->current_level == 11){
+        this->current_enemies.insert({ enemies_list::fuseballs, Color("LIGHTBLUE", LIGHT_BLUE) });
+    }
+    // fuseballTankers appear at level 33 (all good, level.hpp)
+
+    // pulsarTankers appear at level 41
+    else if(this->current_level == 41){
+        this->current_enemies.insert({ enemies_list::pulsarTankers, Color("YELLOW", YELLOW)});
+    }
 }
 
 void Level::set_player_color(){
@@ -220,7 +235,6 @@ void Level::set_player_color(){
 // at this stage, we only have triangle map, so we will play at level 6 only
 void Level::next_level(){
     this->current_level++;    
-    //this->set_current_level(6);
     this->set_map();
     this->set_enemies();
     this->set_player_color();
@@ -233,9 +247,11 @@ std::shared_ptr<Enemy> Level::new_enemy(){
 
     std::random_device rd;  // Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> rand (1, 7);
+    std::uniform_int_distribution<int> rand (0, this->current_enemies.size()-1);
 
     int i = rand(gen);
+    std::cout << "max = " << this->current_enemies.size() << std::endl;
+    std::cout << i << std::endl;
     // affiche que des flippers et spikers
     // int i = rand() % 2;
     // if (i == 1) i++;
@@ -248,7 +264,6 @@ std::shared_ptr<Enemy> Level::new_enemy(){
 
     // force à afficher que des spikers
     // i = 2;
-
     Color color = this->current_enemies.at(i);
     std::shared_ptr<Enemy> e;
     
@@ -270,16 +285,18 @@ std::shared_ptr<Enemy> Level::new_enemy(){
         e = std::make_shared<Fuseballs>("fuseballs", std::move(color));
         break;
     case enemies_list::fuseballTankers:
+        color = Color( this->current_enemies.at(enemies_list::tankers).get_name()+"", this->current_enemies.at(enemies_list::tankers).get_name()+""); 
         e = std::make_shared<FuseballTankers>("fuseballTankers", std::move(color));
         break;
     case enemies_list::pulsarTankers:
+        color = Color( this->current_enemies.at(enemies_list::pulsars).get_name() + "_" + this->current_enemies.at(enemies_list::tankers).get_name(), BLACK); 
         e = std::make_shared<PulsarTankers>("pulsarTankers", std::move(color));
         break;
 
     // we don't have the other enemies for now, so we generate only flippers by default
     default:
-        Color color{"RED", RED};
-        e = std::make_shared<Flippers>("flippers", std::move(color));
+        color = this->get_enemies().at(enemies_list::tankers);
+        e = std::make_shared<Tankers>("tankers", std::move(color));
         break;
     }
     return e;

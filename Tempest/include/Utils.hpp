@@ -11,6 +11,7 @@
 #define PURPLE "220000220"
 
 
+
 #define PI 3.141592653589793238463
 
 // 12 second for each level
@@ -33,7 +34,7 @@ enum color  { red = 0XFF0000,  white = 0XFFFFFF, black = 0X000000, light_blue = 
 
 
 enum enemies_list {
-    flippers = 0, tankers = 1, spikers = 2, superzapper = 3, pulsars = 4, fuseballs = 5, pulsarTankers = 6, fuseballTankers = 7
+    flippers = 0, tankers = 1, spikers = 2, pulsars = 3, fuseballs = 4, fuseballTankers = 5, pulsarTankers = 6
 };
 
 enum maps_list {

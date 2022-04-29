@@ -104,8 +104,8 @@ bool PulsarTankers::intersect(Line l) {
 
 void PulsarTankers::draw(std::shared_ptr<SDL_Renderer> renderer) {
     std::string path;
-    path = static_cast<std::string>("images/pulsarTanker_PURPLE") + static_cast<std::string>(".bmp"); 
-
+    path = static_cast<std::string>("images/pulsarTanker_") + this->color.get_name() + static_cast<std::string>(".bmp"); 
+    std::cout << path << std::endl;
     if(render_image(renderer, path, this->init_width, this->init_height, this->width, this->height, static_cast<const int>(x),  static_cast<const int>(y), 
                     angle, NULL)){
         std::cout << "Can't load pulsarTankers image" <<std::endl;

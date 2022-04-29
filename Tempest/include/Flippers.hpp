@@ -29,7 +29,7 @@ public:
 
     void set_dest (Point&& destination);
     void set_tunnel(Tunel&& h);
-    void set_center( Point&& center);
+    
     void set(Tunel&& h);
     void set_next_hall(Tunel &&h);
     void set_current_angle(double angle);

@@ -43,7 +43,7 @@ Flippers::~Flippers(){}
 void Flippers::set_tunnel( Tunel&& h) { this->hall = h; }
 
 
-void Flippers::set_center( Point&& center) { this->center = center; }
+
 
 void Flippers::set_next_hall(Tunel &&h){
     this->next_hall = h;
@@ -91,7 +91,7 @@ const bool Flippers::flipping() const{
 const bool Flippers::shoot() {
 
     std::mt19937 gen(this->rd());
-    std::uniform_int_distribution<int> rand (0, 15);
+    std::uniform_int_distribution<int> rand (0, 8);
     
     return rand(gen) == 0 ? true : false;
 }
@@ -102,13 +102,14 @@ void Flippers::set(Tunel&& h){
         std::uniform_real_distribution<double> rand (0.25, 0.85);
 
         this->random_p = rand(gen);
+        
     
         this->hall = h;
 
         double dist = h.get_small_line().get_p0().euclideanDistance(h.get_small_line().get_p1());
         this->width = dist;
         this->height = static_cast<double>(init_height) * ( static_cast<double>(width) / static_cast<double>(init_width));
-
+        this->random_p = 1;
         //this->random_p -= this->height / (2 * this->hall.get_small_line().inLine(0.5).euclideanDistance(this->hall.get_big_line().inLine(0.5)));
 
         Point centre_small_line { std::move( hall.get_small_line().inLine(0.5))};
@@ -143,6 +144,9 @@ void Flippers::set(Tunel&& h){
 
         this->limit_init.set_points({pp0, pp1});
         this->dest = Line(limit_init);
+
+        // this->limit_init = this->hall.get_big_line();
+        // this->dest = Line(this->limit_init);
     }
 
 
@@ -155,7 +159,7 @@ bool Flippers::get_closer(long double h) {
     // Si le flipper est arrivé à sa destination, on passe à l'état 1 (mode flip)
     if(this->state == 0 && this->center == this->limit_init.inLine(0.5))
     {
-        //this->state = 1;
+        this->state = 1;
         this->isFlipping = false;
         return intersect(this->hall.get_big_line());
     }
@@ -171,48 +175,15 @@ bool Flippers::get_closer(long double h) {
         return intersect(this->hall.get_big_line());
     }
 
-    // else if(this->state == 1 && !this->isFlipping){
-
-    //     this->isFlipping = true;
-        
-    //     if(this->next_hall.get_n_hall() - this->hall.get_n_hall() == 1 || (this->hall.get_n_hall()==0 && this->next_hall.get_n_hall()!=1)){
-    //         this->next_angle = this->next_hall.get_angle(this->hall) + this->angle;
-    //         this->flip_center = Point(width, height/2.);
-    //     }
-        
-    //     else {
-    //         this->next_angle = this->hall.get_angle(this->next_hall) + this->angle;
-    //         this->flip_center = Point(0, height/2.);
-    //     }
-        
-    //     this->current_angle += (this->next_angle / this->flip_steps);  
-    // }
-
-    else if(this->state == 1 && this->isFlipping && !done){
-        // fin de rotation
-        if( abs(this->current_angle) >= abs(this->next_angle)){
-            
-            this->isFlipping = false;
-            this->hall = Tunel(this->next_hall);
-
-            //if(this->random_p < 0.95) this->random_p+=0.01;
-            //this->width = this->hall.get_small_line().length()*0.8;
-            //this->height = static_cast<int>(static_cast<double>(this->init_height) * (static_cast<double>(this->width) / (static_cast<double>(this->init_width))));
-            this->center = Line( std::move(this->hall.get_small_line().inLine(0.5)), std::move(this->hall.get_big_line().inLine(0.5))).inLine(this->random_p);
-            //double r = (static_cast<double>(this->height)/2.) / this->hall.get_big_line().inLine(0.5).euclideanDistance(this->hall.get_small_line().inLine(0.5));
-            //this->center = Line( std::move(this->hall.get_big_line().inLine(0.5)), std::move(this->hall.get_small_line().inLine(0.5))).inLine(r);
-            //this->center = this->hall.get_small_line().inLine(0.5);
-            this->angle = this->hall.get_angle();
-            this->current_angle = this->angle;
-            this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
-            this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
-            done = true;
-            std::cout << get_next_hall().get_n_hall() - get_hall().get_n_hall() << std::endl;
-        }
-        // en cours de rotation
-        else {
-            this->current_angle += (this->next_angle / this->flip_steps);
-        }
+    else if(this->isFlipping) {
+        this->hall = Tunel(this->next_hall);
+        this->width = this->hall.get_big_line().length() * 0.8;
+        this->height = this->width / 2;
+        this->center = Point(this->hall.get_big_line().inLine(0.5).get_x()+width/2, this->hall.get_big_line().inLine(0.5).get_y()-height);
+        this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
+        this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
+        this->flip_center = Point(this->width/2, this->height/2);
+        this->isFlipping = false;
     }
 
     return intersect(this->hall.get_big_line());

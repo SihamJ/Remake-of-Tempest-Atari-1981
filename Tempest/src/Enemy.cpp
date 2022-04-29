@@ -45,6 +45,16 @@
     Line Enemy::get_start() const { return this->start; }
 
     bool Enemy::get_closer(long double h){ return false; }
+
+    void Enemy::set_width(int width){
+        this->width = width;
+    }
+
+    void Enemy::set_height(int height){
+        this->height = height;
+    }
+
+    void Enemy::set_center( Point&& center) { this->center = center; }
     
     void Enemy::set(Tunel&& h){
 

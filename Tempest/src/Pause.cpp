@@ -25,6 +25,10 @@ void Pause::handle_events() {
                 this->game_ptr->getTimer()->unpause_clock(clock_list::level);
                 this->game_ptr->getTimer()->unpause_clock(clock_list::current_transition);
             }
+            if(event.key.keysym.sym == SDLK_q){
+                this->game_ptr->setIsRunning(false);
+                break;
+            }
             break;
         }
         default:

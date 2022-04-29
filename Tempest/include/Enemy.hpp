@@ -35,9 +35,13 @@ public:
     Line get_dest() const;
     Line get_start() const;
     SDL_Rect get_rect() const;
+    int get_width(){ return this->width;}
+    int get_height(){ return this->height;}
 
     virtual void set(Tunel&& h);
-
+    void set_center( Point&& center);
+    void set_width(int width);
+    void set_height(int height);
     const bool collides_with(Missile m) const;
 
 protected:

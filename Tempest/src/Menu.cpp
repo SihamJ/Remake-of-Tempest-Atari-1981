@@ -25,6 +25,10 @@ void Menu::handle_events() {
                 this->game_ptr->getTimer()->reset_clock(clock_list::current_transition);
                 this->game_ptr->setStart(true);
             }
+            if(event.key.keysym.sym == SDLK_q){
+                this->game_ptr->setIsRunning(false);
+                break;
+            }
             break;
         }
         default:

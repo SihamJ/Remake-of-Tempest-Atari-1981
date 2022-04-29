@@ -326,8 +326,8 @@ void Game::update() {
             if ((*i)->get_closer(h)) {
                 // si flipper, et couloir player, game over
                 if( f!=NULL && f->get_n_hall() == player.get_n_hall()){
-                    //this->setGameOver(true);
-                    //this->setStart(false);
+                    this->setGameOver(true);
+                    this->setStart(false);
                     game_over_msg = std::string("You Were Killed by the Flipper");
                     return;
                 }

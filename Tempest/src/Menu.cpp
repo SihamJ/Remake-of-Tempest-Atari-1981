@@ -20,12 +20,23 @@ void Menu::handle_events() {
             break;
         }
         case SDL_KEYDOWN: {
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
+            if (event.key.keysym.sym == SDLK_SPACE) {
                 this->game_ptr->getTimer()->reset_clock(clock_list::level);
                 this->game_ptr->getTimer()->reset_clock(clock_list::current_transition);
+                this->game_ptr->set_level(this->chosen_level);
                 this->game_ptr->setStart(true);
             }
             break;
+        }
+        case SDL_MOUSEWHEEL: {
+            if(event.wheel.y > 0) // scroll up
+            {
+                this->chosen_level = (this->chosen_level + 1) % 80;
+            }
+            else if(event.wheel.y < 0) // scroll down
+            {
+                this->chosen_level = (this->chosen_level > 1) ? this->chosen_level - 1 : 0;
+            }
         }
         default:
             break;
@@ -51,7 +62,9 @@ void Menu::render() {
     clear_renderer(renderer, BLACK);
     render_image(renderer, "images/logo.bmp", 1078, 427, WIDTH/2, HEIGHT/2, WIDTH/4, HEIGHT/4, 0, NULL);
     render_color(renderer, "255220220", 255);
-    TextRenderer::draw_text(renderer, std::move("PRESS ESCAPE TO START"), WIDTH/2 - 200, 4*HEIGHT/5, 1, 2);
+    TextRenderer::draw_text(renderer, std::move("PRESS SPACE TO START"), WIDTH/2 - 200, 4*HEIGHT/5, 1, 2);
+
+    TextRenderer::draw_text(renderer, "Scroll to chose your level: " + std::to_string(this->chosen_level), WIDTH/2 - 235, 4*HEIGHT/5 + 60, 1, 2);
     
     // màj du rendu
     render_present(renderer);

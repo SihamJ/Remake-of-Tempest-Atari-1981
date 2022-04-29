@@ -44,6 +44,7 @@ public:
     void clean();
 
     void next_level();
+    void set_level(int level);
 
     // checks if the game is still running
     bool running();

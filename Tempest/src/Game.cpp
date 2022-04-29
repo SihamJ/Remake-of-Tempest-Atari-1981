@@ -450,6 +450,11 @@ void Game::clean() {
     quit_game(window, renderer);
 }
 
+void Game::set_level(int level) {
+    this->level->set_current_level(level-1);
+    next_level();
+}
+
 
 bool Game::running() { return this->isRunning; }
 bool Game::transitioning() { return this->isTransitioning; }

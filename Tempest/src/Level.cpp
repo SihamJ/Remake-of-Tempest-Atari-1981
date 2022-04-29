@@ -61,7 +61,11 @@ void Level::print() const{
 
 void Level::set_current_level(int level){
     this->current_level = level;
+    this->set_map();
+    this->set_enemies();
+    this->set_player_color();
 }
+
 int Level::get_current_level() const{
     return this->current_level;
 }

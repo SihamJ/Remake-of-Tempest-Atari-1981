@@ -36,6 +36,7 @@ class Level {
         const int get_nb_enemies() const;
 
         const int get_level_score() const;
+        void set_current_level(int level);
 
         void next_level();
         std::shared_ptr<Enemy> new_enemy();
@@ -46,7 +47,6 @@ class Level {
         void set_map();
         void set_enemies();
         void set_player_color();
-        void set_current_level(int level);
         int current_level = 0;
         std::shared_ptr<Tube> map;
         std::map<int, Color> current_enemies;

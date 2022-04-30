@@ -26,6 +26,9 @@ void Menu::handle_events() {
                 this->game_ptr->set_level(this->chosen_level);
                 this->game_ptr->setStart(true);
             }
+            if (event.key.keysym.sym == SDLK_ESCAPE) { 
+                this->game_ptr->setIsRunning(false);
+            }
             break;
         }
         case SDL_MOUSEWHEEL: {
@@ -62,9 +65,10 @@ void Menu::render() {
     clear_renderer(renderer, BLACK);
     render_image(renderer, "images/logo.bmp", 1078, 427, WIDTH/2, HEIGHT/2, WIDTH/4, HEIGHT/4, 0, NULL);
     render_color(renderer, "255220220", 255);
-    TextRenderer::draw_text(renderer, std::move("PRESS SPACE TO START"), WIDTH/2 - 200, 4*HEIGHT/5, 1, 2);
 
+    TextRenderer::draw_text(renderer, "PRESS SPACE TO START", WIDTH/2 - 200, 4*HEIGHT/5, 1, 2);
     TextRenderer::draw_text(renderer, "Scroll to chose your level: " + std::to_string(this->chosen_level), WIDTH/2 - 235, 4*HEIGHT/5 + 60, 1, 2);
+    TextRenderer::draw_text(renderer, "EXIT: ESCAPE", 10, 50, 0.5, 2);
     
     // màj du rendu
     render_present(renderer);

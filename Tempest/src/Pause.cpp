@@ -20,10 +20,13 @@ void Pause::handle_events() {
             break;
         }
         case SDL_KEYDOWN: {
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
+            if (event.key.keysym.sym == SDLK_SPACE) {
                 this->game_ptr->setPause(false);
                 this->game_ptr->getTimer()->unpause_clock(clock_list::level);
                 this->game_ptr->getTimer()->unpause_clock(clock_list::current_transition);
+            }
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                this->game_ptr->setStart(false);
             }
             break;
         }
@@ -54,8 +57,9 @@ void Pause::render() {
 
     render_color(renderer, YELLOW, 255);
 
-    TextRenderer::draw_text(renderer, std::move("PAUSE"), WIDTH/2 - 70,  150, 1, 2);
-    TextRenderer::draw_text(renderer, std::move("Press escape to return to the game"), WIDTH/2 - 110, 200, 0.6, 2);
+    TextRenderer::draw_text(renderer, "PAUSE", WIDTH/2 - 100,  HEIGHT/6, 2., 2);
+    TextRenderer::draw_text(renderer, "Press space to return to the game", WIDTH/2 - 250, 4*HEIGHT/5 - 150, 1., 2);
+    TextRenderer::draw_text(renderer, "Press escape to go back to the main menu", WIDTH/2 - 275, 4*HEIGHT/5 - 70, 1., 2);
 
     // score
     render_color(renderer, std::move(this->game_ptr->getLevel()->get_score_color()));

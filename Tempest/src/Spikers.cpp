@@ -252,7 +252,7 @@ bool Spikers::decrease_random_p() {
     }
     
     this->random_p -= 0.05;
-    if (random_p < 0.) random_p = 0.;
+    if (random_p <= 0.) return true;
 
     return false;
 }

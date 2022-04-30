@@ -38,10 +38,12 @@ void Audio::shoot(Uint32 time){
     
     timer.add_clock();
     while(SOUND){
-        while(!SHOOTSOUND);
-        device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(7,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+        while(!SHOOTSOUND){ if(!SOUND) break ;}
+        if(!SOUND) break;
+        device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
         timer.reset_clock(0);
         SDL_PauseAudioDevice(device, SDL_FALSE);
+        while(timer.get_clock(0)<20);
         SDL_PauseAudioDevice(device, SDL_TRUE);
         SDL_CloseAudioDevice(device);
         SHOOTSOUND=0;
@@ -68,12 +70,12 @@ void Audio::menu_sound(){
         }
     };
 
-    
-
     while(SOUND){
-            while(!MENUSOUND);
-            device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(8,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+            while(!MENUSOUND) if(!SOUND) break;
+            if(!SOUND) break;
+            device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
             SDL_PauseAudioDevice(device, SDL_FALSE);
+            while(MENUSOUND);
             SDL_PauseAudioDevice(device, SDL_TRUE);
             SDL_CloseAudioDevice(device);
     }
@@ -105,9 +107,11 @@ void Audio::game_over_sound(){
         
 
         while(SOUND){
-            while(!GAMEOVERSOUND);
-            device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(3,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+            while(!GAMEOVERSOUND) if(!SOUND) break;
+            if(!SOUND) break;
+            device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
             SDL_PauseAudioDevice(device, SDL_FALSE);
+            while(GAMEOVERSOUND);
             SDL_PauseAudioDevice(device, SDL_TRUE);
             SDL_CloseAudioDevice(device);
         }

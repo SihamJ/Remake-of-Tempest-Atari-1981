@@ -39,20 +39,19 @@ int main(int argc, char** argv) {
     th.reserve(nbth);
 
     game->init("Tempest", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI|SDL_WINDOW_RESIZABLE|SDL_WINDOW_OPENGL, 
+                SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI|SDL_WINDOW_RESIZABLE|SDL_WINDOW_OPENGL|SDL_WINDOW_FULLSCREEN_DESKTOP, 
                 SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+
 
     // doit être fait après SDL INIT AUDIO
     th.emplace_back(play_menu);
     th.emplace_back(play_game_over);
     th.emplace_back(play_shoot);
+    
 
     // boucle principal
-
     while (game->running()) {
 
-
-        
         while(!game->getStart() && game->running()) {
             MENUSOUND = 1;
             main_menu->handle_events();
@@ -91,9 +90,8 @@ int main(int argc, char** argv) {
     SOUND = 0;
 
     for(auto t = th.begin(); t!=th.end(); t++){
-        (*t).detach();
+        (*t).join();
     }
-
     game->clean();
     return 0;
 }

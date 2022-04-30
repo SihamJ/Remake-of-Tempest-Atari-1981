@@ -18,37 +18,10 @@ std::vector<int> TextRenderer::parse_score(int value){
 }
 
 void TextRenderer::draw_life(std::shared_ptr<SDL_Renderer> renderer, int value, int x, int y, const std::string&& color){
-
     
     for(auto i = 0; i < value; i++){
-        
         std::string path = "images/blaster_" + color + static_cast<std::string>(".bmp");
-        
-        auto image = sdl_shared(SDL_LoadBMP(path.c_str()));
-        if(!image)
-        {
-            SDL_Log("Erreur > %s", SDL_GetError());
-            return;
-        }
-
-        SDL_Rect dest_rect = {x, y, 128, 64};
-        
-        auto monImage = sdl_shared(SDL_CreateTextureFromSurface(renderer.get(), image.get()));  //La texture monImage contient maintenant l'image importée
-
-        if (SDL_QueryTexture(monImage.get(), NULL, NULL, &dest_rect.w, &dest_rect.h) != 0) {
-            SDL_Log("Erreur > %s", SDL_GetError());
-            return;
-        }
-
-        dest_rect.w = 45;
-        dest_rect.h = 22;
-        dest_rect.x = x + (45*(i)) ;
-    
-
-        if (SDL_RenderCopyEx(renderer.get(), monImage.get(), NULL, &dest_rect, 0, NULL, SDL_FLIP_VERTICAL) != 0) {
-            SDL_Log("Erreur > %s", SDL_GetError());
-            return;
-        }
+        render_image(renderer, path, 128, 64, 45, 22, x + (45*i), y, 0, NULL);
     }
 }
 

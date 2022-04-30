@@ -65,7 +65,7 @@ protected:
     long double angle = 0.;
 
     // random number generator
-    std::random_device rd; 
+    std::random_device rd;
 
 };
 

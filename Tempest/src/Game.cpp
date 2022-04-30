@@ -155,7 +155,7 @@ void Game::update() {
     int i = random(gen);
 
     if ( !generated && this->timer->get_clock(clock_list::enemies) > i) {
-            generated = true;
+           // generated = true;
         this->timer->reset_clock(clock_list::enemies);
 
         std::shared_ptr<Enemy> enemy = std::move(this->level->new_enemy());
@@ -277,29 +277,11 @@ void Game::update() {
             std::shared_ptr<Flippers> f = std::dynamic_pointer_cast<Flippers>(*i);
             std::shared_ptr<Tankers> t = std::dynamic_pointer_cast<Tankers>(*i);
             
-            // si c'est un flipper, on check son état (entrain de flipper, va flipper, ou ne rien faire)
-            if( f!= nullptr && f->get_state() == 1 && !f->flipping() && f->will_flip()){
-                
-                f->set_flipping(true);
-                // flip aléatoirement à gauche ou à droite
-                std::mt19937 gen(rd());
-                std::uniform_int_distribution<int> random (0, 2);
-                int nb_hall = random(gen);
-                nb_hall = nb_hall == 0 ? 1 : -1;
-
-                // si map ouverte (couloirs non collés), il faut vérifier les index de couloir
-                if(this->map->get_open()){
-                    if (f->get_hall().get_n_hall() + nb_hall >= this->map->get_nb_hall())
-                        nb_hall = -1;
-                    else if(f->get_hall().get_n_hall() + nb_hall < 0)
-                        nb_hall = 1;
-                }
-
-                // on set le nouveau hall dans lequel le flipper va flipper, et on redéfinie les paramètres 
-                f->set_next_hall(std::move(this->map->get_hall( f->get_hall().get_n_hall() - 1)));
-                f->set_next_angle(f->get_hall().get_angle(f->get_next_hall()) + f->get_hall().get_angle());
-                f->set_flip_center(Point(f->get_width()/2, f->get_height()/2));
-                f->set_current_angle(f->get_hall().get_angle());
+            // si c'est un flipper, on check son état (entrain de flipper, va flipper, ou ne rien faire)                
+            if( f!= NULL && f->get_state() == 1 && !f->flipping()){
+                f->set_next_hall(this->map->get_hall(f->get_hall().get_n_hall() + 1));
+                f->set_next_angle(f->get_hall().get_angle(f->get_next_hall()));
+                //f->set_flipping(true);
             }
 
             // si c'est un spiker à l'état 1 (marche arrière), les paramètres d'homothétie seront différents

@@ -41,7 +41,7 @@ void Pause::handle_events() {
  * en mode pause
  * 
  */
-void Pause::update() { }
+void Pause::update() { this->game_ptr->join_threads();  }
     
 
 /**

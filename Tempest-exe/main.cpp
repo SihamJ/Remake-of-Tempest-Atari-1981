@@ -4,7 +4,7 @@ extern int HEIGHT;
 #include <Pause.hpp>
 #include <GameOver.hpp>
 #include <Menu.hpp>
-
+#include <Audio.hpp>
 // #define SDL_WINDOWPOS_CENTERED SDL_WINDOWPOS_CENTERED_DISPLAY(0)
 
 
@@ -51,8 +51,7 @@ int main(int argc, char** argv) {
             game_over->render();
         }
     }
-
+    game->join_threads();
     game->clean();
-
     return 0;
 }

@@ -28,6 +28,7 @@ add_library(
     src/SquareMap.cpp 
     src/TextRenderer.cpp
     src/SDLWrapper.cpp
+    src/Audio.cpp
 
 )
 

@@ -51,7 +51,7 @@ void Menu::handle_events() {
  * en mode main menu
  * 
  */
-void Menu::update() { }
+void Menu::update() { this->game_ptr->join_threads(); }
     
 
 /**

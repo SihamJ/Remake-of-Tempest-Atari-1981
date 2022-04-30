@@ -8,6 +8,7 @@
 #include <memory>
 #include <vector>
 #include <cmath>
+#include <thread>
 
 #include "Player.hpp"
 #include "TriangleMap.hpp"
@@ -23,7 +24,7 @@
 #include "Line.hpp"
 #include "Color.hpp"
 #include "Tunel.hpp"
-
+#include "Audio.hpp"
 
 class Game {
 
@@ -63,8 +64,11 @@ public:
     std::shared_ptr<Tube> getMap();
     void superzapper(bool all_enemies);
     std::string && getMsgGameOver();
+    void join_threads();
 
 private:
+
+    std::vector<std::thread> th;
 
     std::shared_ptr<Timer> timer;
     // temps enregistré pr faire des updates toutes les x secondes
@@ -119,6 +123,7 @@ private:
 
     std::random_device rd;  
 
+    void play_shoot();
 
 };
 

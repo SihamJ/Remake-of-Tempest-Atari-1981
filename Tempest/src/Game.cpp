@@ -18,7 +18,7 @@ Game::~Game() {}
  */
 void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flagsRenderer) {
 
-    if (init_sdl(SDL_INIT_VIDEO) != 0) {
+    if (init_sdl(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0) {
         // si problème, le jeu doit s'arrêter
         isRunning = false;
         return;
@@ -31,6 +31,9 @@ void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flag
     get_window_size(window, &w, &h);
     WIDTH = w;
     HEIGHT = h;
+
+    int nbth = std::thread::hardware_concurrency();
+    this->th.reserve(nbth);
 
     this->timer = std::make_shared<Timer>();
     
@@ -79,6 +82,8 @@ void Game::handle_events() {
                 std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(h));
                 // ajoute le point au vecteur qui répertorie tous les missiles
                 vm.push_back(std::move(m));
+                this->play_shoot();
+                            
                 break;
             }
             if (event.key.keysym.sym == SDLK_ESCAPE) {
@@ -96,6 +101,7 @@ void Game::handle_events() {
 
             if(event.key.keysym.sym == SDLK_z){
                 if( !this->superzapping && player.dec_superzapper()){
+                    this->play_shoot();
                     this->superzapper(player.get_superzapper()==0 ? false : true);
                 }
             }
@@ -154,10 +160,12 @@ void Game::update() {
 
     int i = random(gen);
 
-    if ( !generated && this->timer->get_clock(clock_list::enemies) > i) {
+    if ( this->timer->get_clock(clock_list::enemies) > i) {
            // generated = true;
         this->timer->reset_clock(clock_list::enemies);
-
+        
+        if(th.size()>0)
+            this->join_threads();
         std::shared_ptr<Enemy> enemy = std::move(this->level->new_enemy());
 
         // un couloir aléatoire parmis les couloirs de la map
@@ -250,6 +258,7 @@ void Game::update() {
 
                     // si on tire sur la ligne d'un spiker en état -1, on diminue la ligne
                     if(enemy_spiker != nullptr) {
+                        this->play_shoot();
                         // if (enemy_spiker->get_state() == -1) {
                             // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
                             double dist1 = (*it)->get_pos().euclideanDistance((*e)->get_hall().get_big_line().inLine(0.5));
@@ -465,6 +474,24 @@ void Game::set_level(int level) {
     this->level->set_current_level(level-1);
     next_level();
     this->player.set_score(this->level->get_level_score());
+}
+
+void Game::join_threads(){
+    for(auto t = this->th.begin(); t != this->th.end(); t++){
+        (*t).join();
+        th.erase(t--);
+    }
+    th.reserve(std::thread::hardware_concurrency());
+}
+
+void Game::play_shoot(){
+    if(th.size() < 10)
+        th.push_back(std::thread( [] ()
+                                {
+                                    Audio audio;
+                                    audio.init();
+                                    audio.shoot(20);
+                                }));
 }
 
 

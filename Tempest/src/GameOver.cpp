@@ -39,7 +39,7 @@ void GameOver::handle_events() {
  * en mode pause
  * 
  */
-void GameOver::update() { }
+void GameOver::update() {  this->game_ptr->join_threads(); }
     
 
 /**

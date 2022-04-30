@@ -85,18 +85,23 @@
     
     const long double Tunel::get_angle(Tunel h) const {
 
-        Point ab { h.get_small_line().get_p0().get_x() - this->get_small_line().get_p0().get_x(), 
-                    h.get_small_line().get_p0().get_y() - this->get_small_line().get_p0().get_y()};
+        if(this->parallel(h)){
+            return 180.;
+        }
+
+        Point ab { h.get_small_line().get_p1().get_x() - h.get_small_line().get_p0().get_x(), 
+                    h.get_small_line().get_p1().get_y() - h.get_small_line().get_p0().get_y()};
         Point cb { h.get_small_line().get_p1().get_x() - this->get_small_line().get_p1().get_x(), 
                     h.get_small_line().get_p1().get_y() - this->get_small_line().get_p1().get_y()};
 
         float dot = ab.get_x() * cb.get_x() + ab.get_y()*cb.get_y();
         float cross = ab.get_x()*cb.get_y() - ab.get_y()*cb.get_x();
 
-        float angle = atan2(cross, dot) * (180. / PI + 0.5);
+        float angle = atan2(cross, dot) * (180. / PI);
         if (angle < 0) angle += 360.;
-        if (angle == 0) angle = 180.;
-        return angle;        
+
+        return angle;
+        
     }
 
     const bool Tunel::parallel(Tunel h) const {

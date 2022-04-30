@@ -23,6 +23,10 @@ void GameOver::handle_events() {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 this->game_ptr->setGameOver(false);
             }
+            if(event.key.keysym.sym == SDLK_q){
+                this->game_ptr->setIsRunning(false);
+                break;
+            }
             break;
         }
         default:

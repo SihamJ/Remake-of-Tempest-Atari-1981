@@ -154,8 +154,8 @@ void Game::update() {
 
     int i = random(gen);
 
-    if ( this->timer->get_clock(clock_list::enemies) > i) {
-
+    if ( !generated && this->timer->get_clock(clock_list::enemies) > i) {
+           // generated = true;
         this->timer->reset_clock(clock_list::enemies);
 
         std::shared_ptr<Enemy> enemy = std::move(this->level->new_enemy());
@@ -275,32 +275,16 @@ void Game::update() {
 
             std::shared_ptr<Spikers> s = std::dynamic_pointer_cast<Spikers>(*i);
             std::shared_ptr<Flippers> f = std::dynamic_pointer_cast<Flippers>(*i);
+            std::shared_ptr<Tankers> t = std::dynamic_pointer_cast<Tankers>(*i);
             
-            // si c'est un flipper, on check son état (entrain de flipper, va flipper, ou ne rien faire)
-            if( f!= NULL && f->get_state() == 1 && !f->flipping() && f->will_flip()){
-                
-                f->set_flipping(true);
-                // flip aléatoirement à gauche ou à droite
-                std::mt19937 gen(rd());
-                std::uniform_int_distribution<int> random (0, 2);
-                int nb_hall = random(gen);
-                nb_hall = nb_hall == 0 ? 1 : -1;
-
-                // si map ouverte (couloirs non collés), il faut vérifier les index de couloir
-                if(this->map->get_open()){
-                    if (f->get_hall().get_n_hall() + nb_hall >= this->map->get_nb_hall())
-                        nb_hall = -1;
-                    else if(f->get_hall().get_n_hall() + nb_hall < 0)
-                        nb_hall = 1;
-                }
-
-                // on set le nouveau hall dans lequel le flipper va flipper, et on redéfinie les paramètres 
-                f->set_next_hall(std::move(this->map->get_hall( f->get_hall().get_n_hall() - 1)));
-                f->set_next_angle(f->get_hall().get_angle(f->get_next_hall()) + f->get_hall().get_angle());
-                f->set_flip_center(Point(f->get_width(), f->get_height()/2));
-                f->set_current_angle(f->get_hall().get_angle());
-
-                
+            // si c'est un flipper, on check son état (entrain de flipper, va flipper, ou ne rien faire)                
+            if( f!= NULL && f->get_state() == 1 && !f->flipping()){
+                std::mt19937 gen(this->rd());
+                std::uniform_int_distribution<int> rand (0, 2);
+                int nbhall = rand(gen) == 0 ? 1: -1;
+                f->set_next_hall(this->map->get_hall(f->get_hall().get_n_hall() + nbhall));
+                f->set_next_angle(f->get_hall().get_angle(f->get_next_hall()));
+                //f->set_flipping(true);
             }
 
             // si c'est un spiker à l'état 1 (marche arrière), les paramètres d'homothétie seront différents
@@ -331,8 +315,32 @@ void Game::update() {
                     game_over_msg = std::string("You Were Killed by the Flipper");
                     return;
                 }
-                // si pas flipper, disparition de l'ennemi
-                else if(f == NULL)
+                else if(t != nullptr){
+                    std::shared_ptr<Enemy> f1 = std::make_shared<Flippers>("flipper", std::move(this->level->get_enemies().at(enemies_list::flippers)));
+                    std::shared_ptr<Enemy> f2 = std::make_shared<Flippers>("flipper", std::move(this->level->get_enemies().at(enemies_list::flippers)));
+                    
+                    f1->set(std::move(this->map->get_hall(t->get_n_hall()-1))); 
+                    f2->set(std::move(t->get_hall()));  
+                    
+                    Point c1 { Line(f1->get_hall().get_small_line().inLine(0.5), f1->get_hall().get_big_line().inLine(0.5)).inLine(0.9) };
+                    Point c2 { Line(f2->get_hall().get_small_line().inLine(0.5), f2->get_hall().get_big_line().inLine(0.5)).inLine(0.9) };
+
+                    f1->set_center(std::move(c1));
+                    f2->set_center(std::move(c2));
+                    f1->set_width(f1->get_hall().get_big_line().length() * 0.8);
+                    f1->set_height(f1->get_width() / 2);
+
+                    f2->set_width(f2->get_hall().get_big_line().length() * 0.8);
+                    f2->set_height(f2->get_width() / 2);
+                    
+                    enemies.erase(i--);
+                    enemies.push_back(std::move(f1)); 
+                    enemies.push_back(std::move(f2));
+                    
+                    break;
+                }
+                
+                else if(f == nullptr )
                     enemies.erase(i--);
             }
         }

@@ -108,7 +108,7 @@ void PulsarTankers::draw(std::shared_ptr<SDL_Renderer> renderer) {
 
     if(render_image(renderer, path, this->init_width, this->init_height, this->width, this->height, static_cast<const int>(x),  static_cast<const int>(y), 
                     angle, NULL)){
-        std::cout << "Can't load pulsarTankers image" <<std::endl;
+        std::cout << "Can't load pulsarTankers image " << path <<std::endl;
         return;
     }
 }

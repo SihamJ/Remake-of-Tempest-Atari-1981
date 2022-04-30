@@ -291,6 +291,10 @@ void Game::update() {
             std::shared_ptr<Spikers> s = std::dynamic_pointer_cast<Spikers>(*i);
             std::shared_ptr<Flippers> f = std::dynamic_pointer_cast<Flippers>(*i);
             std::shared_ptr<Tankers> t = std::dynamic_pointer_cast<Tankers>(*i);
+            // std::shared_ptr<Pulsars> p = std::dynamic_pointer_cast<Pulsars>(*i);
+            // std::shared_ptr<Fuseballs> fu = std::dynamic_pointer_cast<Fuseballs>(*i);
+            std::shared_ptr<PulsarTankers> pt = std::dynamic_pointer_cast<PulsarTankers>(*i);
+            std::shared_ptr<FuseballTankers> ft = std::dynamic_pointer_cast<FuseballTankers>(*i);
             
             // si c'est un flipper, on check son état (entrain de flipper, va flipper, ou ne rien faire)                
             if( f!= NULL && f->get_state() == 1 && !f->flipping()){
@@ -324,39 +328,57 @@ void Game::update() {
             // Déplacement de l'ennemi et vérification s'il a atteint la périphérie
             if ((*i)->get_closer(h)) {
                 // si flipper, et couloir player, game over
-                if( f!=NULL && f->get_n_hall() == player.get_n_hall()){
-                    this->setGameOver(true);
-                    this->setStart(false);
-                    game_over_msg = std::string("You Were Killed by the Flipper");
-                    return;
+                if((*i)->get_n_hall() == player.get_n_hall()) {
+                    if (f != nullptr) {
+                        this->setGameOver(true);
+                        this->setStart(false);
+                        game_over_msg = std::string("You Were Killed by the Flipper");
+                        return;
+                    }
+                    
+                    player.decr_life_point();
+
                 }
-                else if(t != nullptr){
-                    std::shared_ptr<Enemy> f1 = std::make_shared<Flippers>("flipper", std::move(this->level->get_enemies().at(enemies_list::flippers)));
-                    std::shared_ptr<Enemy> f2 = std::make_shared<Flippers>("flipper", std::move(this->level->get_enemies().at(enemies_list::flippers)));
-                    
-                    f1->set(std::move(this->map->get_hall(t->get_n_hall()-1))); 
-                    f2->set(std::move(t->get_hall()));  
-                    
-                    Point c1 { Line(f1->get_hall().get_small_line().inLine(0.5), f1->get_hall().get_big_line().inLine(0.5)).inLine(0.9) };
-                    Point c2 { Line(f2->get_hall().get_small_line().inLine(0.5), f2->get_hall().get_big_line().inLine(0.5)).inLine(0.9) };
+                else if(t != nullptr || pt != nullptr || ft != nullptr){
+                    std::shared_ptr<Enemy> e1;// = std::make_shared<Flippers>("flipper", std::move(this->level->get_enemies().at(enemies_list::flippers)));
+                    std::shared_ptr<Enemy> e2;// = std::make_shared<Flippers>("flipper", std::move(this->level->get_enemies().at(enemies_list::flippers)));
 
-                    f1->set_center(std::move(c1));
-                    f2->set_center(std::move(c2));
-                    f1->set_width(f1->get_hall().get_big_line().length() * 0.8);
-                    f1->set_height(f1->get_width() / 2);
+                    if (t != nullptr) {
+                        e1 = std::make_shared<Flippers>("flipper", std::move(this->level->get_enemies().at(enemies_list::flippers)));
+                        e2 = std::make_shared<Flippers>("flipper", std::move(this->level->get_enemies().at(enemies_list::flippers)));
+                    }
+                    else if (pt != nullptr) {
+                        e1 = std::make_shared<Pulsars>("pulsar", std::move(this->level->get_enemies().at(enemies_list::pulsars)));
+                        e2 = std::make_shared<Pulsars>("pulsar", std::move(this->level->get_enemies().at(enemies_list::pulsars)));
+                    }
+                    else if (ft != nullptr) {
+                        e1 = std::make_shared<Fuseballs>("fuseball", std::move(this->level->get_enemies().at(enemies_list::fuseballs)));
+                        e2 = std::make_shared<Fuseballs>("fuseball", std::move(this->level->get_enemies().at(enemies_list::fuseballs)));
+                    }
+                    
+                    e1->set(std::move(this->map->get_hall((*i)->get_n_hall()-1))); 
+                    e2->set(std::move((*i)->get_hall()));  
+                    
+                    Point c1 { Line(e1->get_hall().get_small_line().inLine(0.5), e1->get_hall().get_big_line().inLine(0.5)).inLine(0.9) };
+                    Point c2 { Line(e2->get_hall().get_small_line().inLine(0.5), e2->get_hall().get_big_line().inLine(0.5)).inLine(0.9) };
 
-                    f2->set_width(f2->get_hall().get_big_line().length() * 0.8);
-                    f2->set_height(f2->get_width() / 2);
+                    e1->set_center(std::move(c1));
+                    e2->set_center(std::move(c2));
+                    e1->set_width(e1->get_hall().get_big_line().length() * 0.8);
+                    e1->set_height(e1->get_width() / 2);
+
+                    e2->set_width(e2->get_hall().get_big_line().length() * 0.8);
+                    e2->set_height(e2->get_width() / 2);
                     
                     enemies.erase(i--);
-                    enemies.push_back(std::move(f1)); 
-                    enemies.push_back(std::move(f2));
+                    enemies.push_back(std::move(e1)); 
+                    enemies.push_back(std::move(e2));
                     
                     break;
                 }
                 
-                else if(f == nullptr )
-                    enemies.erase(i--);
+                // else if(f == nullptr )
+                //     enemies.erase(i--);
             }
         }
     }

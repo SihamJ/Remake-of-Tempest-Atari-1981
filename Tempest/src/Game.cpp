@@ -78,13 +78,14 @@ void Game::handle_events() {
         }
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_SPACE){
+                SHOOTSOUND = 1;
                 // le couloir où le player se trouve
                 Tunel h = this->map->get_hall(player.get_n_hall());
 
                 std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(h));
                 // ajoute le point au vecteur qui répertorie tous les missiles
                 vm.push_back(std::move(m));
-                SHOOTSOUND = 1;
+                
                             
                 break;
             }
@@ -165,8 +166,6 @@ void Game::update() {
            // generated = true;
         this->timer->reset_clock(clock_list::enemies);
         
-        if(th.size()>0)
-            this->join_threads();
         std::shared_ptr<Enemy> enemy = std::move(this->level->new_enemy());
 
         // un couloir aléatoire parmis les couloirs de la map
@@ -205,6 +204,7 @@ void Game::update() {
                 std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(enemy_spiker->get_hall()));
                 m->set_enemy();
                 vm.push_back(std::move(m));
+                SHOOTSOUND=1;
                 enemy_spiker->set_state(-1);
             }
             else if(enemy_flipper != nullptr && enemy_flipper->get_state() == 0 && enemy_flipper->shoot()){
@@ -212,6 +212,7 @@ void Game::update() {
                 m->set_enemy();
                 m->set_pos(enemy_flipper->get_center());
                 vm.push_back(std::move(m));
+                SHOOTSOUND=1;
             }
             
         }
@@ -228,7 +229,6 @@ void Game::update() {
             if ((*it)->get_closer()) {
                 if ((*it)->get_enemy() && this->player.get_hall() == (*it)->get_hall()) {
                     if(this->player.decr_life_point()){
-                        SHOOTSOUND=1;
                         this->setGameOver(true);
                         this->setStart(false);
                         this->game_over_msg = std::string("You Lost All Your Life Points");
@@ -254,6 +254,7 @@ void Game::update() {
                         this->player.incr_score((*e)->get_scoring());
                         vm.erase(it--);
                         enemies.erase(e--);
+                        SHOOTSOUND=1; // TO DO change to collision sound
                         break;
                     }
 
@@ -267,6 +268,7 @@ void Game::update() {
 
                             if (dist1 > dist2) {
                                 vm.erase(it--);
+                                SHOOTSOUND=1; // TO DO change to collision sound
                                 if (!enemy_spiker->decrease_random_p())
                                     enemy_spiker->update_line_limit();
                                 break;

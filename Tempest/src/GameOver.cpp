@@ -2,6 +2,8 @@
 
 extern int WIDTH;
 extern int HEIGHT;
+extern int GAMEOVERSOUND;
+
 
 GameOver::GameOver(std::shared_ptr<Game> g) : game_ptr(g) {}
 GameOver::~GameOver() {}
@@ -16,14 +18,17 @@ void GameOver::handle_events() {
     SDL_PollEvent(&event);
     switch(event.type) {
         case SDL_QUIT: {
+            GAMEOVERSOUND = 0;
             this->game_ptr->setIsRunning(false);
             break;
         }
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
+                GAMEOVERSOUND = 0;
                 this->game_ptr->setGameOver(false);
             }
             if(event.key.keysym.sym == SDLK_q){
+                GAMEOVERSOUND = 0;
                 this->game_ptr->setIsRunning(false);
                 break;
             }

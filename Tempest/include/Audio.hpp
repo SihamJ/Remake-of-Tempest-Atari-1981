@@ -13,6 +13,7 @@ class Audio {
         void shoot(Uint32 time);
         void menu_sound();
         void game_over_sound();
+        
 
     private:
         SDL_AudioSpec spectre;

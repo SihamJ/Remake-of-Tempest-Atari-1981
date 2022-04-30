@@ -83,13 +83,13 @@ const bool Flippers::flipping() const{
 
 const bool Flippers::flip() {
     std::mt19937 gen(this->rd());
-    std::uniform_int_distribution<int> rand (0, 5);
-    return rand(gen) == 0 ? true : false;
+    std::uniform_int_distribution<int> rand (0, 4);
+    return rand(gen) == 0 ? false : true;
 }
 
 const bool Flippers::shoot(){
     std::mt19937 gen(this->rd());
-    std::uniform_int_distribution<int> rand (0, 15);
+    std::uniform_int_distribution<int> rand (0, 8);
     return rand(gen) == 0 ? true : false;
 }
 
@@ -149,7 +149,6 @@ bool Flippers::get_closer(long double h) {
 
     if(this->state == 0 && this->center == this->limit_init.inLine(0.5))
     {
-        std::cout << "from 0 to 1 " <<std::endl;
         this->state = 1;
         this->isFlipping = false;
         this->current_angle = this->angle;
@@ -157,7 +156,7 @@ bool Flippers::get_closer(long double h) {
         this->current_angle = this->hall.get_angle();
     }
 
-    else if(this->state == 1 && !this->isFlipping && first){
+    else if(this->state == 1 && !this->isFlipping && this->flip()){
         first = false;
         this->isFlipping = true;
         
@@ -178,13 +177,14 @@ bool Flippers::get_closer(long double h) {
         
     }
 
-    else if(this->isFlipping){
+    else if(this->state == 1 && this->isFlipping){
         // this->flip_center = Point(0,height/2.);
         // this->current_angle += (this->next_angle / this->flip_steps);
         if(this->current_angle >= this->next_angle){
             this->isFlipping = false;
             //this->center.rotate( Point(this->xflip, this->yflip), this->next_angle/2.);
             this->hall = Tunel(this->next_hall);
+            if(this->random_p < 0.95) this->random_p += 0.05;
             this->center = Line(this->hall.get_small_line().inLine(0.5), this->hall.get_big_line().inLine(0.5)).inLine(this->random_p);
             this->angle = this->hall.get_angle();
             this->flip_center = Point(this->width/2, this->height/2);
@@ -195,8 +195,10 @@ bool Flippers::get_closer(long double h) {
             this->xflip = this->x;
             this->yflip = this->y + height/2;
         }
-        else
+        else{
             this->current_angle += (this->next_angle / this->flip_steps);
+            //std::cout << "inc angle " << std::endl;
+        }
     }
 
     if(this->state == 0) {
@@ -214,13 +216,13 @@ bool Flippers::get_closer(long double h) {
     //     this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
     //     this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
     // }
-
+    //return false;
     return intersect(this->hall.get_big_line());
 }
 
 bool Flippers::intersect(Line l) {
 
-    SDL_Rect r = {static_cast<int>(this->x), static_cast<int>(this->y + height/2.), static_cast<int>(this->x + this->width), static_cast<int>(this->y + this->height/2.)};
+    SDL_Rect r = {static_cast<int>(this->x), static_cast<int>(this->y), static_cast<int>(this->width), static_cast<int>(this->height)};
 
     int x1 = l.get_p0().get_x();
     int y1 = l.get_p0().get_y();

@@ -279,7 +279,10 @@ void Game::update() {
             
             // si c'est un flipper, on check son état (entrain de flipper, va flipper, ou ne rien faire)                
             if( f!= NULL && f->get_state() == 1 && !f->flipping()){
-                f->set_next_hall(this->map->get_hall(f->get_hall().get_n_hall() + 1));
+                std::mt19937 gen(this->rd());
+                std::uniform_int_distribution<int> rand (0, 2);
+                int nbhall = rand(gen) == 0 ? 1: -1;
+                f->set_next_hall(this->map->get_hall(f->get_hall().get_n_hall() + nbhall));
                 f->set_next_angle(f->get_hall().get_angle(f->get_next_hall()));
                 //f->set_flipping(true);
             }

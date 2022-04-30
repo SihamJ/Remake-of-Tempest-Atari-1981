@@ -123,8 +123,6 @@ private:
 
     std::random_device rd;  
 
-    void play_shoot();
-
 };
 
 #endif

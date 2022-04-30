@@ -3,6 +3,7 @@
 // width and height of our window
 int WIDTH = 1400;
 int HEIGHT = 800;
+extern int SHOOTSOUND;
 
 Game::Game() {}
 Game::~Game() {}
@@ -32,8 +33,9 @@ void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flag
     WIDTH = w;
     HEIGHT = h;
 
-    int nbth = std::thread::hardware_concurrency();
-    this->th.reserve(nbth);
+    // int nbth = std::thread::hardware_concurrency();
+    // this->th.reserve(nbth);
+
 
     this->timer = std::make_shared<Timer>();
     
@@ -82,7 +84,7 @@ void Game::handle_events() {
                 std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(h));
                 // ajoute le point au vecteur qui répertorie tous les missiles
                 vm.push_back(std::move(m));
-                this->play_shoot();
+                SHOOTSOUND = 1;
                             
                 break;
             }
@@ -101,7 +103,6 @@ void Game::handle_events() {
 
             if(event.key.keysym.sym == SDLK_z){
                 if( !this->superzapping && player.dec_superzapper()){
-                    this->play_shoot();
                     this->superzapper(player.get_superzapper()==0 ? false : true);
                 }
             }
@@ -227,7 +228,7 @@ void Game::update() {
             if ((*it)->get_closer()) {
                 if ((*it)->get_enemy() && this->player.get_hall() == (*it)->get_hall()) {
                     if(this->player.decr_life_point()){
-
+                        SHOOTSOUND=1;
                         this->setGameOver(true);
                         this->setStart(false);
                         this->game_over_msg = std::string("You Lost All Your Life Points");
@@ -258,7 +259,7 @@ void Game::update() {
 
                     // si on tire sur la ligne d'un spiker en état -1, on diminue la ligne
                     if(enemy_spiker != nullptr) {
-                        this->play_shoot();
+                        SHOOTSOUND=1;
                         // if (enemy_spiker->get_state() == -1) {
                             // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
                             double dist1 = (*it)->get_pos().euclideanDistance((*e)->get_hall().get_big_line().inLine(0.5));
@@ -479,20 +480,10 @@ void Game::set_level(int level) {
 void Game::join_threads(){
     for(auto t = this->th.begin(); t != this->th.end(); t++){
         (*t).join();
-        th.erase(t--);
     }
-    th.reserve(std::thread::hardware_concurrency());
 }
 
-void Game::play_shoot(){
-    if(th.size() < 10)
-        th.push_back(std::thread( [] ()
-                                {
-                                    Audio audio;
-                                    audio.init();
-                                    audio.shoot(20);
-                                }));
-}
+
 
 
 bool Game::running() { return this->isRunning; }

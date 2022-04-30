@@ -464,6 +464,7 @@ void Game::clean() {
 void Game::set_level(int level) {
     this->level->set_current_level(level-1);
     next_level();
+    this->player.set_score(this->level->get_level_score());
 }
 
 

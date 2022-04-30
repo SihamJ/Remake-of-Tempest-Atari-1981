@@ -241,7 +241,7 @@ void Game::update() {
                     std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(*e);
 
                     // si le missile tue un ennemi, on sort de la boucle ennemies car le missile est détruit, on passe au missile qui suit
-                    if( (enemy_spiker == nullptr || enemy_spiker->get_state() != -1) && (*e)->collides_with(*(*it))) {
+                    if(enemy_spiker == nullptr && (*e)->collides_with(*(*it))) {
                         this->player.incr_score((*e)->get_scoring());
                         vm.erase(it--);
                         enemies.erase(e--);
@@ -249,19 +249,22 @@ void Game::update() {
                     }
 
                     // si on tire sur la ligne d'un spiker en état -1, on diminue la ligne
-                    
-                    if (enemy_spiker != nullptr && enemy_spiker->get_state() == -1) {
-                        // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
-                        double dist1 = (*it)->get_pos().euclideanDistance((*e)->get_hall().get_big_line().inLine(0.5));
-                        double dist2 = (*e)->get_hall().get_big_line().inLine(0.5).euclideanDistance(enemy_spiker->get_line_limit().inLine(0.5));
+                    if(enemy_spiker != nullptr) {
+                        // if (enemy_spiker->get_state() == -1) {
+                            // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
+                            double dist1 = (*it)->get_pos().euclideanDistance((*e)->get_hall().get_big_line().inLine(0.5));
+                            double dist2 = (*e)->get_hall().get_big_line().inLine(0.5).euclideanDistance(enemy_spiker->get_line_limit().inLine(0.5));
 
-                        if (dist1 > dist2) {
-                            vm.erase(it--);
-                            enemy_spiker->decrease_random_p();
-                            enemy_spiker->update_line_limit();
-                            break;
-                        }
+                            if (dist1 > dist2) {
+                                vm.erase(it--);
+                                if (!enemy_spiker->decrease_random_p())
+                                    enemy_spiker->update_line_limit();
+                                break;
+                            }
+                        // }
                     }
+                    
+                    
                 }
             }
 

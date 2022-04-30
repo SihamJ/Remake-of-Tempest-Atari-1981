@@ -26,6 +26,7 @@ void Pause::handle_events() {
                 this->game_ptr->getTimer()->unpause_clock(clock_list::current_transition);
             }
             if (event.key.keysym.sym == SDLK_ESCAPE) {
+                this->game_ptr->setPause(false);
                 this->game_ptr->setStart(false);
             }
             break;

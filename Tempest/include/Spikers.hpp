@@ -11,11 +11,11 @@ class Spikers : public Enemy {
 public:
 
     Spikers();
-    Spikers(std::string&& name);
-    Spikers(std::string&& name, Color&& c);
-    Spikers(std::string&& name, Point&& center, Tunel&& h);
+    Spikers(const std::string&& name);
+    Spikers(const std::string&& name,const  Color&& c);
+    Spikers(const std::string&& name, const Point&& center, const Tunel&& h);
     Spikers(const Spikers &other);
-    Spikers(Spikers &&other);
+    Spikers(const Spikers &&other);
 
     ~Spikers();
 

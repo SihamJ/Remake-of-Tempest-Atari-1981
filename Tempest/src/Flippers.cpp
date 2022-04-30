@@ -5,19 +5,19 @@
 Flippers::Flippers(){}
 
 //constructeur
-Flippers::Flippers(std::string&& name)
+Flippers::Flippers(const std::string&& name)
 {
     this->name = std::move(name);
 }
 
-Flippers::Flippers(std::string&& name, Color&& c)
+Flippers::Flippers(const std::string&& name, const Color&& c)
     : Enemy(std::move(c))
 {
     this->name = std::move(name);
 }
 
 //constructeur
-Flippers::Flippers(std::string&& name,  Point&& center,  Tunel&& h)
+Flippers::Flippers(const std::string&& name, const Point&& center,  const Tunel&& h)
     : Enemy(std::move(center), std::move(h))
 {
     this->name = std::move(name);
@@ -30,7 +30,7 @@ Flippers::Flippers(const Flippers &other)
     this->name = static_cast<std::string>("Flippers");
 }
 
-Flippers::Flippers(Flippers &&other)
+Flippers::Flippers(const Flippers &&other)
     : Enemy(std::move(other))
 {
     this->name = static_cast<std::string>("Flippers");

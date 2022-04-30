@@ -63,7 +63,7 @@ public:
     std::shared_ptr<Level> getLevel();
     std::shared_ptr<Tube> getMap();
     void superzapper(bool all_enemies);
-    std::string && getMsgGameOver();
+    std::string get_msg_game_over();
     void join_threads();
 
 private:

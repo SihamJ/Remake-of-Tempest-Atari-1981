@@ -20,6 +20,7 @@ public:
     Tunel(Line&& smallLine, Line&& bigLine);
     Tunel(std::array<Line, 2>&& lines);
     Tunel(Point&& p1, Point&& p2, Point&& p3, Point&& p4);
+    Tunel(Point& p1, Point& p2, Point& p3, Point& p4, int thickness);
     Tunel(Point&& p1, Point&& p2, Point&& p3, Point&& p4, int thickness);
     Tunel(std::array<Point, 4>&& points);
     Tunel(std::array<Point, 4>&& points, int thickness);

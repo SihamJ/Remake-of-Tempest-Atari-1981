@@ -27,15 +27,16 @@ class Level {
         Level(int a);
         ~Level();
 
-        std::shared_ptr<Tube> get_map() const;
-        int get_current_level() const;
-        std::map<int, Color> get_enemies() const;
-        Color get_player_color() const;
-        Color get_map_color() const;
-        Color get_score_color() const;
+        const std::shared_ptr<Tube> get_map() const;
+        const int get_current_level() const;
+        const std::map<int, Color> get_enemies() const;
+        const Color get_player_color() const;
+        const Color get_map_color() const;
+        const Color get_score_color() const;
         const int get_nb_enemies() const;
-
+        const Color get_superzapper() const ;
         const int get_level_score() const;
+
         void set_current_level(int level);
 
         void next_level();

@@ -9,11 +9,11 @@ class Tankers : public Enemy {
 public:
 
     Tankers();
-    Tankers(std::string&&  name);
-    Tankers(std::string&&  name, Color&& c);
-    Tankers(std::string&& name,  Point&& center,  Tunel&& h);
+    Tankers(const std::string&&  name);
+    Tankers(const std::string&&  name,const  Color&& c);
+    Tankers(const std::string&& name, const  Point&& center,  const Tunel&& h);
     Tankers(const Tankers &other);
-    Tankers(Tankers &&other);
+    Tankers(const Tankers &&other);
 
     ~Tankers();
 

@@ -3,19 +3,19 @@
    
     Enemy::Enemy()
     {
-        this->name = std::move(static_cast<std::string>("Enemy"));
+        this->name = (static_cast<std::string>("Enemy"));
     }
 
-    Enemy::Enemy(Color&& c) 
+    Enemy::Enemy(const Color&& c) 
     {
         this->color = std::move(c);
-        this->name = std::move(static_cast<std::string>("Enemy"));
+        this->name = (static_cast<std::string>("Enemy"));
     }
 
-    Enemy::Enemy(Point&& center, Tunel&& h)
+    Enemy::Enemy(const Point&& center, const Tunel&& h)
         :  center(std::move(center))
     {
-        this->name = std::move(static_cast<std::string>("Enemy"));
+        this->name = (static_cast<std::string>("Enemy"));
         this->hall = std::move(h);
     }
 
@@ -26,7 +26,7 @@
         this->start = other.start;
     }
 
-    Enemy::Enemy( Enemy&& other)
+    Enemy::Enemy( const Enemy&& other)
         : Character(std::move(other))
     {
         this->dest = other.dest;
@@ -66,8 +66,8 @@
         width = dist/3;
         height = dist/3;
 
-        Point centre_small_line { std::move(hall.get_small_line().inLine(0.5))};
-        Point centre_big_line { std::move(hall.get_big_line().inLine(0.5))};
+        Point centre_small_line {hall.get_small_line().inLine(0.5)};
+        Point centre_big_line { hall.get_big_line().inLine(0.5)};
 
         x = centre_small_line.get_x() - (width/2);
         y = centre_small_line.get_y() - (height/2);

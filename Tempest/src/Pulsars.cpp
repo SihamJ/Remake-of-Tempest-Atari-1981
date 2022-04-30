@@ -3,19 +3,19 @@
 Pulsars::Pulsars(){}
 
 //constructeur
-Pulsars::Pulsars(std::string&& name)
+Pulsars::Pulsars(const std::string&& name)
 {
     this->name = std::move(name);
 }
 
-Pulsars::Pulsars(std::string&& name, Color&& c)
+Pulsars::Pulsars(const std::string&& name, const Color&& c)
     : Enemy(std::move(c))
 {
     this->name = std::move(name);
 }
 
 //constructeur
-Pulsars::Pulsars(std::string&& name,  Point&& center,  Tunel&& h)
+Pulsars::Pulsars(const std::string&& name,  const Point&& center,  const Tunel&& h)
     : Enemy(std::move(center), std::move(h))
 {
     this->name = std::move(name);
@@ -28,7 +28,7 @@ Pulsars::Pulsars(const Pulsars &other)
     this->name = static_cast<std::string>("Pulsars");
 }
 
-Pulsars::Pulsars(Pulsars &&other)
+Pulsars::Pulsars(const Pulsars &&other)
     : Enemy(std::move(other))
 {
     this->name = static_cast<std::string>("Pulsars");

@@ -31,6 +31,11 @@
         lines[1] = Line(p3, p4, thickness);
     }
 
+    Tunel::Tunel(Point& p1, Point& p2, Point& p3, Point& p4, int thickness){
+        lines[0] = Line(p1, p2, thickness);
+        lines[1] = Line(p3, p4, thickness);
+    }
+
     Tunel::Tunel(std::array<Point, 4>&& points){
         lines[0] = Line(points[0], points[1]);
         lines[1] = Line(points[2], points[3]);
@@ -155,9 +160,9 @@
     }
     
     const bool Tunel::operator==(Tunel &&t) const {
-        return (this->get_small_line() == std::move(t.get_small_line()) && this->get_big_line() == std::move(t.get_big_line()));
+        return (this->get_small_line() == t.get_small_line() && this->get_big_line() == t.get_big_line());
     }
 
     const bool Tunel::operator!=(Tunel &&t) const {
-        return (this->get_small_line() != std::move(t.get_small_line()) || this->get_big_line() != std::move(t.get_big_line()));
+        return (this->get_small_line() != t.get_small_line() || this->get_big_line() != t.get_big_line());
     }

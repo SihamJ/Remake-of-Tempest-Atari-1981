@@ -13,12 +13,12 @@ int SHOOTSOUND = 0;
 
 void play_menu(){
     Audio audio = Audio();
-    audio.menu_sound();
+    audio.play_menu_sound();
 }
 
 void play_game_over(){
     Audio audio = Audio();
-    audio.game_over_sound();
+    audio.play_game_over_sound();
 }
 
 void play_shoot(){

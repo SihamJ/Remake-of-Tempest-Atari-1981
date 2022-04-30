@@ -63,16 +63,16 @@ void Pause::render() {
     TextRenderer::draw_text(renderer, "Press escape to go back to the main menu", WIDTH/2 - 275, 4*HEIGHT/5 - 70, 1., 2);
 
     // score
-    render_color(renderer, std::move(this->game_ptr->getLevel()->get_score_color()));
-    TextRenderer::draw_text(renderer,  std::move("Score: " + std::to_string(player->get_score())), 30, 50, 0.6, 2);
+    render_color(renderer,this->game_ptr->getLevel()->get_score_color());
+    TextRenderer::draw_text(renderer,  "Score: " + std::to_string(player->get_score()), 30, 50, 0.6, 2);
 
     // Player Name
-    TextRenderer::draw_text(renderer, std::move(player->get_name()), 30 , 100, 0.6, 2);
-    TextRenderer::draw_life(renderer, player->get_life_point(), 30, 150, std::move(player->get_color().get_name()));
+    TextRenderer::draw_text(renderer, player->get_name(), 30 , 100, 0.6, 2);
+    TextRenderer::draw_life(renderer, player->get_life_point(), 30, 150,player->get_color().get_name());
 
     // niveau
     render_color(renderer, this->game_ptr->getMap()->get_color());
-    TextRenderer::draw_text(renderer, std::move("Level " + std::to_string(this->game_ptr->getLevel()->get_current_level())), 30, 200, 0.6, 2);
+    TextRenderer::draw_text(renderer, "Level " + std::to_string(this->game_ptr->getLevel()->get_current_level()), 30, 200, 0.6, 2);
 
     // màj du rendu
     render_present(renderer);

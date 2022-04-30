@@ -394,8 +394,11 @@ void Game::render() {
     clear_renderer(renderer, BLACK);
 
     if(this->isTransitioning){
-        render_color(renderer, std::move(this->level->get_map_color()));
-        TextRenderer::draw_text(renderer,  std::move(std::string("LEVEL ") + std::to_string(this->level->get_current_level())), WIDTH/2-100, HEIGHT/3., 2, 3);
+        if(this->level->get_map_color().get_name() == "BLACK")
+            render_color(renderer, Color("WHITE",WHITE));
+        else
+            render_color(renderer, std::move(this->level->get_map_color()));
+        TextRenderer::draw_text(renderer,  std::move(std::string("LEVEL ") + std::to_string(this->level->get_current_level())), WIDTH/2-200, HEIGHT/5., 3, 3);
         render_present(renderer);
         return;
     }
@@ -428,20 +431,20 @@ void Game::render() {
     //     i.draw(renderer);
     // }
 
-    render_color(renderer, std::move(this->level->get_score_color()));
-    TextRenderer::draw_text(renderer,  std::move(std::to_string(this->player.get_score())), 1*WIDTH/4, 50, 1, 2);
+    render_color(renderer, this->level->get_score_color());
+    TextRenderer::draw_text(renderer,  std::to_string(this->player.get_score()), 1*WIDTH/4, 50, 1, 2);
 
     // Player Name
-    TextRenderer::draw_text(renderer,  std::move(this->player.get_name()), WIDTH/2-60 , 50, 1, 2);
+    TextRenderer::draw_text(renderer,  this->player.get_name(), WIDTH/2-60 , 50, 1, 2);
 
     TextRenderer::draw_life(renderer, this->player.get_life_point(), 1*WIDTH/4, 70, this->player.get_color().get_name());
 
-    render_color(renderer, std::move(this->map->get_color()));
-    TextRenderer::draw_text(renderer, std::move(std::to_string(this->level->get_current_level())), WIDTH/2-10, 110, 0.8, 2);
+    render_color(renderer, this->map->get_color());
+    TextRenderer::draw_text(renderer, std::to_string(this->level->get_current_level()), WIDTH/2-10, 110, 0.8, 2);
     
     if(this->superzapping){
-        render_color(renderer, std::move(LIGHT_BLUE), 255);
-        TextRenderer::draw_text(renderer, std::move("SUPERZAPPER!"), WIDTH/3, HEIGHT/3, 2, 4);
+        render_color(renderer, this->level->get_superzapper());
+        TextRenderer::draw_text(renderer, "SUPERZAPPER!", WIDTH/3, HEIGHT/3, 2, 4);
     }
     
     // màj du rendu
@@ -456,12 +459,12 @@ void Game::next_level(){
     this->vh.clear();
     this->enemies.clear();
     this->level->next_level();
-    this->map = std::move(level->get_map());
+    this->map = level->get_map();
     this->player.clean();
     map->build_map();
     center.set_point(map->get_center().get_x(), map->get_center().get_y());
     vh = map->get_hall_list();
-    this->player.set_hall(std::move(map->get_hall(0)));
+    this->player.set_hall(map->get_hall(0));
     this->player.build();
     this->player.set_superzapper(2);
     this->superzapping = false;
@@ -524,4 +527,4 @@ std::shared_ptr<Timer> Game::getTimer() { return this->timer; }
 std::shared_ptr<Player> Game::getPlayer() { return std::make_shared<Player>(this->player); }
 std::shared_ptr<Level> Game::getLevel() { return this->level; }
 std::shared_ptr<Tube> Game::getMap() { return this->map; }
-std::string && Game::getMsgGameOver() { return std::move(this->game_over_msg); }
+std::string Game::get_msg_game_over() { return this->game_over_msg; }

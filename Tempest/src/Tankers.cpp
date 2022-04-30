@@ -3,19 +3,19 @@
 Tankers::Tankers(){}
 
 //constructeur
-Tankers::Tankers(std::string&& name)
+Tankers::Tankers(const std::string&& name)
 {
     this->name = std::move(name);
 }
 
-Tankers::Tankers(std::string&& name, Color&& c)
+Tankers::Tankers(const std::string&& name, const Color&& c)
     : Enemy(std::move(c))
 {
     this->name = std::move(name);
 }
 
 //constructeur
-Tankers::Tankers(std::string&& name,  Point&& center,  Tunel&& h)
+Tankers::Tankers(const std::string&& name, const  Point&& center, const  Tunel&& h)
     : Enemy(std::move(center), std::move(h))
 {
     this->name = std::move(name);
@@ -28,7 +28,7 @@ Tankers::Tankers(const Tankers &other)
     this->name = static_cast<std::string>("Tankers");
 }
 
-Tankers::Tankers(Tankers &&other)
+Tankers::Tankers(const Tankers &&other)
     : Enemy(std::move(other))
 {
     this->name = static_cast<std::string>("Tankers");
@@ -82,7 +82,7 @@ bool Tankers::get_closer(long double h) {
     this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);
 
     //return false;
-    return intersect(std::move(this->hall.get_big_line()));
+    return intersect(this->hall.get_big_line());
 }
 
 bool Tankers::intersect(const Line&& l) {

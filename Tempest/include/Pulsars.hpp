@@ -9,11 +9,11 @@ class Pulsars : public Enemy {
 public:
 
     Pulsars();
-    Pulsars(std::string&&  name);
-    Pulsars(std::string&&  name, Color&& c);
-    Pulsars(std::string&& name,  Point&& center,  Tunel&& h);
+    Pulsars(const std::string&&  name);
+    Pulsars(const std::string&&  name, const Color&& c);
+    Pulsars(const std::string&& name, const  Point&& center, const  Tunel&& h);
     Pulsars(const Pulsars &other);
-    Pulsars(Pulsars &&other);
+    Pulsars(const Pulsars &&other);
 
     ~Pulsars();
 

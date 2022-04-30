@@ -14,8 +14,14 @@ class Color {
         Color(std::string&& name, const int& r, const int& g, const int& b);
         Color(std::string&& name, std::string&& stream);
 
+        Color(const std::string& name, const int& r, const int& g, const int& b);
+        Color(const std::string& name, const std::string& stream);
+
         Color(std::string&& name, const int& r, const int& g, const int& b, const int& a);
         Color(std::string&& name, std::string&& stream, const int& opacity);
+
+        Color(const std::string& name, const int& r, const int& g, const int& b, const int& a);
+        Color(const std::string& name, const std::string& stream, const int& a);
 
         ~Color();
 

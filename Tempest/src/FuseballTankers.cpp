@@ -3,19 +3,19 @@
 FuseballTankers::FuseballTankers(){}
 
 //constructeur
-FuseballTankers::FuseballTankers(std::string&& name)
+FuseballTankers::FuseballTankers(const std::string&& name)
 {
     this->name = std::move(name);
 }
 
-FuseballTankers::FuseballTankers(std::string&& name, Color&& c)
+FuseballTankers::FuseballTankers(const std::string&& name, const Color&& c)
     : Enemy(std::move(c))
 {
     this->name = std::move(name);
 }
 
 //constructeur
-FuseballTankers::FuseballTankers(std::string&& name,  Point&& center,  Tunel&& h)
+FuseballTankers::FuseballTankers(const std::string&& name, const  Point&& center, const  Tunel&& h)
     : Enemy(std::move(center), std::move(h))
 {
     this->name = std::move(name);
@@ -28,7 +28,7 @@ FuseballTankers::FuseballTankers(const FuseballTankers &other)
     this->name = static_cast<std::string>("FuseballTankers");
 }
 
-FuseballTankers::FuseballTankers(FuseballTankers &&other)
+FuseballTankers::FuseballTankers(const FuseballTankers &&other)
     : Enemy(std::move(other))
 {
     this->name = static_cast<std::string>("FuseballTankers");

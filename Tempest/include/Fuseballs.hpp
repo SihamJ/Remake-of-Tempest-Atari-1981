@@ -9,11 +9,11 @@ class Fuseballs : public Enemy {
 public:
 
     Fuseballs();
-    Fuseballs(std::string&&  name);
-    Fuseballs(std::string&&  name, Color&& c);
-    Fuseballs(std::string&& name,  Point&& center,  Tunel&& h);
+    Fuseballs(const std::string&&  name);
+    Fuseballs(const std::string&&  name, const  Color&& c);
+    Fuseballs(const std::string&& name, const  Point&& center, const  Tunel&& h);
     Fuseballs(const Fuseballs &other);
-    Fuseballs(Fuseballs &&other);
+    Fuseballs(const Fuseballs &&other);
 
     ~Fuseballs();
 

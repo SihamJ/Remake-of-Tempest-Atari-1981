@@ -8,11 +8,11 @@ class Flippers : public Enemy {
 public:
 
     Flippers();
-    Flippers(std::string&&  name);
-    Flippers(std::string&&  name, Color&& c);
-    Flippers(std::string&& name,  Point&& center,  Tunel&& h);
+    Flippers(const std::string&&  name);
+    Flippers(const std::string&&  name, const  Color&& c);
+    Flippers(const std::string&& name, const  Point&& center, const  Tunel&& h);
     Flippers(const Flippers &other);
-    Flippers(Flippers &&other);
+    Flippers(const Flippers &&other);
 
     ~Flippers();
     std::vector<Line> get_lines(){ return this->lines; }

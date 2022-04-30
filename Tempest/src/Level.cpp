@@ -9,11 +9,11 @@ Level::Level(int a){
 
 Level::~Level(){}
 
-std::shared_ptr<Tube> Level::get_map() const{
+const std::shared_ptr<Tube> Level::get_map() const{
     return this->map;
 }
 
-std::map<int, Color> Level::get_enemies() const{
+const std::map<int, Color> Level::get_enemies() const{
     return this->current_enemies;
 }
 
@@ -21,15 +21,15 @@ const int Level::get_nb_enemies() const{
     return this->current_enemies.size();
 }
 
-Color Level::get_player_color() const{
+const Color Level::get_player_color() const{
     return this->current_player_color;
 }
 
-Color Level::get_map_color() const{
+const Color Level::get_map_color() const{
     return this->map->get_color();
 }
 
-Color Level::get_score_color() const{
+const Color Level::get_score_color() const{
     Color c;
 
     if(this->current_level > 0 && this->current_level < 17){
@@ -66,8 +66,33 @@ void Level::set_current_level(int level){
     this->set_player_color();
 }
 
-int Level::get_current_level() const{
+const int Level::get_current_level() const{
     return this->current_level;
+}
+
+const Color Level::get_superzapper() const {
+    Color c;
+
+    if(this->current_level > 0 && this->current_level < 17){
+        c = level1_16_superzapper_color;
+    }
+    else if(this->current_level >= 17 && this->current_level < 33){
+        c = level17_32_superzapper_color;
+    }
+    else if(this->current_level >= 33 && this->current_level < 49){
+        c = level33_48_superzapper_color;
+    }
+    else if(this->current_level >= 49 && this->current_level < 65){
+        c = level49_64_superzapper_color;
+    }
+    else if (this->current_level >= 65 && this->current_level < 81){
+        c = level65_80_superzapper_color;
+    }
+    else if(this->current_level >= 81){
+        c = level81_96_superzapper_color;
+    }
+
+    return c;
 }
 
 long double Level::get_h(long double h0, long double d, long double z, bool backwards) const{

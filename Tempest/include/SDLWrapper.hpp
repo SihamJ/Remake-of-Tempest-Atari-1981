@@ -42,8 +42,9 @@ void get_window_size(std::shared_ptr<SDL_Window> window, int *w, int *h);
 
 int set_display(std::shared_ptr<SDL_Window> window, std::shared_ptr<SDL_DisplayMode> mode);
 
-void render_color(std::shared_ptr<SDL_Renderer> renderer, Color&& c);
-void render_color(std::shared_ptr<SDL_Renderer> renderer, std::string&& color);
-void render_color(std::shared_ptr<SDL_Renderer> renderer, std::string&& color, const int opacity);
+void render_color(std::shared_ptr<SDL_Renderer> renderer, const Color&& c);
+void render_color(std::shared_ptr<SDL_Renderer> renderer, const std::string&& color);
+void render_color(std::shared_ptr<SDL_Renderer> renderer, const std::string&& color, const int opacity);
+
 
 #endif

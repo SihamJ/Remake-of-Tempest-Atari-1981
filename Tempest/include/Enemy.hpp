@@ -15,10 +15,11 @@ class Enemy : public Character {
 public:
 
     Enemy();
-    Enemy(Color&& c);
-    Enemy(Point&& center, Tunel&& h);
+    Enemy(const Color&& c);
+    Enemy(const Point&& center, const Tunel&& h);
+    
     Enemy(const Enemy& other);
-    Enemy( Enemy&& other);
+    Enemy( const Enemy&& other);
 
     ~Enemy();
 

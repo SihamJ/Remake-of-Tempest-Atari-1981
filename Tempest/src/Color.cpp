@@ -23,6 +23,47 @@ Color::Color(std::string&& name, const int& r, const int& g, const int& b)
 
 }
 
+Color::Color(const std::string& name, const int& r, const int& g, const int& b)
+    : name(name), r(r), g(g), b(b)
+{
+
+}
+
+
+Color::Color(const std::string& name, const std::string& stream)
+    : name(name)
+{
+    std::string c = stream;
+    std::string r = c.substr(0, 3);
+    std::string g = c.substr(3, 3);
+    std::string b = c.substr(6, 3);
+
+    this->r = std::stoi(r);
+    this->g = std::stoi(g);
+    this->b = std::stoi(b);
+    this->a = 255;
+}
+
+Color::Color(const std::string& name, const int& r, const int& g, const int& b, const int& a)
+    : name(name), r(r), g(g), b(b), a(a)
+{
+
+}
+
+
+Color::Color(const std::string& name, const std::string& stream, const int& a)
+    : name(std::move(name)), a(a)
+{
+    std::string c = stream;
+    std::string r = c.substr(0, 3);
+    std::string g = c.substr(3, 3);
+    std::string b = c.substr(6, 3);
+
+    this->r = std::stoi(r);
+    this->g = std::stoi(g);
+    this->b = std::stoi(b);
+}
+
 // constructor for manually defining rgb values
 Color::Color(std::string&& name, const int& r, const int& g, const int& b, const int& a)
     : name(std::move(name)), r(r), g(g), b(b), a(a)

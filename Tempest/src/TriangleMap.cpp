@@ -108,7 +108,7 @@ void TriangleMap::build_map(){
 
     // linking
     for(int i = 0; i < nbHall; i++){
-        Tunel h = Tunel(std::move(bigLines.at(i)), std::move(bigLines.at((i+1) % bigLines.size())), std::move(smallLines.at(i)), std::move(smallLines.at((i+1) % smallLines.size())), this->thickness);
+        Tunel h { bigLines.at(i), bigLines.at((i+1) % bigLines.size()), smallLines.at(i),smallLines.at((i+1) % smallLines.size()), this->thickness };
         h.set_angle();
         h.set_nb_hall(i);
         this->add_Hall(std::move(h));

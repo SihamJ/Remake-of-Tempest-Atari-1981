@@ -81,16 +81,16 @@ void quit_game(std::shared_ptr<SDL_Window> window, std::shared_ptr<SDL_Renderer>
 }
 
 
-void render_color(std::shared_ptr<SDL_Renderer> renderer, Color&& c){
+void render_color(std::shared_ptr<SDL_Renderer> renderer, const Color&& c){
     SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), c.get_a());
 }
 
-void render_color(std::shared_ptr<SDL_Renderer> renderer, std::string&& color){
+void render_color(std::shared_ptr<SDL_Renderer> renderer, const std::string&& color){
     Color c { "", std::move(color) };
     SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), 255);
 }
 
-void render_color(std::shared_ptr<SDL_Renderer> renderer, std::string&& color, const int opacity){
+void render_color(std::shared_ptr<SDL_Renderer> renderer, const std::string&& color, const int opacity){
     Color c { "", std::move(color), opacity };
     SDL_SetRenderDrawColor(renderer.get(), c.get_r(), c.get_g(), c.get_b(), opacity);
 }

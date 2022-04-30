@@ -6,21 +6,21 @@
 Spikers::Spikers(){}
 
 //constructeur
-Spikers::Spikers(std::string&& name)
+Spikers::Spikers(const std::string&& name)
 {
     this->name = std::move(name);
     this->width = 57;
     this->height = 64;
 }
 
-Spikers::Spikers(std::string&&  name, Color&& c)
+Spikers::Spikers(const std::string&&  name,const  Color&& c)
     : Spikers(std::move(name)) 
 {
     this->color = c;
 }
 
 //constructeur
-Spikers::Spikers(std::string&& name,  Point&& center,  Tunel&& h)
+Spikers::Spikers(const std::string&& name, const  Point&& center, const  Tunel&& h)
     : Enemy(std::move(center), std::move(h))
 {
     this->name = std::move(name);
@@ -38,7 +38,7 @@ Spikers::Spikers(const Spikers &other)
 }
 
 // move constructor
-Spikers::Spikers(Spikers &&other)
+Spikers::Spikers(const Spikers &&other)
     : Enemy(std::move(other))
 {
     this->name = static_cast<std::string>("Spikers");

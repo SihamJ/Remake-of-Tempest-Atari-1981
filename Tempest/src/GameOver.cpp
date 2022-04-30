@@ -62,7 +62,7 @@ void GameOver::render() {
         return;
 
     render_color(renderer, WHITE, 255);
-    TextRenderer::draw_text(renderer, std::move(this->game_ptr->getMsgGameOver()), WIDTH/2 - 160, HEIGHT/3 + 100, 1, 2);
+    TextRenderer::draw_text(renderer, this->game_ptr->get_msg_game_over(), WIDTH/2 - 160, HEIGHT/3 + 100, 1, 2);
     TextRenderer::draw_text(renderer, "PRESS ESCAPE TO GO BACK TO MAIN MENU", WIDTH/2 - 330, HEIGHT/3 + 170, 1, 2);
     // màj du rendu
     render_present(renderer);

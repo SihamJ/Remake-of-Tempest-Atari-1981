@@ -6,7 +6,7 @@ extern int HEIGHT;
 #include <Menu.hpp>
 #include <Audio.hpp>
 // #define SDL_WINDOWPOS_CENTERED SDL_WINDOWPOS_CENTERED_DISPLAY(0)
-int SOUND = 1;
+int SOUND = 0;
 int MENU = 1;
 int GAMEOVER = 0;
 int SHOOT = 0;

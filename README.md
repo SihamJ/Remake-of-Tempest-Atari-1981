@@ -14,9 +14,11 @@ Pout télécharger le code et le compiler sur tous les systèmes vous pouvez uti
 
 # Lancer le jeu (Toujours depuis le répertoir Build)
 
-	./Tempest-exe/Tempest-Atari
+	./bin/Tempest
 
 # Utilisation
 
-	Flêches clavier pour changer de couloir
+	Molette souris pour changer de couloir
 	Espace pour tirer des missiles
+	Z pour le SuperZapper
+	

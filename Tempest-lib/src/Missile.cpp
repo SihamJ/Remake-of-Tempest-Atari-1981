@@ -92,8 +92,22 @@
     }
 
     void Missile::draw(std::shared_ptr<SDL_Renderer> renderer) {
-        
-        if(render_image(renderer, "images/missile_ennemi2.bmp", this->init_width, this->init_height, width, height, static_cast<const int>(this->pos.get_x() - this->width/2),
+        std::string path;
+        int w,h;
+        if(this->get_enemy()){
+            path = "images/missile_ennemi.bmp";
+            w = 537;
+            h = 563;
+            this->height = static_cast<double>(h) * static_cast<double>(this->width) / static_cast<double>(w);
+        }
+        else{
+            w = init_width;
+            h = init_height;
+            path = "images/missile_player.bmp";
+
+        }
+
+        if(render_image(renderer, path.c_str(), w, h, width, height, static_cast<const int>(this->pos.get_x() - this->width/2),
                           static_cast<const int>(this->pos.get_y() - this->height/2), this->angle, NULL)){
             std::cout << "Can't load missile image" << std::endl;
             return;

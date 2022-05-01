@@ -1,6 +1,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,linux,c++,visualstudio,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,c++,visualstudio,visualstudiocode
-
+build
 ### C++ ###
 # Prerequisites
 *.d

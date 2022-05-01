@@ -105,7 +105,7 @@ Pour moduler la vitesse, nous avons apporté des modifications à la formule d'h
 **Latence**
 </br>
 
-Il nous arrive parfois d'avoir un problème de latence, nous avons remarqué qu'il est possible de paralléliser le rendu, or nous n'avons pas eu le temps d'apporter cette modification. 
+Il nous arrive parfois d'avoir un problème de latence bien que peu détectable, nous avons remarqué qu'il est possible de paralléliser le rendu, par contraire de temps nous n'avons pas pu ajouter cette partie.
 
 </br>
 

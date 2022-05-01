@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.6)
 
 add_subdirectory(SDL)
-project(Tempest-Atari LANGUAGES CXX)
+project(Tempest LANGUAGES CXX)
 
 install(DIRECTORY images DESTINATION .)
 file(COPY images/fuseballTanker_PURPLE.bmp images/pulsar_LIGHTBLUE.bmp images/fuseball.bmp 
@@ -12,9 +12,11 @@ file(COPY images/fuseballTanker_PURPLE.bmp images/pulsar_LIGHTBLUE.bmp images/fu
     images/missile.bmp images/blaster_RED.bmp images/blaster_BLUE.bmp images/blaster_GREEN.bmp images/blaster_YELLOW.bmp 
     images/missile_ennemi.bmp images/missile_ennemi2.bmp images/missile_player.bmp images/logo.bmp images/gameover.bmp DESTINATION images)
 
+install(DIRECTORY Audio DESTINATION .)
+file(COPY Audio/shoot.wav Audio/collision2.wav Audio/flipper_attack.wav Audio/gameover.wav Audio/menu.wav 
+    Audio/next_level.wav Audio/score.wav Audio/superzapper.wav DESTINATION Audio)
 
-
-add_subdirectory(Tempest)
-add_subdirectory(Tempest-exe)
+add_subdirectory(Tempest-lib)
+add_subdirectory(bin)
 
 

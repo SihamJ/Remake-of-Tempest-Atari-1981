@@ -44,15 +44,16 @@ int main(int argc, char** argv) {
                 SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI|SDL_WINDOW_RESIZABLE|SDL_WINDOW_OPENGL|SDL_WINDOW_FULLSCREEN_DESKTOP, 
                 SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
 
-
-    //doit être fait après SDL INIT AUDIO
-    th.emplace_back(menu);
-    //th.emplace_back(gameover);
-    th.emplace_back(shoot);
-    //th.emplace_back(enemy_shoot);
-    th.emplace_back(superzapper);
-    th.emplace_back(next_level);
-    th.emplace_back(score);
+    if (SOUND){
+        //doit être fait après SDL INIT AUDIO
+        th.emplace_back(menu);
+        //th.emplace_back(gameover);
+        th.emplace_back(shoot);
+        //th.emplace_back(enemy_shoot);
+        th.emplace_back(superzapper);
+        th.emplace_back(next_level);
+        th.emplace_back(score);
+    }
 
     // boucle principal
     while (game->running()) {

@@ -185,7 +185,11 @@ void Game::update() {
     }
     
     std::mt19937 gen(this->rd());
-    std::uniform_int_distribution<int> random (0, 100000);
+    std::uniform_int_distribution<int> random (level->get_current_level() >= 100 ? 
+        0 : 500 - (level->get_current_level() * 5), 
+        level->get_current_level() < 200 ?
+        static_cast<int>(1000000. * (1. - static_cast<double>(level->get_current_level())/200.))
+        : 50000);
 
     int i = random(gen);
 
@@ -230,7 +234,7 @@ void Game::update() {
             if (enemy_spiker != nullptr && enemy_spiker->get_state() == 2) {
                 std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(enemy_spiker->get_hall()));
                 m->set_enemy();
-                vm.push_back(std::move(m));
+                vm_enemy.push_back(std::move(m));
                 ENEMYSHOOT=1;
                 enemy_spiker->set_state(-1);
             }
@@ -238,7 +242,7 @@ void Game::update() {
                 std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(enemy_flipper->get_hall()));
                 m->set_enemy();
                 m->set_pos(enemy_flipper->get_center());
-                vm.push_back(std::move(m));
+                vm_enemy.push_back(std::move(m));
                 ENEMYSHOOT=1;
             }
             
@@ -267,48 +271,79 @@ void Game::update() {
                 vm.erase(it--);
                 continue;
             }
-
             else if (!(*it)->get_enemy()) {
 
-                for (auto e = enemies.begin(); e!= enemies.end(); e++) {
+                bool m_exist = true;
 
-                    // si missile et ennemi pas dans le meme hall on continue à l'ennemi suivant
-                    if( (*it)->get_hall() != (*e)->get_hall())
-                        continue;
-
-                    std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(*e);
-
-                    // si le missile tue un ennemi, on sort de la boucle ennemies car le missile est détruit, on passe au missile qui suit
-                    if(enemy_spiker == nullptr && (*e)->collides_with(*(*it))) {
-                        SCORE = 1;
-                        this->player.incr_score((*e)->get_scoring());
+                for (auto it_enemy = vm_enemy.begin(); it_enemy != vm_enemy.end(); it_enemy++) {
+                    if ((*it)->collides_with(*(*it_enemy))) {
+                        std::cout<< "COLLISION MISSILES" << std::endl;
                         vm.erase(it--);
-                        enemies.erase(e--);
-                        ENEMYSHOOT=1; // TO DO change to collision sound
+                        vm_enemy.erase(it_enemy);
+                        m_exist = false;
                         break;
                     }
-
-                    // si on tire sur la ligne d'un spiker en état -1, on diminue la ligne
-                    if(enemy_spiker != nullptr) {
-                        // if (enemy_spiker->get_state() == -1) {
-                            // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
-                            double dist1 = (*it)->get_pos().euclideanDistance((*e)->get_hall().get_big_line().inLine(0.5));
-                            double dist2 = (*e)->get_hall().get_big_line().inLine(0.5).euclideanDistance(enemy_spiker->get_line_limit().inLine(0.5));
-
-                            if (dist1 > dist2) {
-
-                                vm.erase(it--);
-                                if (!enemy_spiker->decrease_random_p())
-                                    enemy_spiker->update_line_limit();
-                                break;
-                            }
-                        // }
-                    }
-                    
-                    
                 }
+
+                if (m_exist)
+                    for (auto e = enemies.begin(); e!= enemies.end(); e++) {
+
+                        // si missile et ennemi pas dans le meme hall on continue à l'ennemi suivant
+                        if( (*it)->get_hall() != (*e)->get_hall())
+                            continue;
+
+                        std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(*e);
+
+                        // si le missile tue un ennemi, on sort de la boucle ennemies car le missile est détruit, on passe au missile qui suit
+                        if(enemy_spiker == nullptr && (*e)->collides_with(*(*it))) {
+                            SCORE = 1;
+                            this->player.incr_score((*e)->get_scoring());
+                            vm.erase(it--);
+                            enemies.erase(e--);
+                            ENEMYSHOOT=1; // TO DO change to collision sound
+                            break;
+                        }
+
+                        // si on tire sur la ligne d'un spiker en état -1, on diminue la ligne
+                        if(enemy_spiker != nullptr) {
+                            // if (enemy_spiker->get_state() == -1) {
+                                // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
+                                double dist1 = (*it)->get_pos().euclideanDistance((*e)->get_hall().get_big_line().inLine(0.5));
+                                double dist2 = (*e)->get_hall().get_big_line().inLine(0.5).euclideanDistance(enemy_spiker->get_line_limit().inLine(0.5));
+
+                                if (dist1 > dist2) {
+
+                                    vm.erase(it--);
+                                    if (!enemy_spiker->decrease_random_p())
+                                        enemy_spiker->update_line_limit();
+                                    break;
+                                }
+                            // }
+                        }
+                        
+                        
+                    }
             }
 
+            
+
+        }
+
+        for (auto it = vm_enemy.begin(); it != vm_enemy.end(); it++) {
+
+            if ((*it)->get_closer()) {
+                if (this->player.get_hall() == (*it)->get_hall()) {
+                    PLAYERTOUCHE = 1;
+                    if(this->player.decr_life_point()){
+                        GAMEOVER = 1;
+                        this->setGameOver(true);
+                        this->setStart(false);
+                        this->game_over_msg = std::string("YOU LOST ALL YOUR LIFE POINTS");
+                        return;
+                    }
+                }
+                vm_enemy.erase(it--);
+            }
         }
 
 
@@ -455,6 +490,9 @@ void Game::render() {
     // Missiles 
     for (auto i : vm)
         i->draw(renderer);
+        
+    for (auto i : vm_enemy)
+        i->draw(renderer);
 
 
     for (auto i : enemies){
@@ -492,6 +530,7 @@ void Game::next_level(){
     this->timer->reset_clock(clock_list::current_transition);
     this->isTransitioning = true;
     this->vm.clear();
+    this->vm_enemy.clear();
     this->vh.clear();
     this->enemies.clear();
     this->level->next_level();

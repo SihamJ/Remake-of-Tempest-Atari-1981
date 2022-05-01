@@ -90,6 +90,7 @@ private:
     // std::vector<Point> vm;
 
     std::vector<std::shared_ptr<Missile>> vm;
+    std::vector<std::shared_ptr<Missile>> vm_enemy;
 
     // Vecteur des ennemies courants
     std::vector<std::shared_ptr<Enemy>> enemies;

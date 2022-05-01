@@ -272,7 +272,6 @@ void Game::update() {
                     if ((*it)->collides_with(*(*it_enemy))) {
                         std::cout<< "COLLISION" << std::endl;
                         SCORE = 1;
-                        auto &test = *(*it_enemy);
                         vm.erase(it--);
                         vm_enemy.erase(it_enemy);
                         m_exist = false;

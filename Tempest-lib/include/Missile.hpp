@@ -30,6 +30,8 @@ class Missile {
 
         bool intersect(Line l) const;
 
+        const bool collides_with(Missile m) const;
+
         void draw(std::shared_ptr<SDL_Renderer> renderer);
 
         

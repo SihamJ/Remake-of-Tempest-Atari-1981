@@ -124,3 +124,14 @@
 bool Missile::get_enemy()  const{
     return this->enemy;
 }
+
+const bool Missile::collides_with(Missile m) const {
+
+    // Les collisions standards ne fonctionnent pas à tous les coups à cause de la durée des Timeframes.
+    // On compare la distance du missile à sa destination, et la distance du missile ennemi et cette même destination.
+    // Si la distance du missile ennemi est plus grande, cela veut dire que le missile l'a dépassé donc collision.
+    double dist1 = this->get_pos().euclideanDistance(this->hall.get_small_line().inLine(0.5));
+    double dist2 = m.get_pos().euclideanDistance(this->hall.get_small_line().inLine(0.5));
+
+    return dist1 <= dist2;
+}

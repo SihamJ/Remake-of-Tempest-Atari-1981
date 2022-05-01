@@ -87,7 +87,8 @@ La gestion des effets sonores a necessité l'introduction des threads, nous avon
 
 
 Nous avons commencé ce projet assez tôt durant le semestre, et nous nous sommes arrangés pour avoir des réunions régulières sur l'avancée du projet. Nous avons tous les deux travaillé sur à peu près toute les types de fonctionnalités du jeu très souvent en communiquant au moment de programmer et en s'entraidant.
-En ce qui concerne ma partie, je me suis surtout focalisé sur les ennemies, les menus, les transitions, les missiles, les classes pour les dessins géométriques.
+En ce qui concerne ma partie, je me suis surtout focalisé sur les ennemies, les menus (menu principal, menu pause, menu game over), les transitions de changements de niveaux, les missiles et les classes pour les dessins géométriques.
+Pour ce qui est des transitions de changements de niveaux, nous avons remarqués de légers problèmes dans le jeu suite à ces modifications, nous avons donc décider de laisser ces animations sur une branche à part car nous n'avions pas le temps de les corriger avant le rendu final. Si vous voulez observer ces animations je vous invite à lancer le jeu depuis la branche "64-styliser-le-passage-au-niveau-suivant" le dernier commit étant le commit n°: 73b56b8e.
 Nous avons utilisé des issues Gitlab pour faciliter la gestion des tâches, ainsi que des outils de travail collaboratif comme Miro et Lucid Chart pour la spécification.</br>
 
 </br>

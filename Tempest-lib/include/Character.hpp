@@ -35,16 +35,22 @@ public:
 
     void set_hall(const Tunel& hall){ this->hall = hall; }
 
+    // dessines le character
     virtual void draw(std::shared_ptr<SDL_Renderer> renderer)= 0;
+
+    // clear les dessins du character
     virtual void clean(){ this->lines.clear(); }
     
     
 
 protected:
-
+    // les lignes qui permettent de dessiner le character
     std::vector<Line> lines;
+    // nom de l'ennemi ou personnage
     std::string name;
+    // Couleur du character
     Color color;
+    // Tunnel où se trouve le character
     Tunel hall;
 };
 

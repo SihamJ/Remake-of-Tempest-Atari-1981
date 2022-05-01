@@ -2,6 +2,7 @@
 
 extern int WIDTH;
 extern int HEIGHT;
+extern int MENU;
 
 Pause::Pause(std::shared_ptr<Game> g) : game_ptr(g) {}
 Pause::~Pause() {}
@@ -21,6 +22,7 @@ void Pause::handle_events() {
         }
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_SPACE) {
+                MENU = 0;
                 this->game_ptr->setPause(false);
                 this->game_ptr->getTimer()->unpause_clock(clock_list::level);
                 this->game_ptr->getTimer()->unpause_clock(clock_list::current_transition);

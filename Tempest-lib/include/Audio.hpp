@@ -13,10 +13,16 @@ class Audio {
         Audio();
         ~Audio();
 
-        void shoot(Uint32 time);
-        void play_menu_sound();
-        void play_game_over_sound();
-        
+        void shoot();
+        void menu();
+        void pause();
+        void gameover();
+        void player_touche();
+        void enemy_shoot();
+        void inc_score();
+        void superzapper();
+        void flipper_attack();
+        void next_level();
 
     private:
         SDL_AudioSpec spectre;

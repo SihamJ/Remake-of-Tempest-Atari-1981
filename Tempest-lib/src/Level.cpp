@@ -107,10 +107,10 @@ long double Level::get_h(long double h0, long double d, long double z, bool back
         return h;
     }
     else if(this->current_level >= 17 && this->current_level < 33){
-        return (1. - ((1.-h0) / sqrt(std::cbrtl(d*d*d*d*d*d*d))) * sqrt(std::cbrtl(z*z*z*z*z*z*z)));
+        return (1. - ((1.-h0) / std::cbrtl(std::cbrtl(d*d*d*d*d*d*d*d*d*d))) * std::cbrtl(std::cbrtl(z*z*z*z*z*z*z*z*z*z)));
     }
     else if(this->current_level >= 33 && this->current_level < 49){
-        return (1. - ((1.-h0) / std::cbrtl(d*d*d*d)) * std::cbrtl(z*z*z*z));
+        return (1. - ((1.-h0) / std::cbrtl(std::cbrtl(d*d*d*d*d*d*d*d*d*d*d*d))) * std::cbrtl(std::cbrtl(z*z*z*z*d*d*d*d*d*d*d*d)));
     }
     else {
         return (1. - ((1.-h0) / (d*d)) * (z*z));

@@ -74,7 +74,7 @@ void Pulsars::clean(){
 
 bool Pulsars::get_closer(long double h) {
 
-    this->center = Line(this->center, this->hall.get_big_line().inLine(0.5)).inLine(h*h*std::cbrtl(h));
+    this->center = Line(this->center, this->hall.get_big_line().inLine(0.5)).inLine(h*h*h);
     this->width = 0.8 * h * this->hall.get_big_line().length();
     this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
 

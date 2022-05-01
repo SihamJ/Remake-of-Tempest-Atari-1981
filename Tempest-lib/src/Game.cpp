@@ -3,7 +3,18 @@
 // width and height of our window
 int WIDTH = 1400;
 int HEIGHT = 800;
-extern int SHOOTSOUND;
+extern int SOUND;
+extern int MENU;
+extern int GAMEOVER;
+extern int SHOOT;
+extern int ENEMYSHOOT;
+extern int SUPERZAPPER;
+extern int FLIPPERATTACK;
+extern int PLAYERTOUCHE;
+extern int SCORE;
+extern int LEVEL;
+extern int PAUSE;
+
 
 Game::Game() {}
 Game::~Game() {}
@@ -78,7 +89,7 @@ void Game::handle_events() {
         }
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_SPACE){
-                SHOOTSOUND = 1;
+                SHOOT = 1;
                 // le couloir où le player se trouve
                 Tunel h = this->map->get_hall(player.get_n_hall());
 
@@ -90,6 +101,7 @@ void Game::handle_events() {
                 break;
             }
             if (event.key.keysym.sym == SDLK_ESCAPE) {
+                MENU = 1;
                 setPause(true);
                 // On met en pause les timer de passage au niveau suivant et de transition courante s'il y en une
                 this->timer->pause_clock(clock_list::level);
@@ -104,6 +116,7 @@ void Game::handle_events() {
 
             if(event.key.keysym.sym == SDLK_z){
                 if( !this->superzapping && player.dec_superzapper()){
+                    SUPERZAPPER = 1;
                     this->superzapper(player.get_superzapper()==0 ? false : true);
                 }
             }
@@ -139,6 +152,7 @@ void Game::update() {
     // Passer au niveau suivant ?
 
     if (!this->isTransitioning && this->timer->get_clock(clock_list::level) > LEVEL_TIME){
+        LEVEL = 1;
         this->isTransitioning = true;
         this->timer->reset_clock(clock_list::level);
         this->next_level();
@@ -204,7 +218,7 @@ void Game::update() {
                 std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(enemy_spiker->get_hall()));
                 m->set_enemy();
                 vm.push_back(std::move(m));
-                SHOOTSOUND=1;
+                ENEMYSHOOT=1;
                 enemy_spiker->set_state(-1);
             }
             else if(enemy_flipper != nullptr && enemy_flipper->get_state() == 0 && enemy_flipper->shoot()){
@@ -212,7 +226,7 @@ void Game::update() {
                 m->set_enemy();
                 m->set_pos(enemy_flipper->get_center());
                 vm.push_back(std::move(m));
-                SHOOTSOUND=1;
+                ENEMYSHOOT=1;
             }
             
         }
@@ -228,7 +242,9 @@ void Game::update() {
             bool cond = false;
             if ((*it)->get_closer()) {
                 if ((*it)->get_enemy() && this->player.get_hall() == (*it)->get_hall()) {
+                    PLAYERTOUCHE = 1;
                     if(this->player.decr_life_point()){
+                        GAMEOVER = 1;
                         this->setGameOver(true);
                         this->setStart(false);
                         this->game_over_msg = std::string("YOU LOST ALL YOUR LIFE POINTS");
@@ -251,24 +267,24 @@ void Game::update() {
 
                     // si le missile tue un ennemi, on sort de la boucle ennemies car le missile est détruit, on passe au missile qui suit
                     if(enemy_spiker == nullptr && (*e)->collides_with(*(*it))) {
+                        SCORE = 1;
                         this->player.incr_score((*e)->get_scoring());
                         vm.erase(it--);
                         enemies.erase(e--);
-                        SHOOTSOUND=1; // TO DO change to collision sound
+                        ENEMYSHOOT=1; // TO DO change to collision sound
                         break;
                     }
 
                     // si on tire sur la ligne d'un spiker en état -1, on diminue la ligne
                     if(enemy_spiker != nullptr) {
-                        SHOOTSOUND=1;
                         // if (enemy_spiker->get_state() == -1) {
                             // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
                             double dist1 = (*it)->get_pos().euclideanDistance((*e)->get_hall().get_big_line().inLine(0.5));
                             double dist2 = (*e)->get_hall().get_big_line().inLine(0.5).euclideanDistance(enemy_spiker->get_line_limit().inLine(0.5));
 
                             if (dist1 > dist2) {
+
                                 vm.erase(it--);
-                                SHOOTSOUND=1; // TO DO change to collision sound
                                 if (!enemy_spiker->decrease_random_p())
                                     enemy_spiker->update_line_limit();
                                 break;
@@ -330,6 +346,7 @@ void Game::update() {
                 // si flipper, et couloir player, game over
                 if((*i)->get_n_hall() == player.get_n_hall()) {
                     if (f != nullptr) {
+                        GAMEOVER = 1;
                         this->setGameOver(true);
                         this->setStart(false);
                         game_over_msg = std::string("YOU WERE KILLED BY THE FLIPPER");
@@ -337,6 +354,7 @@ void Game::update() {
                     }
                     
                     if (player.decr_life_point()) {
+                        GAMEOVER = 1;
                         this->setGameOver(true);
                         this->setStart(false);
                         game_over_msg = std::string("You Died");

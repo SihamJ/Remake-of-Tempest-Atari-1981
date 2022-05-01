@@ -2,7 +2,7 @@
 
 extern int WIDTH;
 extern int HEIGHT;
-extern int MENUSOUND;
+extern int MENU;
 
 Menu::Menu(std::shared_ptr<Game> g) : game_ptr(g) {}
 Menu::~Menu() {}
@@ -17,20 +17,19 @@ void Menu::handle_events() {
     SDL_PollEvent(&event);
     switch(event.type) {
         case SDL_QUIT: {
-            MENUSOUND = 0;
             this->game_ptr->setIsRunning(false);
             break;
         }
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_SPACE) {
-                MENUSOUND = 0;
+                MENU = 0;
                 this->game_ptr->getTimer()->reset_clock(clock_list::level);
                 this->game_ptr->getTimer()->reset_clock(clock_list::current_transition);
                 this->game_ptr->set_level(this->chosen_level);
                 this->game_ptr->setStart(true);
             }
             if (event.key.keysym.sym == SDLK_ESCAPE) { 
-                MENUSOUND = 0;
+                MENU = 0;
                 this->game_ptr->setIsRunning(false);
             }
             break;

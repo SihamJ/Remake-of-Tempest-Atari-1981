@@ -3,6 +3,8 @@
 // width and height of our window
 int WIDTH = 1400;
 int HEIGHT = 800;
+
+// Global variables used to synchronize Audio effects with gameplay
 extern int SOUND;
 extern int SOUND2;
 extern int MENU;
@@ -37,43 +39,50 @@ void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flag
         return;
     }
 
+    // Méthodes d'encapsulation de la libraire SDL, définition dans SDLWrapper.cpp
     window = create_window(title, xpos, ypos, flagsWindow);
     renderer = create_renderer(window, -1, flagsRenderer);
     int w,h;
     
+    // Comme le mode plein écran est activé, il faut récupérer la taille de la fenêtre pour ajuster nos éléments
     get_window_size(window, &w, &h);
     WIDTH = w;
     HEIGHT = h;
 
-    // int nbth = std::thread::hardware_concurrency();
-    // this->th.reserve(nbth);
 
-
+    // On utilise un timer pour synchronize les timeframes de mise à jour du jeu, du rendu, et des animations et générations des ennemis
     this->timer = std::make_shared<Timer>();
     
-    // clock 1 game update
+    // clock 1 pour game update
     this->timer->add_clock();
-    // clock 2 pour enemies
+    // clock 2 pour générations des enemies
     this->timer->add_clock();
     // clock 3 pour passer au niveau suivant
     this->timer->add_clock();
-    // clock 4 pour animation courante
+    // clock 4 pour l'animation courante
     this->timer->add_clock();
-    // clock 5 pour tir par seconde
+    // clock 5 pour limiter les tirs par seconde
     this->timer->add_clock();
 
+    // Classe Niveau qui contient les informations sur le niveau courant
     this->level = std::make_shared<Level>();
+    // Au début, le niveau est à 0, on commencer par actualiser pour passer au niveau 1
     this->level->next_level();
-    this->player.set_score(this->level->get_level_score());
+
+    // On récupère la map du niveau courant depuis la classe niveau
     this->map = level->get_map();
 
     // construction de la map
     map->build_map();
+    // instantiation du joueur
     this->player = Player(0, std::move(map->get_hall(0)), std::move(this->level->get_player_color()));
     // récupère le point central de la Map
     center.set_point( map->get_center().get_x(), map->get_center().get_y());
     
+    // on stocke dans un vector les tunnels de la map pour faciliter l'accès
     vh = map->get_hall_list();
+
+    // On démarre le jeu
     isRunning = true;
     
 }
@@ -81,6 +90,11 @@ void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flag
 /**
  * @brief Gère les évènements de l'utilisateur (click souris/tape au clavier)
  * 
+ * Espace = Tir de missile (limité à 20 par seconde)
+ * Escape = Menu Pause
+ * Z = SuperZapper
+ * Flêche droite/gauche / Scroll molette Up/Down =  Changement de couloir
+ * M = Couper le son ( pas encore fonctionnel )
  */
 void Game::handle_events() {
     SDL_Event event;
@@ -133,10 +147,6 @@ void Game::handle_events() {
                 SOUND2 =  SOUND2 == 0 ? 1 : 0;
                 break;
             }
-            if(event.key.keysym.sym == SDLK_q){
-                isRunning = false;
-                break;
-            }
             break;
         }
         case SDL_MOUSEWHEEL: {
@@ -163,7 +173,6 @@ void Game::handle_events() {
 void Game::update() {
 
     // Passer au niveau suivant ?
-
     if (!this->isTransitioning && this->timer->get_clock(clock_list::level) > LEVEL_TIME){
         LEVEL = 1;
         this->isTransitioning = true;
@@ -172,6 +181,7 @@ void Game::update() {
         return;
     }
 
+    // Si le temps de transition est écoulé, on arrete l'animation
     if(this->isTransitioning && this->timer->get_clock(clock_list::current_transition) > TRANSISTION_TIME){
         this->isTransitioning = false;
         this->timer->reset_clock(clock_list::current_transition);
@@ -180,10 +190,12 @@ void Game::update() {
     // on ne veut pas update le jeu avant de finir l'animation de transition
     else if(this->isTransitioning) return;
 
+    // Temps d'animation SuperZapper
     if(this->superzapping && this->timer->get_clock(clock_list::current_transition) > SUPERZAPPER_TIME){
             this->superzapping = false;
     }
     
+    // La fréquence de génération des ennemis varie selon le niveau, aléatoire mais avec seuil
     std::mt19937 gen(this->rd());
     std::uniform_int_distribution<int> random (level->get_current_level() >= 100 ? 
         0 : 500 - (level->get_current_level() * 5), 
@@ -193,8 +205,10 @@ void Game::update() {
 
     int i = random(gen);
 
+    // On génère un ennemi si temps dépassé
     if ( this->timer->get_clock(clock_list::enemies) > i) {
 
+        // mise à jour de l'horloge
         this->timer->reset_clock(clock_list::enemies);
         
         std::shared_ptr<Enemy> enemy = std::move(this->level->new_enemy());
@@ -223,6 +237,8 @@ void Game::update() {
     if (timer->get_clock(clock_list::update) > TICK) {
         timer->reset_clock(clock_list::update);
 
+
+        // Pour les ennemis qui tirent des missiles
         for (auto e : enemies) {
 
             std::shared_ptr<Spikers> enemy_spiker = std::dynamic_pointer_cast<Spikers>(e);
@@ -248,43 +264,31 @@ void Game::update() {
             
         }
 
-        // collisions.clear();
-
-        //timer->reset_clock(clock_list::update);
-        // Rapproche tous les missiles de leur destination
-        // détruit le missile si il a atteint sa cible
         
+        // Rapproche tous les missiles alliés de leur destination
+        // détruit le missile si il a atteint sa cible
         for (auto it = vm.begin(); it != vm.end(); it++) {
 
             bool cond = false;
+            // Si le missile a atteint le centre sans collision, il disparait
             if ((*it)->get_closer()) {
-                if ((*it)->get_enemy() && this->player.get_hall() == (*it)->get_hall()) {
-                    PLAYERTOUCHE = 1;
-                    if(this->player.decr_life_point()){
-                        GAMEOVER = 1;
-                        this->setGameOver(true);
-                        this->setStart(false);
-                        this->game_over_msg = std::string("YOU LOST ALL YOUR LIFE POINTS");
-                        return;
-                    }
-                }
                 vm.erase(it--);
                 continue;
             }
-            else if (!(*it)->get_enemy()) {
 
+            
+            else {
                 bool m_exist = true;
-
+                // on cherche s'il y a collision avec un missile ennemi
                 for (auto it_enemy = vm_enemy.begin(); it_enemy != vm_enemy.end(); it_enemy++) {
                     if ((*it)->collides_with(*(*it_enemy))) {
-                        std::cout<< "COLLISION MISSILES" << std::endl;
                         vm.erase(it--);
                         vm_enemy.erase(it_enemy);
                         m_exist = false;
                         break;
                     }
                 }
-
+                // Si pas de collision avec missile ennemi, on cherche s'il y a collision avec un ennemi
                 if (m_exist)
                     for (auto e = enemies.begin(); e!= enemies.end(); e++) {
 
@@ -300,13 +304,12 @@ void Game::update() {
                             this->player.incr_score((*e)->get_scoring());
                             vm.erase(it--);
                             enemies.erase(e--);
-                            ENEMYSHOOT=1; // TO DO change to collision sound
+                            ENEMYSHOOT=1; 
                             break;
                         }
 
                         // si on tire sur la ligne d'un spiker en état -1, on diminue la ligne
                         if(enemy_spiker != nullptr) {
-                            // if (enemy_spiker->get_state() == -1) {
                                 // detruit le missile si il atteint la ligne verte du spiker + diminue la ligne verte du spiker
                                 double dist1 = (*it)->get_pos().euclideanDistance((*e)->get_hall().get_big_line().inLine(0.5));
                                 double dist2 = (*e)->get_hall().get_big_line().inLine(0.5).euclideanDistance(enemy_spiker->get_line_limit().inLine(0.5));
@@ -318,7 +321,7 @@ void Game::update() {
                                         enemy_spiker->update_line_limit();
                                     break;
                                 }
-                            // }
+                            
                         }
                         
                         
@@ -329,9 +332,12 @@ void Game::update() {
 
         }
 
+        // On rapproche les missiles ennemis de la périphérie
         for (auto it = vm_enemy.begin(); it != vm_enemy.end(); it++) {
 
+            // S'ils ont atteint la périphérie
             if ((*it)->get_closer()) {
+                // Si c'est le couloir du joueur, on décrémente ces points de vie
                 if (this->player.get_hall() == (*it)->get_hall()) {
                     PLAYERTOUCHE = 1;
                     if(this->player.decr_life_point()){
@@ -370,7 +376,7 @@ void Game::update() {
                 //f->set_flipping(true);
             }
 
-            // si c'est un spiker à l'état 1 (marche arrière), les paramètres d'homothétie seront différents
+            // si c'est un spiker à l'état 1 (marche arrière)
             if( s != NULL && s->get_state() == 1){
 
                 h0 = s->get_hall().get_small_line().length() / s->get_limit().length();
@@ -379,7 +385,7 @@ void Game::update() {
                 backwards = true;
             }
 
-            // Sinon même paramètres d'homothétie
+            // Sinon 
             else {
                 h0 = (*i)->get_start().length() / (*i)->get_dest().length(); 
                 d = (*i)->get_start().inLine(0.5).euclideanDistance((*i)->get_dest().inLine(0.5));
@@ -391,8 +397,9 @@ void Game::update() {
 
             // Déplacement de l'ennemi et vérification s'il a atteint la périphérie
             if ((*i)->get_closer(h)) {
-                // si flipper, et couloir player, game over
+                
                 if((*i)->get_n_hall() == player.get_n_hall()) {
+                    // si c'est un flipper  qui a atteint la périphérie, et même couloir que player, game over 
                     if (f != nullptr) {
                         GAMEOVER = 1;
                         this->setGameOver(true);
@@ -400,19 +407,21 @@ void Game::update() {
                         game_over_msg = std::string("YOU WERE KILLED BY THE FLIPPER");
                         return;
                     }
-                    
+                    // si autre ennemi, on décremente les pdv
                     if (player.decr_life_point()) {
                         GAMEOVER = 1;
                         this->setGameOver(true);
                         this->setStart(false);
-                        game_over_msg = std::string("You Died");
+                        game_over_msg = std::string("YOU LOST ALL YOUR LIFE POINTS");
                         return;
                     }
 
                 }
+
+                // Les autres ennemies se transforment quand ils arrivent à la périphérie
                 else if(t != nullptr || pt != nullptr || ft != nullptr){
-                    std::shared_ptr<Enemy> e1;// = std::make_shared<Flippers>("flipper", std::move(this->level->get_enemies().at(enemies_list::flippers)));
-                    std::shared_ptr<Enemy> e2;// = std::make_shared<Flippers>("flipper", std::move(this->level->get_enemies().at(enemies_list::flippers)));
+                    std::shared_ptr<Enemy> e1;
+                    std::shared_ptr<Enemy> e2;
 
                     if (t != nullptr) {
                         e1 = std::make_shared<Flippers>("flipper", std::move(this->level->get_enemies().at(enemies_list::flippers)));
@@ -448,8 +457,7 @@ void Game::update() {
                     break;
                 }
                 
-                // else if(f == nullptr )
-                //     enemies.erase(i--);
+               
             }
         }
     }
@@ -464,6 +472,8 @@ void Game::render() {
     // clear la fenêtre en noir
     clear_renderer(renderer, BLACK);
 
+
+    // Si transition de niveau
     if(this->isTransitioning){
         if(this->level->get_map_color().get_name() == "BLACK")
             render_color(renderer, Color("WHITE",WHITE));
@@ -474,45 +484,43 @@ void Game::render() {
         return;
     }
 
-    if (getPause()) { render_present(renderer); return;}
+    // rendu de la map
     render_color(renderer, std::move(map->get_color()));
     map->draw(renderer);
 
+    // si niv < 17, on dessine le couloir du joueur en jaune
     if(this->level->get_current_level() < 17){
         render_color(renderer, YELLOW, 255);
         map->get_hall(player.get_n_hall()).draw(renderer);
     }
 
+    // on dessine le vaisseau du joueur
     render_color(renderer, std::move(level->get_player_color()));    
     player.draw(renderer);
 
 
-    // Missiles 
+    // Rendu des missiles  du player
     for (auto i : vm)
         i->draw(renderer);
-        
+    
+    // rendu des missiles enemies
     for (auto i : vm_enemy)
         i->draw(renderer);
 
-
+    // rendu des ennemis
     for (auto i : enemies){
         // on récupère la couleur de l'ennemi
         render_color(renderer, std::move(i->get_color()));
         i->draw(renderer);
     }
 
-    // for (auto i : collisions){
-    //     i.draw(renderer);
-    // }
+
+    // Affichage des scores et autres informations
 
     render_color(renderer, this->level->get_score_color());
     TextRenderer::draw_text(renderer,  std::to_string(this->player.get_score()), 1*WIDTH/3, 50, 1, 2, true);
-
-    // Player Name
     TextRenderer::draw_text(renderer,  this->player.get_name(), WIDTH/2 , 50, 1, 2, true);
-
     TextRenderer::draw_life(renderer, this->player.get_life_point(), WIDTH/3, 70, this->player.get_color().get_name());
-
     render_color(renderer, this->map->get_color());
     TextRenderer::draw_text(renderer, std::to_string(this->level->get_current_level()), WIDTH/2, 110, 0.8, 2, true);
     
@@ -525,6 +533,7 @@ void Game::render() {
     render_present(renderer);
 }
 
+// pour passer au niv sup, on clear les vectors
 void Game::next_level(){
 
     this->timer->reset_clock(clock_list::current_transition);
@@ -546,6 +555,7 @@ void Game::next_level(){
     
 }
 
+// gestion temps superzapper et éliminations des ennemies
 void Game::superzapper(bool all_enemies){
 
     this->superzapping = true;

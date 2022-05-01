@@ -64,7 +64,6 @@ public:
     std::shared_ptr<Tube> getMap();
     void superzapper(bool all_enemies);
     std::string get_msg_game_over();
-    void join_threads();
     void reset_life_point();
 
 private:

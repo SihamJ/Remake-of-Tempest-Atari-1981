@@ -194,7 +194,7 @@ void Game::update() {
     int i = random(gen);
 
     if ( this->timer->get_clock(clock_list::enemies) > i) {
-           // generated = true;
+
         this->timer->reset_clock(clock_list::enemies);
         
         std::shared_ptr<Enemy> enemy = std::move(this->level->new_enemy());
@@ -578,14 +578,6 @@ void Game::set_level(int level) {
     next_level();
     this->player.set_score(this->level->get_level_score());
 }
-
-void Game::join_threads(){
-    for(auto t = this->th.begin(); t != this->th.end(); t++){
-        (*t).join();
-    }
-}
-
-
 
 
 bool Game::running() { return this->isRunning; }

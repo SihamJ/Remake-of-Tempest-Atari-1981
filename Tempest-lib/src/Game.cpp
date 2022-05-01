@@ -15,7 +15,6 @@ extern int PLAYERTOUCHE;
 extern int SCORE;
 extern int LEVEL;
 extern int PAUSE;
-extern int SOUND2;
 
 
 Game::Game() {}

@@ -6,7 +6,7 @@ extern int HEIGHT;
 #include <Menu.hpp>
 #include <Audio.hpp>
 // #define SDL_WINDOWPOS_CENTERED SDL_WINDOWPOS_CENTERED_DISPLAY(0)
-int SOUND = 1;
+int SOUND = 0;
 int MENU = 1;
 int GAMEOVER = 0;
 int SHOOT = 0;
@@ -24,9 +24,9 @@ void gameover();
 void shoot();
 void enemy_shoot();
 void superzapper();
-void player_touche();
 void next_level();
 void score();
+void player_sounds();
 
 int main(int argc, char** argv) {
     std::shared_ptr<Game> game = std::make_shared<Game>();
@@ -41,17 +41,16 @@ int main(int argc, char** argv) {
     th.reserve(nbth);
 
     game->init("Tempest", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI|SDL_WINDOW_RESIZABLE|SDL_WINDOW_OPENGL, 
+                SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI|SDL_WINDOW_RESIZABLE|SDL_WINDOW_OPENGL|SDL_WINDOW_FULLSCREEN_DESKTOP, 
                 SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
 
 
-    // doit être fait après SDL INIT AUDIO
+    //doit être fait après SDL INIT AUDIO
     th.emplace_back(menu);
-    th.emplace_back(gameover);
+    //th.emplace_back(gameover);
     th.emplace_back(shoot);
     //th.emplace_back(enemy_shoot);
     th.emplace_back(superzapper);
-    //th.emplace_back(player_touche);
     th.emplace_back(next_level);
     th.emplace_back(score);
 
@@ -123,11 +122,6 @@ void enemy_shoot(){
 void superzapper(){
     Audio audio = Audio();
     audio.superzapper();
-}
-
-void player_touche(){
-    Audio audio = Audio();
-    audio.player_touche();
 }
 
 void next_level(){

@@ -203,7 +203,7 @@ bool Flippers::get_closer(long double h) {
 
     if(this->state == 0) {
         this->center = Line(this->center, this->dest.inLine(0.5)).inLine(h*h*h);
-        this->width = h * this->limit_init.length();
+        this->width = 0.8 * h * this->limit_init.length();
         this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
         this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);
         this->y = this->center.get_y() - ( static_cast<long double>(this->height)/2.0);

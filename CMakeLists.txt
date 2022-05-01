@@ -13,9 +13,7 @@ file(COPY images/fuseballTanker_PURPLE.bmp images/pulsar_LIGHTBLUE.bmp images/fu
     images/missile_ennemi.bmp images/missile_ennemi.bmp images/missile_player.bmp images/logo.bmp images/gameover.bmp DESTINATION images)
 
 install(DIRECTORY Audio DESTINATION .)
-file(COPY Audio/shoot.wav Audio/collision2.wav Audio/flipper_attack.wav Audio/gameover.wav Audio/menu.wav 
-    Audio/next_level.wav Audio/score.wav Audio/superzapper.wav Audio/retro.wav Audio/gameover3.wav 
-    Audio/next_level.wav Audio/flipper_attack.wav Audio/superzapper.wav Audio/score.wav DESTINATION Audio)
+file(COPY Audio/shoot.wav Audio/enemy_shot.wav Audio/gameover.wav Audio/menu.wav Audio/next_level.wav Audio/score.wav Audio/supperzapper.wav  DESTINATION Audio)
 
 add_subdirectory(Tempest-lib)
 add_subdirectory(Tempest)

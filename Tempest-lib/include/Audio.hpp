@@ -26,8 +26,7 @@ class Audio {
         void player_sounds();
 
     private:
-        SDL_AudioSpec spectre;
-        SDL_AudioDeviceID device;
+
 
         float a = 1.410000000000000000e+03;
         

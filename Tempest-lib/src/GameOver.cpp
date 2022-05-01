@@ -26,6 +26,7 @@ void GameOver::handle_events() {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 MENU = 1;
                 this->game_ptr->setGameOver(false);
+                this->game_ptr->reset_life_point();
             }
             if(event.key.keysym.sym == SDLK_q){
                 this->game_ptr->setIsRunning(false);

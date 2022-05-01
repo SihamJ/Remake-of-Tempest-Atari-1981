@@ -137,3 +137,8 @@
         this->name = other.name;
         this->build();
     }
+
+    
+    void Player::reset_life_point() {
+        this->life_point = INIT_VIE;
+    }

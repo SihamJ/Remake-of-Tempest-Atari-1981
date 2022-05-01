@@ -31,6 +31,7 @@ public:
     bool decr_life_point();
     void incr_score(int points);
     const bool dec_superzapper();
+    void reset_life_point();
 
     void build();
     void draw(std::shared_ptr<SDL_Renderer> renderer) override;

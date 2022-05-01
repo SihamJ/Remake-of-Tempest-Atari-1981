@@ -51,7 +51,7 @@ void Audio::menu(){
     Uint8* audio_buf;
     Uint32 audio_len;
 
-    if( SDL_LoadWAV_RW( SDL_RWFromFile("Audio/menu.wav", "rb"), 1, &spectre, &audio_buf, &audio_len) == NULL){
+    if( SDL_LoadWAV( "Audio/menu.wav", &spectre, &audio_buf, &audio_len) == NULL){
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
     }
@@ -59,7 +59,7 @@ void Audio::menu(){
     while(SOUND){
             while(!MENU) if(!SOUND) break;
             if(!SOUND) break;
-            device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+            device = SDL_OpenAudioDevice(nullptr, 0, &(spectre), nullptr, 0);
             int success = SDL_QueueAudio(device, audio_buf, audio_len);
             SDL_PauseAudioDevice(device, SDL_FALSE);
             while(MENU);
@@ -67,8 +67,7 @@ void Audio::menu(){
             SDL_CloseAudioDevice(device);
             MENU = 0;
     }
-
-}
+    }
 
 void Audio::gameover(){
 
@@ -77,7 +76,7 @@ void Audio::gameover(){
         Uint8* audio_buf;
         Uint32 audio_len;
 
-        if( SDL_LoadWAV_RW( SDL_RWFromFile("Audio/gameover3.wav", "rb"), 1, &spectre, &audio_buf, &audio_len) == NULL){
+        if( SDL_LoadWAV("Audio/gameover3.wav", &spectre, &audio_buf, &audio_len) == NULL){
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
     }
@@ -85,14 +84,13 @@ void Audio::gameover(){
         while(SOUND){
             while(!GAMEOVER) if(!SOUND) break;
             if(!SOUND) break;
-            device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+            device = SDL_OpenAudioDevice(nullptr, 0, &(spectre), nullptr, 0);
             int success = SDL_QueueAudio(device, audio_buf, audio_len);
             SDL_PauseAudioDevice(device, SDL_FALSE);
             SDL_Delay(5000);
             GAMEOVER = 0;
             SDL_PauseAudioDevice(device, SDL_TRUE);
             SDL_CloseAudioDevice(device);
-
         }
 }
 
@@ -102,7 +100,7 @@ void Audio::player_touche(){
     Uint8* audio_buf;
     Uint32 audio_len;
 
-    if( SDL_LoadWAV_RW( SDL_RWFromFile("Audio/collision.wav", "rb"), 1, &spectre, &audio_buf, &audio_len) == NULL){
+    if( SDL_LoadWAV("Audio/collision2.wav", &spectre, &audio_buf, &audio_len) == NULL){
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
     }
@@ -110,7 +108,7 @@ void Audio::player_touche(){
     while(SOUND){
             while(!PLAYERTOUCHE) if(!SOUND) break;
             if(!SOUND) break;
-            device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+            device = SDL_OpenAudioDevice(nullptr, 0, &(spectre), nullptr, 0);
             int success = SDL_QueueAudio(device, audio_buf, audio_len);
             SDL_PauseAudioDevice(device, SDL_FALSE);
             SDL_Delay(200);
@@ -118,6 +116,7 @@ void Audio::player_touche(){
             SDL_CloseAudioDevice(device);
             PLAYERTOUCHE = 0;
     }
+
 }
 
 void Audio::inc_score(){
@@ -126,7 +125,7 @@ void Audio::inc_score(){
     Uint8* audio_buf;
     Uint32 audio_len;
 
-    if( SDL_LoadWAV_RW( SDL_RWFromFile("Audio/score.wav", "rb"), 1, &spectre, &audio_buf, &audio_len) == NULL){
+    if( SDL_LoadWAV("Audio/score.wav", &spectre, &audio_buf, &audio_len) == NULL){
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
     }
@@ -134,7 +133,7 @@ void Audio::inc_score(){
     while(SOUND){
             while(!SCORE) if(!SOUND) break;
             if(!SOUND) break;
-            device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+            device = SDL_OpenAudioDevice(nullptr, 0, &(spectre), nullptr, 0);
             int success = SDL_QueueAudio(device, audio_buf, audio_len);
             SDL_PauseAudioDevice(device, SDL_FALSE);
             SDL_Delay(200);
@@ -150,7 +149,7 @@ void Audio::superzapper(){
     Uint8* audio_buf;
     Uint32 audio_len;
 
-    if( SDL_LoadWAV_RW( SDL_RWFromFile("Audio/superzapper.wav", "rb"), 1, &spectre, &audio_buf, &audio_len) == NULL){
+    if( SDL_LoadWAV("Audio/superzapper.wav", &spectre, &audio_buf, &audio_len) == NULL){
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
     }
@@ -158,7 +157,7 @@ void Audio::superzapper(){
     while(SOUND){
             while(!SUPERZAPPER) if(!SOUND) break;
             if(!SOUND) break;
-            device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+            device = SDL_OpenAudioDevice(nullptr, 0, &(spectre), nullptr, 0);
             int success = SDL_QueueAudio(device, audio_buf, audio_len);
             SDL_PauseAudioDevice(device, SDL_FALSE);
             SDL_Delay(2000);
@@ -166,6 +165,7 @@ void Audio::superzapper(){
             SDL_CloseAudioDevice(device);
             SUPERZAPPER = 0;
     }
+
 }
 
 void Audio::flipper_attack(){
@@ -174,7 +174,7 @@ void Audio::flipper_attack(){
     Uint8* audio_buf;
     Uint32 audio_len;
 
-    if( SDL_LoadWAV_RW( SDL_RWFromFile("Audio/flipper_attack.wav", "rb"), 1, &spectre, &audio_buf, &audio_len) == NULL){
+    if( SDL_LoadWAV("Audio/flipper_attack.wav", &spectre, &audio_buf, &audio_len) == NULL){
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
     }
@@ -182,7 +182,7 @@ void Audio::flipper_attack(){
     while(SOUND){
             while(!FLIPPERATTACK) if(!SOUND) break;
             if(!SOUND) break;
-            device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+            device = SDL_OpenAudioDevice(nullptr, 0, &(spectre), nullptr, 0);
             int success = SDL_QueueAudio(device, audio_buf, audio_len);
             SDL_PauseAudioDevice(device, SDL_FALSE);
             SDL_Delay(3000);
@@ -190,6 +190,7 @@ void Audio::flipper_attack(){
             SDL_CloseAudioDevice(device);
             FLIPPERATTACK = 0;
     }
+
 }
 
 void Audio::next_level(){
@@ -198,7 +199,7 @@ void Audio::next_level(){
     Uint8* audio_buf;
     Uint32 audio_len;
 
-    if( SDL_LoadWAV_RW( SDL_RWFromFile("Audio/next_level.wav", "rb"), 1, &spectre, &audio_buf, &audio_len) == NULL){
+    if( SDL_LoadWAV("Audio/next_level.wav", &spectre, &audio_buf, &audio_len) == NULL){
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
     }
@@ -206,14 +207,15 @@ void Audio::next_level(){
     while(SOUND){
             while(!LEVEL) if(!SOUND) break;
             if(!SOUND) break;
-            device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+            device = SDL_OpenAudioDevice(nullptr, 0, &(spectre), nullptr, 0);
             int success = SDL_QueueAudio(device, audio_buf, audio_len);
             SDL_PauseAudioDevice(device, SDL_FALSE);
             SDL_Delay(2000);
             SDL_PauseAudioDevice(device, SDL_TRUE);
-            SDL_CloseAudioDevice(device);
+           SDL_CloseAudioDevice(device);
             LEVEL = 0;
     }
+
 }
 
 void Audio::enemy_shoot(){
@@ -222,7 +224,7 @@ void Audio::enemy_shoot(){
     Uint8* audio_buf;
     Uint32 audio_len;
 
-    if( SDL_LoadWAV_RW( SDL_RWFromFile("Audio/next_level.wav", "rb"), 1, &spectre, &audio_buf, &audio_len) == NULL){
+    if( SDL_LoadWAV("Audio/retro.wav",  &spectre, &audio_buf, &audio_len) == NULL){
         SDL_Log("Erreur > %s", SDL_GetError());
         return;
     }
@@ -230,10 +232,10 @@ void Audio::enemy_shoot(){
     while(SOUND){
             while(!ENEMYSHOOT) if(!SOUND) break;
             if(!SOUND) break;
-            device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), &(spectre), SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+            device = SDL_OpenAudioDevice(nullptr, 0, &(spectre), nullptr, 0);
             int success = SDL_QueueAudio(device, audio_buf, audio_len);
             SDL_PauseAudioDevice(device, SDL_FALSE);
-            SDL_Delay(2000);
+            SDL_Delay(200);
             SDL_PauseAudioDevice(device, SDL_TRUE);
             SDL_CloseAudioDevice(device);
             ENEMYSHOOT = 0;

@@ -18,30 +18,14 @@ int LEVEL = 0;
 int SCORE = 0;
 int PAUSE = 0;
 
-void menu(){
-    Audio audio = Audio();
-    audio.menu();
-}
-
-void gameover(){
-    Audio audio = Audio();
-    audio.gameover();
-}
-
-void shoot(){
-    Audio audio = Audio();
-    audio.shoot();                           
-}
-
-void enemy_shoot(){
-    Audio audio = Audio();
-    audio.enemy_shoot();                           
-}
-
-void superzapper(){
-    Audio audio = Audio();
-    audio.superzapper();
-}
+void menu();
+void gameover();
+void shoot();
+void enemy_shoot();
+void superzapper();
+void player_touche();
+void next_level();
+void score();
 
 int main(int argc, char** argv) {
     std::shared_ptr<Game> game = std::make_shared<Game>();
@@ -66,6 +50,9 @@ int main(int argc, char** argv) {
     th.emplace_back(shoot);
     th.emplace_back(enemy_shoot);
     th.emplace_back(superzapper);
+    th.emplace_back(player_touche);
+    th.emplace_back(next_level);
+    th.emplace_back(score);
 
     // boucle principal
     while (game->running()) {
@@ -110,4 +97,44 @@ int main(int argc, char** argv) {
     }
     game->clean();
     return 0;
+}
+
+void menu(){
+    Audio audio = Audio();
+    audio.menu();
+}
+
+void gameover(){
+    Audio audio = Audio();
+    audio.gameover();
+}
+
+void shoot(){
+    Audio audio = Audio();
+    audio.shoot();                           
+}
+
+void enemy_shoot(){
+    Audio audio = Audio();
+    audio.enemy_shoot();                           
+}
+
+void superzapper(){
+    Audio audio = Audio();
+    audio.superzapper();
+}
+
+void player_touche(){
+    Audio audio = Audio();
+    audio.player_touche();
+}
+
+void next_level(){
+    Audio audio = Audio();
+    audio.next_level();
+}
+
+void score(){
+    Audio audio = Audio();
+    audio.inc_score();
 }

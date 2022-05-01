@@ -21,6 +21,9 @@ Pout télécharger le code et le compiler sur tous les systèmes vous pouvez uti
 	Par précaution, les effets sonores sont désactivés.
 	Vous pouvez les activez en modifiant la variable global SOUND au début du main.cpp en la mettant à 1.
 
+	Choix du niveau au menu de démarrage en scrollant avec la molette.
+	
+
 	Molette souris pour changer de couloir
 	Espace pour tirer des missiles
 	Z pour le SuperZapper

@@ -65,7 +65,7 @@ void Pause::render() {
 
     render_color(renderer, WHITE, 255);
 
-    TextRenderer::draw_text(renderer, "PAUSE", WIDTH/2,  4*HEIGHT/5 , 2., 2, true);
+    TextRenderer::draw_text(renderer, "PAUSE", WIDTH/2,  HEIGHT/4 , 2., 2, true);
     TextRenderer::draw_text(renderer, "PRESS SPACE TO RETURN TO THE GAME", WIDTH/2, 4*HEIGHT/5 - 150, 1., 2, true);
     TextRenderer::draw_text(renderer, "PRESS ESCAPE TO GO BACK TO MAIN MENU", WIDTH/2, 4*HEIGHT/5 - 70, 1., 2, true);
 

@@ -270,8 +270,7 @@ void Game::update() {
 
                 for (auto it_enemy = vm_enemy.begin(); it_enemy != vm_enemy.end(); it_enemy++) {
                     if ((*it)->collides_with(*(*it_enemy))) {
-                        std::cout<< "COLLISION" << std::endl;
-                        SCORE = 1;
+                        std::cout<< "COLLISION MISSILES" << std::endl;
                         vm.erase(it--);
                         vm_enemy.erase(it_enemy);
                         m_exist = false;
@@ -321,6 +320,23 @@ void Game::update() {
 
             
 
+        }
+
+        for (auto it = vm_enemy.begin(); it != vm_enemy.end(); it++) {
+
+            if ((*it)->get_closer()) {
+                if (this->player.get_hall() == (*it)->get_hall()) {
+                    PLAYERTOUCHE = 1;
+                    if(this->player.decr_life_point()){
+                        GAMEOVER = 1;
+                        this->setGameOver(true);
+                        this->setStart(false);
+                        this->game_over_msg = std::string("YOU LOST ALL YOUR LIFE POINTS");
+                        return;
+                    }
+                }
+                vm_enemy.erase(it--);
+            }
         }
 
 

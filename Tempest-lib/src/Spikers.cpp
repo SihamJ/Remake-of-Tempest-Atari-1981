@@ -169,7 +169,7 @@ bool Spikers::get_closer(long double h) {
     }
 
     else if(this->state == 1) {
-        this->center = Line(this->center, this->hall.get_small_line().inLine(0.5)).inLine(h*h*h);
+        this->center = Line(this->center, this->hall.get_small_line().inLine(0.5)).inLine(h);
         this->width = (this->limit_init.length()/3.) * (1-h) ;
         this->height = static_cast<long double>(init_height) * ( static_cast<long double>(width) / static_cast<long double>(init_width));
         this->x = this->center.get_x() - ( static_cast<long double>(this->width)/2.0);

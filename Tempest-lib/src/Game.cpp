@@ -336,7 +336,12 @@ void Game::update() {
                         return;
                     }
                     
-                    player.decr_life_point();
+                    if (player.decr_life_point()) {
+                        this->setGameOver(true);
+                        this->setStart(false);
+                        game_over_msg = std::string("You Died");
+                        return;
+                    }
 
                 }
                 else if(t != nullptr || pt != nullptr || ft != nullptr){

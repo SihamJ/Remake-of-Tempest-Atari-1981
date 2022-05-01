@@ -3,6 +3,7 @@
 extern int WIDTH;
 extern int HEIGHT;
 extern int MENU;
+extern int SOUND2;
 
 Menu::Menu(std::shared_ptr<Game> g) : game_ptr(g) {}
 Menu::~Menu() {}
@@ -31,6 +32,10 @@ void Menu::handle_events() {
             if (event.key.keysym.sym == SDLK_ESCAPE) { 
                 MENU = 0;
                 this->game_ptr->setIsRunning(false);
+            }
+            if(event.key.keysym.sym == SDLK_m){
+                SOUND2 =  SOUND2 == 0 ? 1 : 0;
+                break;
             }
             break;
         }

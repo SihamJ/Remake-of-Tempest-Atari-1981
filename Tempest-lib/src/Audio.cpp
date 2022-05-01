@@ -11,6 +11,7 @@ extern int PLAYERTOUCHE;
 extern int SCORE;
 extern int LEVEL;
 extern int PAUSE;
+extern int SOUND2;
 
 Audio::Audio(){
     
@@ -33,6 +34,7 @@ void Audio::shoot(){
     while(SOUND){
         while(!SHOOT){ if(!SOUND) break ;}
         if(!SOUND) break;
+        if(!SOUND2) continue;
         device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), NULL, 0);
         
         int success = SDL_QueueAudio(device, audio_buf, audio_len);
@@ -62,7 +64,7 @@ void Audio::menu(){
             device = SDL_OpenAudioDevice(nullptr, 0, &(spectre), nullptr, 0);
             int success = SDL_QueueAudio(device, audio_buf, audio_len);
             SDL_PauseAudioDevice(device, SDL_FALSE);
-            while(MENU);
+            while(MENU && SOUND2);
             SDL_PauseAudioDevice(device, SDL_TRUE);
             SDL_CloseAudioDevice(device);
             MENU = 0;

@@ -6,7 +6,7 @@ extern int HEIGHT;
 #include <Menu.hpp>
 #include <Audio.hpp>
 // #define SDL_WINDOWPOS_CENTERED SDL_WINDOWPOS_CENTERED_DISPLAY(0)
-int SOUND = 1;
+int SOUND = 0;
 int MENU = 1;
 int GAMEOVER = 0;
 int SHOOT = 0;
@@ -17,6 +17,7 @@ int PLAYERTOUCHE = 0;
 int LEVEL = 0;
 int SCORE = 0;
 int PAUSE = 0;
+int SOUND2 = 1;
 
 void menu();
 void gameover();
@@ -48,9 +49,9 @@ int main(int argc, char** argv) {
     th.emplace_back(menu);
     th.emplace_back(gameover);
     th.emplace_back(shoot);
-    th.emplace_back(enemy_shoot);
+    //th.emplace_back(enemy_shoot);
     th.emplace_back(superzapper);
-    th.emplace_back(player_touche);
+    //th.emplace_back(player_touche);
     th.emplace_back(next_level);
     th.emplace_back(score);
 

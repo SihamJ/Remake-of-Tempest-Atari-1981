@@ -4,6 +4,7 @@
 int WIDTH = 1400;
 int HEIGHT = 800;
 extern int SOUND;
+extern int SOUND2;
 extern int MENU;
 extern int GAMEOVER;
 extern int SHOOT;
@@ -14,6 +15,7 @@ extern int PLAYERTOUCHE;
 extern int SCORE;
 extern int LEVEL;
 extern int PAUSE;
+extern int SOUND2;
 
 
 Game::Game() {}
@@ -119,6 +121,10 @@ void Game::handle_events() {
                     SUPERZAPPER = 1;
                     this->superzapper(player.get_superzapper()==0 ? false : true);
                 }
+            }
+            if(event.key.keysym.sym == SDLK_m){
+                SOUND2 =  SOUND2 == 0 ? 1 : 0;
+                break;
             }
             if(event.key.keysym.sym == SDLK_q){
                 isRunning = false;

@@ -3,6 +3,7 @@
 extern int WIDTH;
 extern int HEIGHT;
 extern int MENU;
+extern int SOUND2;
 
 
 GameOver::GameOver(std::shared_ptr<Game> g) : game_ptr(g) {}
@@ -28,6 +29,10 @@ void GameOver::handle_events() {
             }
             if(event.key.keysym.sym == SDLK_q){
                 this->game_ptr->setIsRunning(false);
+                break;
+            }
+            if(event.key.keysym.sym == SDLK_m){
+                SOUND2 =  SOUND2 == 0 ? 1 : 0;
                 break;
             }
             break;

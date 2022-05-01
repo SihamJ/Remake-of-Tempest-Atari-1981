@@ -3,6 +3,7 @@
 extern int WIDTH;
 extern int HEIGHT;
 extern int MENU;
+extern int SOUND2;
 
 Pause::Pause(std::shared_ptr<Game> g) : game_ptr(g) {}
 Pause::~Pause() {}
@@ -30,6 +31,10 @@ void Pause::handle_events() {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 this->game_ptr->setPause(false);
                 this->game_ptr->setStart(false);
+            }
+            if(event.key.keysym.sym == SDLK_m){
+                SOUND2 =  SOUND2 == 0 ? 1 : 0;
+                break;
             }
             break;
         }

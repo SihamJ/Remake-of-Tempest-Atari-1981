@@ -42,11 +42,11 @@ void Menu::handle_events() {
         case SDL_MOUSEWHEEL: {
             if(event.wheel.y > 0) // scroll up
             {
-                this->chosen_level = (this->chosen_level + 1) % 100 + 1;
+                this->chosen_level = (this->chosen_level + 1) % 200 + 1;
             }
             else if(event.wheel.y < 0) // scroll down
             {
-                this->chosen_level = ((this->chosen_level - 1) + 99) % 100;
+                this->chosen_level = ((this->chosen_level - 1) + 199) % 200;
             }
         }
         default:
@@ -75,7 +75,7 @@ void Menu::render() {
     render_color(renderer, "255220220", 255);
 
     TextRenderer::draw_text(renderer, "PRESS SPACE TO START", WIDTH/2, 4*HEIGHT/5, 1, 2, true);
-    TextRenderer::draw_text(renderer, "Scroll to chose your level: " + std::to_string(this->chosen_level), WIDTH/2, 4*HEIGHT/5 + 60, 1, 2, true);
+    TextRenderer::draw_text(renderer, "SCROLL TO CHOSE YOUR LEVEL: " + std::to_string(this->chosen_level), WIDTH/2, 4*HEIGHT/5 + 60, 1, 2, true);
     TextRenderer::draw_text(renderer, "EXIT: ESCAPE", 10, 50, 0.5, 2, false);
     
     // màj du rendu

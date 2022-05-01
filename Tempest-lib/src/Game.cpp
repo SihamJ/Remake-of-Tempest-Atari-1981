@@ -178,7 +178,11 @@ void Game::update() {
     }
     
     std::mt19937 gen(this->rd());
-    std::uniform_int_distribution<int> random (0, 100000);
+    std::uniform_int_distribution<int> random (level->get_current_level() >= 100 ? 
+        0 : 500 - (level->get_current_level() * 5), 
+        level->get_current_level() < 200 ?
+        static_cast<int>(1000000. * (1. - static_cast<double>(level->get_current_level())/200.))
+        : 50000);
 
     int i = random(gen);
 

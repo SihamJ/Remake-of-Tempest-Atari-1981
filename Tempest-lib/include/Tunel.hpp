@@ -52,6 +52,12 @@ public:
     const bool operator==(Tunel &&t) const ;
     const bool operator!=(Tunel &&t) const;
 
+    void zoom(Point center);
+    void zoom();
+    void calcul_dezoom(Point center);
+
+    std::array<long double, 8> ajout_dezoom;
+
 
 private:
     // les deux lignes

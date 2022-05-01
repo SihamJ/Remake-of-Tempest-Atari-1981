@@ -49,7 +49,7 @@ public:
 
     // checks if the game is still running
     bool running();
-    bool transitioning();
+    int transitioning();
     void setPause(bool pause);
     bool getPause();
     bool getGameOver();
@@ -79,7 +79,7 @@ private:
 
     // savoir si le jeu doit continuer de fonctionner
     bool isRunning;
-    bool isTransitioning=true;
+    int isTransitioning=0;
     // fenêtre
     std::shared_ptr<SDL_Window> window;
 

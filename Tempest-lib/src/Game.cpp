@@ -58,6 +58,8 @@ void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flag
     this->timer->add_clock();
     // clock 4 pour animation courante
     this->timer->add_clock();
+    // clock 5 pour transition dla nouvelle map
+    this->timer->add_clock();
 
     this->level = std::make_shared<Level>();
     this->level->next_level();
@@ -106,6 +108,7 @@ void Game::handle_events() {
                 // On met en pause les timer de passage au niveau suivant et de transition courante s'il y en une
                 this->timer->pause_clock(clock_list::level);
                 this->timer->pause_clock(clock_list::current_transition);
+                this->timer->pause_clock(clock_list::transition_new_map);
                 break;
             }
             if(event.key.keysym.sym == SDLK_RIGHT)
@@ -151,28 +154,51 @@ void Game::update() {
 
     // Passer au niveau suivant ?
 
-    if (!this->isTransitioning && this->timer->get_clock(clock_list::level) > LEVEL_TIME){
+    if (this->isTransitioning == 0 && this->timer->get_clock(clock_list::level) > LEVEL_TIME){
         LEVEL = 1;
-        this->isTransitioning = true;
+        this->timer->reset_clock(clock_list::current_transition);
+        if (level->get_current_level() != 0)
+            this->isTransitioning = 1;
+        this->enemies.clear();
         this->timer->reset_clock(clock_list::level);
-        this->next_level();
         return;
     }
-
-    if(this->isTransitioning && this->timer->get_clock(clock_list::current_transition) > TRANSISTION_TIME){
-        this->isTransitioning = false;
+    else if(this->isTransitioning == 1 && this->timer->get_clock(clock_list::current_transition) > TRANSITION_TIME){
+        this->isTransitioning = 2;
         this->timer->reset_clock(clock_list::current_transition);
+        this->timer->reset_clock(clock_list::transition_new_map);
+        this->next_level();
+        map->calcule_zoom2();
+        return;
     }
-
+    else if(this->isTransitioning == 2 && this->timer->get_clock(clock_list::transition_new_map) > TRANSITION_TIME){
+        this->isTransitioning = 0;
+        this->timer->reset_clock(clock_list::current_transition);
+        this->timer->reset_clock(clock_list::level);
+        return;
+    }
     // on ne veut pas update le jeu avant de finir l'animation de transition
-    else if(this->isTransitioning) return;
+    else if(this->isTransitioning == 1 && timer->get_clock(clock_list::update) > TICK) {
+        this->timer->reset_clock(clock_list::update);
+        map->zoom();
+        return;
+    }
+    else if(this->isTransitioning == 2 && timer->get_clock(clock_list::update) > TICK) {
+        this->timer->reset_clock(clock_list::update);
+        map->zoom2();
+        return;
+    }
+    else if (this->isTransitioning != 0)
+        return;
 
     if(this->superzapping && this->timer->get_clock(clock_list::current_transition) > SUPERZAPPER_TIME){
             this->superzapping = false;
     }
     
     std::mt19937 gen(this->rd());
-    std::uniform_int_distribution<int> random (0, 100000);
+    std::uniform_int_distribution<int> random (1000, level->get_current_level() < 200 ? 
+                                    static_cast<int>(1000000. * (1. - static_cast<double>(level->get_current_level())/200.)) 
+                                    : 50000);
 
     int i = random(gen);
 
@@ -416,15 +442,15 @@ void Game::render() {
     // clear la fenêtre en noir
     clear_renderer(renderer, BLACK);
 
-    if(this->isTransitioning){
-        if(this->level->get_map_color().get_name() == "BLACK")
-            render_color(renderer, Color("WHITE",WHITE));
-        else
-            render_color(renderer, std::move(this->level->get_map_color()));
-        TextRenderer::draw_text(renderer,  std::move(std::string("LEVEL ") + std::to_string(this->level->get_current_level())), WIDTH/2, HEIGHT/4, 3, 2, true);
-        render_present(renderer);
-        return;
-    }
+    // if(this->isTransitioning){
+    //     if(this->level->get_map_color().get_name() == "BLACK")
+    //         render_color(renderer, Color("WHITE",WHITE));
+    //     else
+    //         render_color(renderer, std::move(this->level->get_map_color()));
+    //     TextRenderer::draw_text(renderer,  std::move(std::string("LEVEL ") + std::to_string(this->level->get_current_level())), WIDTH/2-200, HEIGHT/5., 3, 3);
+    //     render_present(renderer);
+    //     return;
+    // }
 
     if (getPause()) { render_present(renderer); return;}
     render_color(renderer, std::move(map->get_color()));
@@ -476,8 +502,7 @@ void Game::render() {
 
 void Game::next_level(){
 
-    this->timer->reset_clock(clock_list::current_transition);
-    this->isTransitioning = true;
+    
     this->vm.clear();
     this->vh.clear();
     this->enemies.clear();
@@ -537,7 +562,7 @@ void Game::join_threads(){
 
 
 bool Game::running() { return this->isRunning; }
-bool Game::transitioning() { return this->isTransitioning; }
+int Game::transitioning() { return this->isTransitioning; }
 bool Game::getPause() { return this->pause; }
 void Game::setPause(bool pause) { this->pause = pause; }
 void Game::setGameOver(bool go) { this->game_over = go; }

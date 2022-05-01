@@ -166,3 +166,52 @@
     const bool Tunel::operator!=(Tunel &&t) const {
         return (this->get_small_line() != t.get_small_line() || this->get_big_line() != t.get_big_line());
     }
+
+    void Tunel::zoom(Point center) {
+        double vitesse = static_cast<double>(TRANSITION_TIME) / 350.; // / static_cast<double>(WIDTH)/4.
+
+        auto &l = lines.at(0);
+        l.set_line(Point{l.get_p0().get_x() + (l.get_p0().get_x() - center.get_x())/vitesse, 
+                            l.get_p0().get_y() + (l.get_p0().get_y() - center.get_y())/vitesse},
+                    Point{l.get_p1().get_x() + (l.get_p1().get_x() - center.get_x())/vitesse, 
+                            l.get_p1().get_y() + (l.get_p1().get_y() - center.get_y())/vitesse});
+
+        auto &l2 = lines.at(1);
+        l2.set_line(Point{l2.get_p0().get_x() + (l2.get_p0().get_x() - center.get_x())/vitesse, 
+                            l2.get_p0().get_y() + (l2.get_p0().get_y() - center.get_y())/vitesse},
+                    Point{l2.get_p1().get_x() + (l2.get_p1().get_x() - center.get_x())/vitesse, 
+                            l2.get_p1().get_y() + (l2.get_p1().get_y() - center.get_y())/vitesse});
+
+    }
+
+    void Tunel::calcul_dezoom(Point center) {
+        long double temp = static_cast<long double>(TRANSITION_TIME) / static_cast<long double>(TICK);
+        ajout_dezoom = {(lines.at(0).get_p0().get_x() - center.get_x())/temp,
+                        (lines.at(0).get_p0().get_y() - center.get_y())/temp,
+                        (lines.at(0).get_p1().get_x() - center.get_x())/temp,
+                        (lines.at(0).get_p1().get_y() - center.get_y())/temp,
+                        (lines.at(1).get_p0().get_x() - center.get_x())/temp,
+                        (lines.at(1).get_p0().get_y() - center.get_y())/temp,
+                        (lines.at(1).get_p1().get_x() - center.get_x())/temp,
+                        (lines.at(1).get_p1().get_y() - center.get_y())/temp};
+
+        auto &l = lines.at(0);
+        l.set_line(center,center);
+
+        auto &l2 = lines.at(1);
+        l2.set_line(center,center);
+    }
+
+    void Tunel::zoom() {
+        auto &l = lines.at(0);
+        l.set_line(Point{l.get_p0().get_x() + ajout_dezoom.at(0), 
+                            l.get_p0().get_y() + ajout_dezoom.at(1)},
+                    Point{l.get_p1().get_x() + ajout_dezoom.at(2), 
+                            l.get_p1().get_y() + ajout_dezoom.at(3)});
+
+        auto &l2 = lines.at(1);
+        l2.set_line(Point{l2.get_p0().get_x() + ajout_dezoom.at(4), 
+                            l2.get_p0().get_y() + ajout_dezoom.at(5)},
+                    Point{l2.get_p1().get_x() + ajout_dezoom.at(6), 
+                            l2.get_p1().get_y() + ajout_dezoom.at(7)});
+    }

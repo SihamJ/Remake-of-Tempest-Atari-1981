@@ -14,8 +14,8 @@
 
 // 12 second for each level
 #define LEVEL_TIME 12000
-// 2 seconds for transistion
-#define TRANSISTION_TIME 2000
+// 2 seconds for transition
+#define TRANSITION_TIME 2000
 // superzapper time = 1s
 #define SUPERZAPPER_TIME 1000
 // points de vie au début du jeu
@@ -36,7 +36,7 @@ enum maps_list {
 };
 
 enum clock_list{
-    update = 0, enemies = 1, level = 2, current_transition = 3
+    update = 0, enemies = 1, level = 2, current_transition = 3, transition_new_map = 4
 };
 
 

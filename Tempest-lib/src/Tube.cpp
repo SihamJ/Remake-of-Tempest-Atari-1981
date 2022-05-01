@@ -81,3 +81,21 @@ void Tube::clear(){
 std::string Tube::get_name(){
     return this->name;
 }
+
+void Tube::zoom() {
+    for (auto &i : hallList) {
+        i.zoom(this->center);
+    }
+}
+
+void Tube::calcule_zoom2() {
+    for (auto &i : hallList) {
+        i.calcul_dezoom(this->center);
+    }
+}
+
+void Tube::zoom2() {
+    for (auto &i : hallList) {
+        i.zoom();
+    }
+}

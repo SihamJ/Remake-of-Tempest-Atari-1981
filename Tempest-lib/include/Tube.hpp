@@ -33,6 +33,9 @@ public:
     void clear();
     std::string get_name();
     Tunel get_hall(int index);
+    void zoom();
+    void calcule_zoom2();
+    void zoom2();
 
 protected:
     int width;

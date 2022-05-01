@@ -33,7 +33,7 @@ public:
     ~Game();
 
     void init(std::string title, int xpos, int ypos, int flagsWindow, int flagsRenderer);
-
+    int nb_shots = 0;
     void handle_events();
     void update();
     void render();

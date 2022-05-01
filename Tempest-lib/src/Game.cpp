@@ -60,6 +60,8 @@ void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flag
     this->timer->add_clock();
     // clock 4 pour animation courante
     this->timer->add_clock();
+    // clock 5 pour tir par seconde
+    this->timer->add_clock();
 
     this->level = std::make_shared<Level>();
     this->level->next_level();
@@ -91,15 +93,21 @@ void Game::handle_events() {
         }
         case SDL_KEYDOWN: {
             if (event.key.keysym.sym == SDLK_SPACE){
-                SHOOT = 1;
-                // le couloir où le player se trouve
-                Tunel h = this->map->get_hall(player.get_n_hall());
+                // MAX 10 TIR PAR SECONDE
+                if(this->timer->get_clock(clock_list::shots) > 500){
+                    this->timer->reset_clock(clock_list::shots);
+                    nb_shots = 0;
+                }
+                if(nb_shots < 10){
+                    SHOOT = 1;
+                    nb_shots ++;                    
+                    // le couloir où le player se trouve
+                    Tunel h = this->map->get_hall(player.get_n_hall());
 
-                std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(h));
-                // ajoute le point au vecteur qui répertorie tous les missiles
-                vm.push_back(std::move(m));
-                
-                            
+                    std::shared_ptr<Missile> m = std::make_shared<Missile>(std::move(h));
+                    // ajoute le point au vecteur qui répertorie tous les missiles
+                    vm.push_back(std::move(m));
+                }     
                 break;
             }
             if (event.key.keysym.sym == SDLK_ESCAPE) {

@@ -34,9 +34,7 @@ void Audio::shoot(){
     while(SOUND){
         while(!SHOOT){ if(!SOUND) break ;}
         if(!SOUND) break;
-        if(!SOUND2) continue;
-        device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), NULL, 0);
-        
+        device = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(0,0), 0, &(spectre), NULL, 0);        
         int success = SDL_QueueAudio(device, audio_buf, audio_len);
         SDL_PauseAudioDevice(device, SDL_FALSE);
         SDL_Delay(200);
@@ -64,7 +62,7 @@ void Audio::menu(){
             device = SDL_OpenAudioDevice(nullptr, 0, &(spectre), nullptr, 0);
             int success = SDL_QueueAudio(device, audio_buf, audio_len);
             SDL_PauseAudioDevice(device, SDL_FALSE);
-            while(MENU && SOUND2);
+            while(MENU);
             SDL_PauseAudioDevice(device, SDL_TRUE);
             SDL_CloseAudioDevice(device);
             MENU = 0;
@@ -146,27 +144,7 @@ void Audio::inc_score(){
 }
 
 void Audio::superzapper(){
-    SDL_AudioSpec spectre;
-    SDL_AudioDeviceID device;
-    Uint8* audio_buf;
-    Uint32 audio_len;
-
-    if( SDL_LoadWAV("Audio/superzapper.wav", &spectre, &audio_buf, &audio_len) == NULL){
-        SDL_Log("Erreur > %s", SDL_GetError());
-        return;
-    }
-
-    while(SOUND){
-            while(!SUPERZAPPER) if(!SOUND) break;
-            if(!SOUND) break;
-            device = SDL_OpenAudioDevice(nullptr, 0, &(spectre), nullptr, 0);
-            int success = SDL_QueueAudio(device, audio_buf, audio_len);
-            SDL_PauseAudioDevice(device, SDL_FALSE);
-            SDL_Delay(2000);
-            SDL_PauseAudioDevice(device, SDL_TRUE);
-            SDL_CloseAudioDevice(device);
-            SUPERZAPPER = 0;
-    }
+    
 
 }
 
@@ -243,3 +221,35 @@ void Audio::enemy_shoot(){
             ENEMYSHOOT = 0;
     }
 }
+
+// void Audio::player_sounds(){
+//     SDL_AudioSpec spectre_superzapper, spectre_shoot;
+//     SDL_AudioDeviceID device;
+//     Uint8* audio_buf_shoot, *audio_buf_superzapper;
+//     Uint32 audio_len_shoot, audio_len_superzapper;
+
+//     if( SDL_LoadWAV("Audio/superzapper.wav", &spectre_superzapper, &audio_buf_superzapper, &audio_len_superzapper) == NULL){
+//         SDL_Log("Erreur > %s", SDL_GetError());
+//         return;
+//     }
+//     if( SDL_LoadWAV_RW( SDL_RWFromFile("Audio/shoot.wav", "rb"), 1, &spectre_shoot, &audio_buf_shoot, &audio_len_shoot) == NULL){
+//         SDL_Log("Erreur > %s", SDL_GetError());
+//         return;
+//     }
+
+//     while(SOUND){
+//             if(SUPERZAPPER){
+//                 device = SDL_OpenAudioDevice(nullptr, 0, &(spectre), nullptr, 0);
+//                 int success = SDL_QueueAudio(device, audio_buf, audio_len);
+//                 SDL_PauseAudioDevice(device, SDL_FALSE);
+//                 SDL_Delay(2000);
+//                 SDL_PauseAudioDevice(device, SDL_TRUE);
+//                 SDL_CloseAudioDevice(device);
+//                 SUPERZAPPER = 0;
+//             }
+//             if(SHOOT){
+
+//             }
+            
+//     }
+// }

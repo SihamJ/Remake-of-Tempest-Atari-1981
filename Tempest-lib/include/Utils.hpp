@@ -36,7 +36,7 @@ enum maps_list {
 };
 
 enum clock_list{
-    update = 0, enemies = 1, level = 2, current_transition = 3
+    update = 0, enemies = 1, level = 2, current_transition = 3, shots = 4
 };
 
 

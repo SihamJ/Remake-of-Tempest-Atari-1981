@@ -23,6 +23,7 @@ class Audio {
         void superzapper();
         void flipper_attack();
         void next_level();
+        void player_sounds();
 
     private:
         SDL_AudioSpec spectre;

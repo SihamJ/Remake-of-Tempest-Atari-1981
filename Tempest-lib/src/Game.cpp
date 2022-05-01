@@ -603,3 +603,4 @@ std::shared_ptr<Player> Game::getPlayer() { return std::make_shared<Player>(this
 std::shared_ptr<Level> Game::getLevel() { return this->level; }
 std::shared_ptr<Tube> Game::getMap() { return this->map; }
 std::string Game::get_msg_game_over() { return this->game_over_msg; }
+void Game::reset_life_point() { this->player.reset_life_point(); }

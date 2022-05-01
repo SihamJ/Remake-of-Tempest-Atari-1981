@@ -80,7 +80,7 @@ L'héritage et le polymorphisme a biensur aussi été indispensable pour ce proj
 **Audio et Threading**
 </br>
 
-La gestion des effets sonores a necessité l'introduction des threads, nous avons saisi l'occasion pour intégrer plus de fonctionnalités du C++. La classe Audio fonctionne comme suit:
+La gestion des effets sonores a necessité l'introduction des threads, nous avons saisi l'occasion pour intégrer plus de fonctionnalités du C++. Cependant, la libraire SDL ne permet pas une gestion faciles de ces effets, et des erreurs de segmentations arrivent parfois quand plusieurs device sont ouverts. En local, quand les device sont limités à 5 voire 6, il n'y a pas de problèmes, nous avons donc préféré désactivé le son par précaution. Ce dernier peut être activé facilement en mettant la variable globale SOUND à 1. Celle-ci est en haut du fichier main.cpp.
 
 
 ## Répartition des tâches
@@ -104,15 +104,14 @@ Pour moduler la vitesse, nous avons apporté des modifications à la formule d'h
 **Latence**
 </br>
 
-Il nous arrive parfois d'avoir un problème de latence, nous avons remarqué qu'il est possible de paralléliser le rendu, or nous n'avons pas eu le temps d'apporter cette modification. 
+Il nous arrive parfois d'avoir un problème de latence bien que peu détectable, nous avons remarqué qu'il est possible de paralléliser le rendu, par contraire de temps nous n'avons pas pu ajouter cette partie.
 
 </br>
 
 ## **Fonctionnalités actuelles et perspectives**
 
 
-Notre version actuelle intègre la majorité des fonctionnalités du jeu du point de vue Game Logic. Les 3 ennemis Tankers, Spikers et Flippers sont complets, les autres sont présents mais ont un fonctionnement basique, ils se placent tous au bout du couloir et décrémente les points de vie du joueur si collision. 
-Les flippers quant à eux causent la mort directe du joueur. </br>
+Notre version actuelle intègre la majorité des fonctionnalités du jeu du point de vue Game Logic. Tous les ennemis sont intégrés. Il reste du travail sur quelques animations notamment les Flippers et leurs rotation.
 Certains ennemis n'apparaissent qu'à un certain niveau, ainsi pour voir le fonctionnement des Spikers, il faut commencer au niveau 4, pour les Fuseballs c'est le niveau 11, les FuseballTankers au niveau 33, et les PulsarTankers au niveau 41. </br>
 Nous avons intégré 3 Maps (Cercle, Carré et Triangle). Tous les niveaux sont aussi intégrés, il est possible d'effectuer le choix de niveau au menu de démarrage. Comme dans le jeu original, le démarrage au niveau X permet de commencer avec un score Y. La map invisible est aussi présente à partie du niveau 65 jusqu'au niveau 80.</br>
 Le SuperZapper est aussi implémenté. Le joueur dispose de 2 SuperZappers par niveau, le premier permet de tuer tous les ennemis, le 2ème tue un ennemi aléatoirement.</br>

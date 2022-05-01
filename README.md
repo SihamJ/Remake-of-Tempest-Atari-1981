@@ -14,11 +14,14 @@ Pout télécharger le code et le compiler sur tous les systèmes vous pouvez uti
 
 # Lancer le jeu (Toujours depuis le répertoir Build)
 
-	./bin/Tempest
+	./Tempest/Tempest
 
 # Utilisation
+
+	Par précaution, les effets sonores sont désactivés.
+	Vous pouvez les activez en modifiant la variable global SOUND au début du main.cpp en la mettant à 1.
 
 	Molette souris pour changer de couloir
 	Espace pour tirer des missiles
 	Z pour le SuperZapper
-	
+	Escape pour Pause

@@ -16,6 +16,8 @@ Pout télécharger le code et le compiler sur tous les systèmes vous pouvez uti
 
 	./Tempest/Tempest
 
+	Il ne faut surtout pas executer depuis le répertoire Tempest, mais depuis build. Sinon, il y aura un problème de chemins.
+	
 # Utilisation
 
 	Par précaution, les effets sonores sont désactivés pour éviter des erreurs connus de segmentation qui peuvent arriver avec SDL Audio.

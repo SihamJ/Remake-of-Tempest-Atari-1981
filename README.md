@@ -18,12 +18,17 @@ Pout télécharger le code et le compiler sur tous les systèmes vous pouvez uti
 
 # Utilisation
 
-	Par précaution, les effets sonores sont désactivés.
-	Vous pouvez les activez en modifiant la variable global SOUND au début du main.cpp en la mettant à 1.
+	Par précaution, les effets sonores sont désactivés pour éviter des erreurs connus de segmentation qui peuvent arriver avec SDL Audio.
+	Vous pouvez les activer en modifiant la variable global SOUND au début du main.cpp en la mettant à 1.
+	
+	ATTENTION: Si vous activez les effets sonores, il faut avoir installé les packages libasound et libpulse:
+	> sudo apt-get install libasound2-dev libpulse-dev
+	Sinon, ces derniers seront automatiquement désactivés au démarrage du jeu.
+
+
+	Contrôles: 
 
 	Choix du niveau au menu de démarrage en scrollant avec la molette.
-	
-
 	Molette souris pour changer de couloir
 	Espace pour tirer des missiles
 	Z pour le SuperZapper

@@ -75,8 +75,9 @@ int set_display(std::shared_ptr<SDL_Window> window, std::shared_ptr<SDL_DisplayM
 }
 
 void quit_game(std::shared_ptr<SDL_Window> window, std::shared_ptr<SDL_Renderer> renderer){
-    SDL_DestroyWindow(window.get());
+   
     SDL_DestroyRenderer(renderer.get());
+     SDL_DestroyWindow(window.get());
     SDL_Quit();
 }
 

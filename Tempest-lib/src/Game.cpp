@@ -32,9 +32,21 @@ Game::~Game() {}
  * @param height la hauteur de la fenêtre
  */
 void Game::init(std::string title, int xpos, int ypos, int flagsWindow, int flagsRenderer) {
-
-    if (init_sdl(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0) {
+    int flags = SDL_INIT_VIDEO;
+    // ajout des effets sonores aux flags
+    if(SOUND){
+        flags = flags|SDL_INIT_AUDIO;
+    }
+    // init avec audio
+    if (init_sdl(flags) != 0) {
         // si problème, le jeu doit s'arrêter
+        SOUND = 0;
+        SDL_Log("Erreur > %s", SDL_GetError());
+        std::cout << "\nVeuillez installez les librairies suivantes: sudo apt-get install libasound2-dev libpulse-dev\n ou desactiver les effets sonores dans main.cpp en mettant la variable SOUND à 0. Démarrage du Jeu sans effets sonores...\n\n" << std::endl;
+    }
+    // si fail, init sans audio
+    if(init_sdl(SDL_INIT_VIDEO) != 0){
+        SDL_Log("Erreur > %s", SDL_GetError());
         isRunning = false;
         return;
     }
